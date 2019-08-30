@@ -1,0 +1,234 @@
+.IotHtml .Iot_loginImg, .IotHtml .Iot_welcome { text-align: center; }
+
+.IotHtml .Iot_loginBox .login-logoTxt, .IotHtml .Iot_loginBox .div_join, .IotHtml .Iot_loginBox-body { color: #666; }
+
+.IotHtml { /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f2f5f6+0,e3eaed+37,c8d7dc+100;Grey+3D+%234 */ background: #f2f5f6; /* Old browsers */ background: -moz-linear-gradient(-45deg, #f2f5f6 0%, #e3eaed 37%, #c8d7dc 100%); /* FF3.6-15 */ background: -webkit-linear-gradient(-45deg, #f2f5f6 0%, #e3eaed 37%, #c8d7dc 100%); /* Chrome10-25,Safari5.1-6 */ background: linear-gradient(135deg, #f2f5f6 0%, #e3eaed 37%, #c8d7dc 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f5f6', endColorstr='#c8d7dc',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */ }
+.Iot_loginPage { background: none; }
+.Iot_loginBox { width: 800px; margin: 7% auto 0 auto; }
+/*.IotHtml .Iot_loginBox .login-logo { width: 46px; height: 46px; margin-bottom: 0px; background-image: url(../img/IotAdmin_logo.png); float: left; background-position: -2px -1px; }*/
+.Iot_loginBox .login-logoTxt { float: left; line-height: 44px; font-size: 20pt; font-weight: bold; margin-left: 5px; }
+.Iot_loginBox .div_join { float: right; height: 50px; vertical-align: text-bottom; line-height: 66px; margin-right: 5px; cursor: pointer; }
+
+.Iot_loginBox-body { clear: both; height: 400px; padding: 20px; border: 1px solid #c7c7c7; background: #fff; -webkit-border-radius: 5px 5px 5px 5px; border-radius: 5px 5px 5px 5px; -webkit-box-shadow: 0px 3px 2px -1px #adadad; box-shadow: 0px 3px 2px -1px #adadad; }
+.Iot_loginBox-body.auth h2 { font-size: 14pt; text-align: center; line-height: 29px; margin-bottom: 30px; }
+.Iot_loginBox-body.auth .dsp { padding: 10px; width: 360px; height: 48px; margin: 0 auto; text-align: center; background: #eee; -webkit-border-radius: 5px 5px 5px 5px; border-radius: 5px 5px 5px 5px; font-size: 18pt; line-height: 27px; }
+.Iot_loginBox-body.auth button.re_send { /* border:1px solid #555;
+background:#fff; */ -webkit-border-radius: 5px 5px 5px 5px; border-radius: 5px 5px 5px 5px; width: 30%; height: 30px; margin: 30px auto 0 auto; line-height: 0; }
+
+.Iot_inputArea { clear: both; width: 400px; height: 130px; margin: 0 auto; padding: 20px; float: none; }
+.Iot_inputArea *:first-child { margin-bottom: 10px; }
+.Iot_inputArea * { height: 44px; }
+
+.IotHtml .Iot_loginForm { float: left; width: 470px; }
+.IotHtml .Iot_loginForm .Iot_loginMsgBox { width: 100%; height: 20px; padding: 0; text-align: right; }
+.IotHtml .Iot_loginForm .Iot_join { width: 100px; float: right; margin-top: 10px; }
+.IotHtml .Iot_loginImg { float: right; width: 270px; height: 358px; border: 1px solid #ddd; font-size: 30px; line-height: 358px; }
+.IotHtml .Iot_inputArea { clear: both; width: 350px; float: left; }
+.IotHtml .Iot_welcome { clear: both; width: 100%; height: 245px; font-size: 30px; line-height: 254px; }
+.IotHtml .Iot_btnArea { width: 110px; float: left; margin-left: 10px; }
+.IotHtml .Iot_btnArea .Iot_loginBtn { height: 83px; }
+.IotHtml .Iot_btnArea .Iot_joinBtn { margin-top: 12px; }
+
+.IotJoinPop input { width: 50%; float: left; }
+.IotJoinPop .idConfirmBtn { float: left; margin-left: 12px; height: 30px; line-height: 15px; }
+.IotJoinPop .form-group { clear: both; }
+
+.box.pageSubTitle { border-top-color: #c3c3c3; }
+
+.pageSubTitle { height: 70px; padding: 10px; background: #d2d6de; }
+.pageSubTitle div { float: left; }
+.pageSubTitle .pageIcon { width: 50px; height: 50px; border: 1px solid #ddd; background: #fff; -webkit-border-radius: 10px; border-radius: 10px; }
+.pageSubTitle .pageIcon span { font-size: 26px; margin: 10px 12px; color: #555; }
+.pageSubTitle .pageDesc { margin-left: 14px; }
+.pageSubTitle .pageDesc span { color: #333; line-height: 24px; }
+
+.Iot_searchGroup { float: right; }
+.Iot_searchGroup > * { float: left; margin: 0 10px; }
+.Iot_searchGroup input[type=text] { width: 120px; }
+.Iot_searchGroup input[type=text].picker { width: 310px; }
+.Iot_searchGroup select { width: 150px; }
+
+#radioBtn .notActive { color: #3276b1; background-color: #fff; }
+
+.iag_bbsBtn { margin-top: -67px; }
+
+.regIo { float: left; position: static; margin-left: 18px; }
+.regIo .dropdown-menu { left: 250px; }
+
+.case-list.left { float: left; width: 30%; }
+
+.case-list.right { float: right; width: 70%; }
+
+.case-reglist.left { float: left; width: 50%; }
+
+.case-reglist.right { float: right; width: 50%; }
+
+.caseCenterArea { float: left; width: 5%; }
+
+.lowSub { float: right; font-size: 1.2em; color: #3c8dbc; margin-left: 6px; }
+
+.table-striped.caseCode > tbody > tr { cursor: pointer; }
+
+.table-striped.caseCode > tbody > tr:hover { background-color: #ddd; }
+
+.table-striped > tbody > tr:nth-of-type(odd).selected { background: #dff3ff; }
+
+.table-striped > tbody > tr.even.selected { background: #dff3ff; }
+
+.searchGroup_inner * { float: left; }
+.searchGroup_inner label { margin-right: 6px; }
+
+.IAG_PageForm > .form-group > textarea, .IAG_PageForm > .form-group span.input-group-addon.textarea { height: 150px; }
+
+.IAG_PageForm > .form-group > input, .IAG_PageForm > .form-group select, .IAG_PageForm > .form-group div.input-group, .IAG_PageForm > .form-group > textarea { width: 70%; }
+
+.IAG_PageForm > .form-group span.input-group-addon { width: 30%; }
+
+.IAG_PageForm.service_pop input, .IAG_PageForm.service_pop select, .IAG_PageForm.service_pop textarea { width: 70%; }
+
+.IAG_PageForm.service_pop span { width: 30%; }
+
+.IAG_PageForm.service_pop .form-group.tx span, .IAG_PageForm.service_pop .form-group.tx textarea { height: 300px; }
+
+.IAG_PageForm { width: 100%; margin: 20px auto 0 auto; }
+.IAG_PageForm > .form-group { width: 100%; clear: both; margin: 0 0 15px 0; }
+.IAG_PageForm > .form-group > input, .IAG_PageForm > .form-group select, .IAG_PageForm > .form-group div.input-group { height: 33px; float: left; }
+.IAG_PageForm > .form-group > input > input, .IAG_PageForm > .form-group > input select, .IAG_PageForm > .form-group select > input, .IAG_PageForm > .form-group select select, .IAG_PageForm > .form-group div.input-group > input, .IAG_PageForm > .form-group div.input-group select { width: 100%; height: 33px; }
+.IAG_PageForm > .form-group > textarea { float: left; resize: none; border-color: #d2d6de; padding: 6px 12px; }
+.IAG_PageForm > .form-group .input-group-btn > button { width: 82px; }
+.IAG_PageForm > .form-group span.input-group-addon { float: left; line-height: 9px; height: 33px; }
+.IAG_PageForm > .form-group span.input-group-addon label { text-align: center; width: 100%; float: left; }
+.IAG_PageForm > .form-group span.input-group-addon label.error { width: 100%; clear: both; margin: 0; padding: 0 10px; }
+.IAG_PageForm > .form-group span.input-group-addon.cls_bor { border-right: 1px solid #ddd; }
+.IAG_PageForm > .form-group #error_ul, .IAG_PageForm > .form-group .error_ul li { list-style: none; }
+.IAG_PageForm > .form-group .btn-group { margin-left: 10px; }
+.IAG_PageForm > .form-group > .input-group-btn { float: left; left: -80px; }
+.IAG_PageForm.service_pop label { width: 100%; }
+
+.modal-footer.IAG_Page { padding-top: 0px; }
+
+.content.IAG_Page { padding-bottom: 0px; }
+
+@media (min-width: 992px) { .modal-xlg { width: 1200px; } }
+.content-header.IAG_pop { height: 36px; }
+.content-header.IAG_pop > * { float: left; }
+
+.service_pop_footer { width: 100%; text-align: center; }
+
+.ioins_pop_footer { padding: 0 10px 10px 10px; border: none; }
+
+.nomar_bt { margin-bottom: 0; }
+
+.nobor_tp { border-top: none; }
+
+.pop_serch .form-group { width: 410px; float: right; }
+.pop_serch .form-group > * { float: left; }
+.pop_serch .form-group select, .pop_serch .form-group input { width: 150px; margin-right: 10px; }
+
+.box-body.pop_se_Area { height: 54px; }
+
+.mbr_info .mbr_row { clear: both; width: 100%; height: 55px; padding: 10px; }
+.mbr_info .form-group { width: 23%; margin-right: 10px; float: left; }
+.mbr_info .form-group > * { float: left; }
+.mbr_info .form-group span { height: 30px; width: 40%; }
+.mbr_info .form-group span label { width: 100%; margin: 0; }
+.mbr_info .form-group input { width: 60%; text-align: center; background: #fff; }
+
+.authMng .col-md-5 .authRow:hover { background: #ddd; }
+.authMng .col-md-5 .authRow.sel { background: #dff3ff; }
+.authMng .col-md-5 tr { cursor: pointer; }
+.authMng .col-md-5 tr th { text-align: center; }
+.authMng .col-md-5 tr td { text-align: center; }
+.authMng .col-md-5 tr:hover { background: #ddd; }
+.authMng .box-header button { float: right; }
+.authMng .box-header h3 { line-height: 30px; }
+.authMng .box-sTitle { margin-left: 6px; }
+
+.apprDet .box-body table.table-bordered > thead > tr > th, .apprDet .box-body .tr_line, .apprDet .box-body .tr_line label, .apprDet .box-body .tr_line:last-child { border-color: #e4e4e4; border-width: 1px; }
+.apprDet .box-body label, .apprDet .box-body input, .apprDet .box-body textarea { height: 30px; margin-bottom: 6px; padding: 0; }
+.apprDet .box-body label { width: 10%; clear: both; float: left; text-align: center; line-height: 30px; background: #f4f4f4; }
+.apprDet .box-body input { background: none; border: 0; }
+.apprDet .box-body input, .apprDet .box-body textarea { margin-left: 2%; float: left; width: 85%; padding-left: 4px; }
+.apprDet .box-body textarea { background: 0; resize: none; line-height: 28px; /* &#apprRsn{
+} */ }
+.apprDet .box-body .msg { float: left; width: 50%; color: #3c8dbc; font-weight: bold; text-align: right; }
+.apprDet .box-body .wtBtn { float: left; width: 60%; }
+.apprDet .box-body .wtBtn button { width: 30%; float: left; margin: 10px 0 10px 5px; }
+.apprDet .box-body .wtBtn input, .apprDet .box-body .wtBtn textarea { width: 60%; }
+.apprDet .box-body table.table-bordered > thead > tr > th { border-top-style: solid; background: #f4f4f4; }
+.apprDet .box-body .tr_line { clear: both; width: 100%; border-top-style: solid; border-right-style: solid; width: 100%; height: 31px; }
+.apprDet .box-body .tr_line * { float: left; margin: 0; height: 30px; }
+.apprDet .box-body .tr_line label { border-right-style: solid; border-left-style: solid; clear: none; }
+.apprDet .box-body .tr_line input, .apprDet .box-body .tr_line textarea { margin: 0 1% 0 1%; text-align: left; }
+.apprDet .box-body .tr_line textarea { border: 0; }
+.apprDet .box-body .tr_line.col1 label { width: 14%; }
+.apprDet .box-body .tr_line.col1 input, .apprDet .box-body .tr_line.col1 textarea { width: 84%; }
+.apprDet .box-body .tr_line.col1.wbtn input, .apprDet .box-body .tr_line.col1.wbtn textarea { width: 78%; }
+.apprDet .box-body .tr_line.col1.wbtn button { float: right; height: 26px; margin: 2px 4px 0 0; width: 5%; line-height: 0; }
+.apprDet .box-body .tr_line.col2 label { width: 14%; }
+.apprDet .box-body .tr_line.col2 input, .apprDet .box-body .tr_line.col2 textarea { width: 34%; }
+.apprDet .box-body .tr_line.hx2 { height: 60px; }
+.apprDet .box-body .tr_line.hx2 label, .apprDet .box-body .tr_line.hx2 input, .apprDet .box-body .tr_line.hx2 textarea { height: 59px; }
+.apprDet .box-body .tr_line.hx2 label { line-height: 59px; }
+.apprDet .box-body .tr_line:last-child { border-bottom-style: solid; height: 32px; }
+
+.box-header.wBtn button { float: right; margin-left: 10px; }
+.box-header.wBtn h3 { line-height: 30px; }
+
+/* .pvPop{
+	table{
+		width:100%;
+		tbody{
+			tr{
+				height:24px;
+				td{
+					padding:0px;
+					height:35px;
+					&.itemNm{
+						float:left;
+						width:200px;
+						background:#e6e6e6;
+					}
+				}
+			}
+		}
+	}
+} */
+.content.api .box-body { font-size: 13px; color: #555; }
+.content.api .box-body h4 { height: 32px; line-height: 32px; font-size: 16px; line-height: 16px; margin-top: 48px; font-weight: bold; }
+.content.api .box-body h4:first-child { margin-top: 18px; }
+.content.api .box-body p { margin: -6px 0px 0px; line-height: 22px; padding-bottom: 10px; }
+.content.api .box-body p span.red { color: #ee4141; }
+.content.api .box-body h5 { height: 23px; line-height: 23px; font-size: 14px; font-weight: bold; color: #67aada; padding-bottom: 9px; margin-top: 17px; }
+.content.api .box-body table { width: 100%; border-top: solid 1px #e3e3e3; table-layout: fixed; }
+.content.api .box-body table tr th { padding: 7px 0px; color: #585858; font-weight: normal; border-left: 1px solid #eaeaea; border-bottom: 1px solid #eaeaea; text-align: center; background-color: #f7f7f7; }
+.content.api .box-body table tr th:last-child { border-right: 1px solid #eaeaea; }
+.content.api .box-body table tr td { padding: 7px 6px 7px 13px; border: 1px solid #eaeaea; text-align: left; line-height: 16px; }
+.content.api .box-body dl { border: 1px solid #eaeaea; margin: 15px 0 15px 0; }
+.content.api .box-body dl dt { padding: 5px 0px 6px 15px; color: #777777; line-height: 18px; font-size: 12px; background-color: #f7f7f7; }
+.content.api .box-body dl dd { padding: 0px; color: #777777; line-height: 18px; border-top: 1px solid #eaeaea; background-color: white; padding: 12px 0 12px 15px; }
+.content.api .box-body dl dd.nt { border-top: 0; }
+.content.api .box-body dl dd pre { background-color: #eee; overflow: auto; margin: 0 0 1em; padding: .5em 1em; }
+.content.api .box-body dl dd pre code, .content.api .box-body dl dd pre .line-number { /* Ukuran line-height antara teks di dalam tag <code> dan <span class="line-number"> harus sama! */ font: normal normal 14px/15px "Courier New",Courier,Monospace; color: black; display: block; }
+.content.api .box-body dl dd pre .line-number { float: left; margin: 0 1em 0 -1em; border-right: 4px solid; text-align: right; border-color: #5eb6e0; }
+.content.api .box-body dl dd pre .line-number span { display: block; padding: 0 .5em 0 1em; }
+.content.api .box-body dl dd pre .cl { display: block; clear: both; }
+.content.api .box-body ul { margin: 10px 0; }
+.content.api .box-body ul li { padding: 0 3px 0 0; line-height: 18px; }
+.content.api .box-body table.codes td { text-align: center; }
+
+table.table-bordered.dataTable tbody td, table.table-bordered.dataTable thead th { word-break: break-all; font-size: 1.04em; }
+table.table-bordered.dataTable tbody td xmp, table.table-bordered.dataTable thead th xmp { font-size: 1.04em; white-space: pre-line; }
+
+ul#error_ul { margin: 0; }
+
+#formCaseReg .desr { height: 30px; text-align: right; margin-right: 10px; }
+#formCaseReg .desr ul, #formCaseReg .desr li { list-style: none; }
+
+button span.glyphicon { margin-top: 2px; }
+
+xmp { margin: 0; font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif; }
+
+.modal .form-horizontal .form-group { margin: 0 0 15px 0; }
+
+/*# sourceMappingURL=Iot_webAdmin.css.map */

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nexgrid.cgsg.admin.mapper.LoginMapper">
+	
+	<select id="getLoginInfo" resultType="com.nexgrid.cgsg.admin.vo.LoginInfo">
+		/* LoginMapper.getLoginInfo */
+		
+		SELECT 
+				MBR_ID 				AS mbrId
+				, USE_YN 			AS useYn
+				, LOGIN_FAIL_CNT 	AS loginFailCnt
+                , TO_CHAR(LOGIN_FAIL_DT,'YYYYMMddHH24mi') AS loginFailDt
+		FROM TB_MBR_INFO A
+		WHERE 1 = 1
+		AND MBR_ID = #{mbrId}
+		AND MBR_PW = #{mbrPw}
+	</select>
+
+	<select id="getLoginInfo2" resultType="com.nexgrid.cgsg.admin.vo.LoginInfo">
+		/* LoginMapper.getLoginInfo2 */
+		
+		SELECT 
+			MBR_ID 			    as mbrId
+			, MBR_NM 			as mbrNm
+			, TEL 			    as tel
+			, ROLE_CD 		    as roleCd
+			, LOGIN_END_DT 	    as loginEndDt
+			, USE_YN 			as useYn
+			, LOGIN_FAIL_CNT 	as loginFailCnt
+			, APPLY_DT 		    as applyDt
+			, MBR_PW			as mbrPw
+			, DECODE(MBR_ID,'admin','Y','N') as managerYn
+		FROM TB_MBR_INFO A
+		WHERE 1=1	
+		AND MBR_ID = #{mbrId}
+		AND use_yn = 'Y'
+	</select>
+
+	<select id="getCommonMenuList" resultType="com.nexgrid.cgsg.admin.vo.MenuInfo">
+		/* LoginMapper.getCommonMenuList */
+		
+		<![CDATA[
+		SELECT 
+			 MENU_ID AS menuId
+			,MENU_NM AS menuName
+		FROM TB_MENU_MST
+		WHERE 1=1
+		AND DEPTH = '1'
+		AND USE_YN = 'Y'
+		AND MENU_ID IN (
+			SELECT A.UPMENU_ID
+			FROM (
+			SELECT A.UPMENU_ID
+				 , COUNT(A.UPMENU_ID) AS CNT
+			FROM TB_MENU_MST A JOIN TB_ROLE_MENU B ON A.MENU_ID = B.MENU_ID
+			WHERE A.DEPTH = '2'
+			AND A.USE_YN = 'Y'
+			AND B.ROLE_CD = (SELECT ROLE_CD FROM TB_MBR_INFO WHERE MBR_ID = #{mbrId})
+			GROUP BY A.UPMENU_ID
+			HAVING COUNT(A.UPMENU_ID) > 0
+			) A
+		)	
+		ORDER BY MENU_ID
+		]]>
+	</select>
+
+	<select id="getSubMenuList2" resultType="com.nexgrid.cgsg.admin.vo.MenuInfo">
+		/* LoginMapper.getSubMenuList2 */
+		
+		SELECT 
+			C.UPMENU_ID AS upMenuID
+			,C.MENU_ID AS menuId
+			,C.MENU_NM AS menuName
+			,C.MENU_URL AS menuURL
+		FROM TB_ROLE_MST A
+		LEFT JOIN TB_ROLE_MENU B ON A.ROLE_CODE=B.ROLE_CD
+		LEFT JOIN TB_MENU_MST C ON B.MENU_ID=C.MENU_ID
+		WHERE A.ROLE_CODE=(
+			SELECT ROLE_CD
+			FROM TB_MBR_INFO
+			WHERE MBR_ID = #{mbrId}
+			AND USE_YN = 'Y'
+		)
+		AND C.USE_YN = 'Y'
+		ORDER BY C.ORD_NO
+	</select>	
+
+	<select id="getAllSubMenuList" resultType="com.nexgrid.cgsg.admin.vo.MenuInfo">
+		/* LoginMapper.getAllSubMenuList */
+		
+		SELECT		 
+				UPMENU_ID AS upMenuID
+				,MENU_ID AS menuId
+				,MENU_NM AS menuName
+				,MENU_URL AS menuURL
+		FROM	TB_MENU_MST
+		WHERE 1=1
+		AND		 DEPTH = '2'
+		AND		 USE_YN = 'Y'
+	</select>
+
+	<insert id="updateLoginFailCnt">
+		/* LoginMapper.updateLoginFailCnt */
+		
+		UPDATE TB_MBR_INFO
+		SET
+			LOGIN_FAIL_CNT = #{loginFailCnt} + 1,
+            LOGIN_FAIL_DT = TO_DATE(#{loginFailDt}, 'yyyy/mm/dd hh24:mi:ss')
+		WHERE	MBR_ID = #{mbrId}
+	</insert>
+	
+	<update id="setUserLock">
+		/* LoginMapper.setUserLock */
+		
+		UPDATE TB_MBR_INFO
+		SET
+			USE_YN = 'N'
+		WHERE	MBR_ID = #{mbrId}
+	</update>
+
+	<update id="setLoginFailCntInit">
+		/* LoginMapper.setLoginFailCntInit */
+		
+		UPDATE TB_MBR_INFO
+		SET
+			LOGIN_FAIL_CNT = 0
+			, LOGIN_END_DT = TO_DATE(#{loginEndDt}, 'yyyy/mm/dd hh24:mi:ss')
+		WHERE MBR_ID = #{mbrId}
+	</update>
+
+   	<update id="setUserUnLock">
+   		/* LoginMapper.setUserUnLock */
+   		
+		UPDATE TB_MBR_INFO
+		SET
+			LOGIN_FAIL_CNT = 0
+           ,USE_YN = 'Y'
+		WHERE MBR_ID = #{mbrId}
+	</update>	
+
+	<select id="getLoginInfoOnlyId" resultType="com.nexgrid.cgsg.admin.vo.LoginInfo">
+		/* LoginMapper.getLoginInfoOnlyId */
+		
+		SELECT 
+			 USE_YN 			as useYn
+			, LOGIN_FAIL_CNT 	as loginFailCnt
+            , TO_CHAR(LOGIN_FAIL_DT,'YYYYMMddHH24mi') AS loginFailDt
+		FROM TB_MBR_INFO A
+		WHERE 1 = 1
+		AND MBR_ID = #{mbrId}
+	</select>
+	
+	<select id="getApplyDate" resultType="String">
+		/* LoginMapper.getApplyDate */
+		
+	 	SELECT pw_apply_dt 
+	 	FROM tb_mbr_info 
+
+	 	WHERE mbr_id = #{mbrId}
+	</select>
+
+    <select id="getOldPwValidate" resultType="int">
+    	/* LoginMapper.getOldPwValidate */
+    	
+		SELECT
+			COUNT(mbr_id) AS cnt
+		FROM tb_mbr_info
+		WHERE mbr_id = #{mbrId}
+        AND ( mbr_pw = #{mbrpw} OR mbr_pw_old1 = #{mbrPw} OR mbr_pw_old2 = #{mbrPw} )
+	</select>
+
+	<update id="updateLoginEndDt">
+		/* LoginMapper.updateLoginEndDt */
+		
+		UPDATE tb_mbr_info
+		SET
+			login_end_dt = TO_DATE(#{loginEndDt}, 'yyyy/mm/dd hh24:mi:ss')
+		WHERE mbr_id = #{mbrId}
+	</update>
+</mapper>
