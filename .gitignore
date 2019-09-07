@@ -4,6 +4,7 @@ target/
 !**/src/main/**
 !**/src/test/**
 /src/main/front/node_modules
+/src/main/front/.nuxt
 
 ### STS ###
 .apt_generated
