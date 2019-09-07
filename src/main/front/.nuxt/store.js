@@ -19,6 +19,8 @@ void (function updateModules() {
   store.modules = store.modules || {}
 
   resolveStoreModules(require('..\\store\\login.js'), 'login.js')
+  resolveStoreModules(require('..\\store\\menu.js'), 'menu.js')
+  resolveStoreModules(require('..\\store\\navi.js'), 'navi.js')
 
   // If the environment supports hot reloading...
 
@@ -27,6 +29,8 @@ void (function updateModules() {
     module.hot.accept([
       '..\\store\\index.js',
       '..\\store\\login.js',
+      '..\\store\\menu.js',
+      '..\\store\\navi.js',
     ], () => {
       // Update `root.modules` with the latest definitions.
       updateModules()

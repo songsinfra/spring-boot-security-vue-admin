@@ -80,8 +80,8 @@ $(".steps-validation").steps({
         if (currentIndex < newIndex)
         {
             // To remove error styles
-            form.find(".body:eq(" + newIndex + ") label.error").remove();
-            form.find(".body:eq(" + newIndex + ") .error").removeClass("error");
+            form.find(".body:eq(" + newIndex + "error").remove();
+            form.find(".body:eq(" + newIndex + "error").removeClass("error");
         }
         form.validate().settings.ignore = ":disabled,:hidden";
         return form.valid();

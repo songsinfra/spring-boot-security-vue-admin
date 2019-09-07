@@ -1,4 +1,4 @@
-import axios from '@nuxtjs/axios';
+import Cookie from 'js-cookie';
 
 export const state = () => ({
     user:{}
@@ -11,20 +11,41 @@ export const mutations = {
 };
 
 export const actions = {
-    async setUser({commit}) {
+    async setUser({commit}, {id, password}) {
         try {
-            debugger;
-            const res = await axios.post('http://localhost:8080/oauth/token', {
-                "grant_type" 	: "password",
-                "client_id" 	: "testClient",
-                "username" 	: "test",
-                "password" 	: "test"
+            // this.$axios.setToken("dGVzdENsaWVudDpzZWNyZXQ=", "basic");
+            // const token = await this.$axios.$post('/api/oauth/token', '', {
+            //     params: {
+            //         "grant_type": "password",
+            //         "client_id": "testClient",
+            //         "username": id,
+            //         "password": password,
+            //     }
+            // });
+            // this.$axios.setToken(null, "basic");
+
+            const response = await this.$axios.$post('/api/oauth/token', '', {
+                params: {
+                    "grant_type": "password",
+                    "client_id": "testClient",
+                    "username": id,
+                    "password": password,
+                }
             });
-            console.log(res.data);
-            commit('setUser', res.data);
+
+            commit('setUser', response);
+            Cookie.set('auth', response);
         }catch (e) {
             console.log(e);
         }
+    },
 
+    async logout({commit, state}) {
+        try {
+            commit('setUser', null);
+            Cookie.remove('auth');
+        }catch (e) {
+            console.log(e);
+        }
     }
 };

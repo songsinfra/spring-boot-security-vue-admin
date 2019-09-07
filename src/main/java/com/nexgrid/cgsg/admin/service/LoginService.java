@@ -12,18 +12,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service(value = "loginService")
-public class LoginService implements LoginMapper {
+public class LoginService {
 	private Logger log = LoggerFactory.getLogger(LoginService.class);
 
 	@Autowired
 	private LoginMapper mapper;
 
-	@Override
 	public List<LoginInfo> getLoginInfo(LoginInfo loginInfo) {
 		return mapper.getLoginInfo(loginInfo);
 	}
 
-	@Override
 	public List<MenuInfo> getCommonMenuList(LoginInfo loginInfo) {
 		return mapper.getCommonMenuList(loginInfo);
 	}

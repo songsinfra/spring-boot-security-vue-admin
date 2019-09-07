@@ -20,17 +20,17 @@
                                 <div class="card-content">
 
                                     <div class="card-body">
-                                        <form class="form-horizontal" action="index.html" novalidate>
+                                        <form class="form-horizontal" action="index.html" novalidate @submit.prevent="login">
                                             <fieldset class="form-group position-relative has-icon-left">
                                                 <input type="text" class="form-control round" id="user-name"
-                                                       placeholder="Your Username" required>
+                                                       placeholder="Your Username" v-model="user.username" required >
                                                 <div class="form-control-position">
                                                     <i class="ft-user"></i>
                                                 </div>
                                             </fieldset>
                                             <fieldset class="form-group position-relative has-icon-left">
                                                 <input type="password" class="form-control round" id="user-password"
-                                                       placeholder="Enter Password" required>
+                                                       placeholder="Enter Password" required v-model="user.password" >
                                                 <div class="form-control-position">
                                                     <i class="ft-lock"></i>
                                                 </div>
@@ -62,7 +62,6 @@
                                         <a href="#" class="btn btn-social-icon round mr-1 mb-1 btn-instagram"><span
                                                 class="ft-instagram"></span></a>
                                     </div>
-
                                     <p class="card-subtitle text-muted text-right font-small-3 mx-2 my-1"><span>Don't have an account ? <a
                                             href="register.html" class="card-link">Sign Up</a></span></p>
                                 </div>
@@ -79,7 +78,21 @@
 <script>
     export default {
         layout: 'login',
-        name: 'Login'
+        name: 'Login',
+        data: ()=>{
+            return {
+                user: {
+                    username: 'admin',
+                    password: 'test',
+                }
+            }
+        },
+        methods : {
+            async login(){
+                await this.$store.dispatch('login/setUser', { id: this.user.username, password : this.user.password});
+                this.$router.push('/');
+            }
+        }
     }
 </script>
 <style scoped>

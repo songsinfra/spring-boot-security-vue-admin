@@ -383,7 +383,7 @@
                                                                                     href="chat-application.html"><i
                                             class="ft-message-square"></i> Chats</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="login.html"><i class="ft-power"></i> Logout</a>
+                                    <a class="dropdown-item" @click="logout"><i class="ft-power"></i> Logout</a>
                                 </div>
                             </div>
                         </li>
@@ -396,7 +396,14 @@
 
 <script>
     export default {
-        name: "Top"
+        name: "Top",
+        methods:{
+            logout() {
+                this.$store.dispatch('login/logout');
+                this.$router.push("/login/login");
+            }
+        }
+
     }
 </script>
 

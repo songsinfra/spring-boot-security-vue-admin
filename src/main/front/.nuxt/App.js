@@ -2,6 +2,8 @@ import Vue from 'vue'
 import NuxtLoading from './components/nuxt-loading.vue'
 import NuxtBuildIndicator from './components/nuxt-build-indicator'
 
+import '..\\node_modules\\bootstrap-vue\\dist\\bootstrap-vue.css'
+
 import _6f6c098b from '..\\layouts\\default.vue'
 import _77a66d33 from '..\\layouts\\login.vue'
 

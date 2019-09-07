@@ -12,6 +12,7 @@
                             <div class="card">
                                 <div class="card-header" id="headingAOne">
                                     <h5 class="mb-0">
+                                        <button @click="test">테스트 전송</button>
                                         <button class="btn btn-link" data-toggle="collapse"
                                                 data-target="#collapseA1" aria-expanded="true"
                                                 aria-controls="collapseA1">
@@ -183,17 +184,30 @@
 </template>
 <script>
     export default {
+        fetch ({ store, redirect }) {
+
+        },
         data() {
             return {
                 project: "default"
             }
+
         },
-        asyncData({store}) {
+        async asyncData({$axios, error}) {
 
-
-            store.dispatch('login/setUser');
+            try {
+                const res = await $axios.$post('/api/front/constant', {test: 'test'});
+            } catch (e) {
+                error({stateCode: 404, message: e.message});
+            }
             return {
                 name: "kim"
+            }
+        },
+        methods:{
+            async test() {
+                const res = await this.$axios.$post('/api/test/loginProcessForAuth',{test:'test'});
+                console.log(res);
             }
         }
     }

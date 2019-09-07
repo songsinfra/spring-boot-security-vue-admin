@@ -3,7 +3,7 @@ import Meta from 'vue-meta'
 import { createRouter } from './router.js'
 import NoSsr from './components/no-ssr.js'
 import NuxtChild from './components/nuxt-child.js'
-import NuxtError from './components/nuxt-error.vue'
+import NuxtError from '..\\layouts\\error.vue'
 import Nuxt from './components/nuxt.js'
 import App from './App.js'
 import { setContext, getLocation, getRouteData, normalizeError } from './utils'
@@ -11,7 +11,9 @@ import { createStore } from './store.js'
 
 /* Plugins */
 
+import nuxt_plugin_bootstrapvue_7c63a9f4 from 'nuxt_plugin_bootstrapvue_7c63a9f4' // Source: .\\bootstrap-vue.js (mode: 'all')
 import nuxt_plugin_axios_2101d852 from 'nuxt_plugin_axios_2101d852' // Source: .\\axios.js (mode: 'all')
+import nuxt_plugin_axios_3566aa80 from 'nuxt_plugin_axios_3566aa80' // Source: ..\\plugins\\axios (mode: 'all')
 
 // Component: <NoSsr>
 Vue.component(NoSsr.name, NoSsr)
@@ -151,8 +153,16 @@ async function createApp(ssrContext) {
 
   // Plugin execution
 
+  if (typeof nuxt_plugin_bootstrapvue_7c63a9f4 === 'function') {
+    await nuxt_plugin_bootstrapvue_7c63a9f4(app.context, inject)
+  }
+
   if (typeof nuxt_plugin_axios_2101d852 === 'function') {
     await nuxt_plugin_axios_2101d852(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_axios_3566aa80 === 'function') {
+    await nuxt_plugin_axios_3566aa80(app.context, inject)
   }
 
   // If server-side, wait for async component to be resolved first

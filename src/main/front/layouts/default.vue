@@ -17,8 +17,7 @@
                                     </li>
                                     <li class="breadcrumb-item"><a href="#">Form Elements</a>
                                     </li>
-                                    <li class="breadcrumb-item active">Form Inputs
-                                    </li>
+                                    <li class="breadcrumb-item active">Form Inputs</li>
                                 </ol>
                             </div>
                         </div>
@@ -38,10 +37,9 @@
     import Top from '~/components/layout/Top.vue';
     import Footer from '~/components/layout/Footer.vue';
 
-    //<link rel="apple-touch-icon" href="app-assets/images/ico/apple-icon-120.png">
-    // <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico">
     export default {
         name: "default",
+        middleware: 'auth',
         components: {
             Top,
             LeftMenu,

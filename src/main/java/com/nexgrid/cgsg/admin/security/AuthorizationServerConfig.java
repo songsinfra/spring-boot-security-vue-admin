@@ -24,8 +24,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration
-@EnableAuthorizationServer
+//@Configuration
+//@EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
@@ -40,10 +40,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                         tokenEnhancer(), accessTokenConverter()
                 )
         );
+
         endpoints.tokenStore(tokenStore())
                 .tokenEnhancer(enhancerChain)
                 .authenticationManager(this.authenticationManager);
-
     }
 
     @Bean
@@ -61,7 +61,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .refreshTokenValiditySeconds(2592000);  // 30 days
     }
 
-
     @Bean
     public TokenStore tokenStore() {
         return new JwtTokenStore(accessTokenConverter());
@@ -70,7 +69,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey("123");
+        converter.setSigningKey("3drSmdcNQ5SHPbs8YC8KOYwEGPHNCmm1");
         return converter;
     }
 
@@ -79,7 +78,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public DefaultTokenServices tokenServices() {
         DefaultTokenServices tokenServices = new DefaultTokenServices();
         tokenServices.setTokenStore(tokenStore());
-        tokenServices.setSupportRefreshToken(true);
+        tokenServices.setSupportRefreshToken(false);
         return tokenServices;
     }
 

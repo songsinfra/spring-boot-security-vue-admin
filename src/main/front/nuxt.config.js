@@ -15,11 +15,24 @@ module.exports = {
     },
     modules: [
         '@nuxtjs/axios',
+        'bootstrap-vue/nuxt'
     ],
-    // axios: {
-    //     proxy: true     // proxy 사용
-    // },
-    // proxy: {
-    //     'http://localhost:3000/': 'http://localhost:8080/'    // proxy url
-    // }
+    bootstrapVue: {
+        bootstrapCSS: false, // Or `css: false`
+        // bootstrapVueCSS: false // Or `bvCSS: false`
+    },
+    plugins: [
+        '~/plugins/axios'
+    ],
+    axios: {
+        proxyHeaders: true,
+        credentials: true,
+        proxy: true     // proxy 사용
+    },
+    proxy: {
+        '/api/': {
+            target: 'http://localhost:8080/api',
+            pathRewrite: {'^/api': ''},
+        }    // proxy url
+    },
 }
