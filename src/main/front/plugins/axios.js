@@ -4,8 +4,8 @@ export default function ({ $axios, redirect, store, $bvModal }) {
     $axios.onRequest(async request => {
         setCsrf(request);
 
-        const preToken = request.headers.common['Authorization'];
-        if(!preToken) setToken(request);
+        // const preToken = request.headers.common['Authorization'];
+        // if(!preToken) setToken(request);
 
         return request;
     })

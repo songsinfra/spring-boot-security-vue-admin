@@ -17,7 +17,7 @@ public interface LoginMapper {
 	public int setUserLock(LoginInfo loginInfo);
 
 	/*사용자 잠금 초기화*/
-	public int setUserUnLock(LoginInfo loginInfo);
+	public int setUserUnLockAndResetFailCnt(LoginInfo loginInfo);
 	
 	public int updateLoginFailCnt(LoginInfo loginInfo);
 

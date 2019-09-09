@@ -129,7 +129,7 @@
 		WHERE MBR_ID = #{mbrId}
 	</update>
 
-   	<update id="setUserUnLock">
+   	<update id="setUserUnLockAndResetFailCnt">
    		/* LoginMapper.setUserUnLock */
    		
 		UPDATE TB_MBR_INFO

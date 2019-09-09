@@ -35,6 +35,11 @@ public class LoginController {
 	@Autowired
 	private LoginService loginService;
 
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public LoginInfo login(@RequestBody LoginInfo loginInfo) {
+		return loginService.login(loginInfo);
+	}
+
 	/**
 	 * @Date : 2015. 9. 7.
 	 * @작성자 : 
@@ -43,8 +48,7 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/loginProcessForAuth", method = RequestMethod.POST)
 	@ResponseBody
-	public int loginProcessForAuth(HttpServletRequest request, @RequestBody LoginInfo loginInfo, Model model,
-                                   BindingResult result) {
+	public int loginProcessForAuth(@RequestBody LoginInfo loginInfo) {
 
 		logger.debug("=== loginProcessForAuth loginInfo: " + loginInfo.toString());
 				

@@ -16,10 +16,14 @@ export const actions = {
         try {
             let auth = null
             debugger;
+            console.log(req.headers.cookie);
             if (req.headers.cookie) {
                 const parsed = cookieparser.parse(req.headers.cookie);
+                console.log(parsed);
                 try {
-                    auth = JSON.parse(parsed.auth)
+                    // auth = JSON.parse(parsed.auth)
+                    auth = parsed.auth;
+                    console.log(auth);
                 } catch (err) {
                     console.log(err);
                 }

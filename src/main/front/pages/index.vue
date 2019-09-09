@@ -197,6 +197,7 @@
 
             try {
                 const res = await $axios.$post('/api/front/constant', {test: 'test'});
+                console.log(`res : ${res}`);
             } catch (e) {
                 error({stateCode: 404, message: e.message});
             }

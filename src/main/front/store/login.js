@@ -24,7 +24,7 @@ export const actions = {
             // });
             // this.$axios.setToken(null, "basic");
 
-            const response = await this.$axios.$post('/api/oauth/token', '', {
+            const response = await this.$axios.$post('/api/login', '', {
                 params: {
                     "grant_type": "password",
                     "client_id": "testClient",
@@ -33,6 +33,7 @@ export const actions = {
                 }
             });
 
+            debugger;
             commit('setUser', response);
             Cookie.set('auth', response);
         }catch (e) {

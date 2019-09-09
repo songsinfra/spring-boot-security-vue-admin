@@ -1,10 +1,13 @@
 package com.nexgrid.cgsg.admin.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexgrid.cgsg.admin.service.LoginService;
 import com.nexgrid.cgsg.admin.vo.LoginInfo;
+import com.nexgrid.cgsg.admin.vo.ResultInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +42,8 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService customAuthenticationProvider;
 
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -47,6 +53,7 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
         http.csrf()
                 .csrfTokenRepository(csrfTokenRepository)
                 .ignoringAntMatchers("/front/constant")
+                .ignoringAntMatchers("/login/**")
                 .and()
 //                .disable()
                 .authorizeRequests()
@@ -61,7 +68,11 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
         return new AuthenticationSuccessHandler() {
             @Override
             public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                response.getWriter().append("login success!!!");
+                ResultInfo resultInfo = new ResultInfo();
+                resultInfo.setCode("202");
+
+                response.setStatus(HttpStatus.OK.value());
+                response.getWriter().append(objectMapper.writeValueAsString(resultInfo));
             }
         };
     }
@@ -78,10 +89,7 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(customAuthenticationProvider);
-        auth.
-                userDetailsService(customAuthenticationProvider);
-//                .inMemoryAuthentication().withUser("test").password("{noop}test").roles("USER");
+        auth.userDetailsService(customAuthenticationProvider);
 
     }
 
