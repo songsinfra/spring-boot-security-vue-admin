@@ -14,10 +14,10 @@ public interface LoginMapper {
 
 	public List<MenuInfo> getCommonMenuList(LoginInfo loginInfo);
 
-	public int setUserLock(LoginInfo loginInfo);
+	public int setUserLock(String mbrId);
 
 	/*사용자 잠금 초기화*/
-	public int setUserUnLockAndResetFailCnt(LoginInfo loginInfo);
+	public int setUserUnLockAndResetFailCnt(String mbrId);
 	
 	public int updateLoginFailCnt(LoginInfo loginInfo);
 
@@ -36,6 +36,5 @@ public interface LoginMapper {
 	/* 직전3회 비밀번호 조회 */
 	public int getOldPwValidate(LoginInfo loginInfo);
 
-	public int updateLoginEndDt(LoginInfo loginInfo);	
-
+	public int updateLoginEndDt(LoginInfo loginInfo);
 }

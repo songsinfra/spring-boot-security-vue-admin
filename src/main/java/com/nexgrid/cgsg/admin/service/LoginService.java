@@ -58,9 +58,9 @@ public class LoginService {
 		Assert.notNull(loginInfo, "selected loginInfo is null");
 
 		if (!"Y".equalsIgnoreCase(loginInfo.getUseYn())) {
-			this.lockedLogin(loginInfo);
+			this.lockedLoginChecker(loginInfo.getMbrId(), loginInfo.getLoginFailCnt(), loginInfo.getLoginFailDt());
 		}else{
-			this.unLockedLogin(loginInfo);
+			this.unLockedLoginChecker(loginInfo.getMbrId(), loginInfo.getLoginFailCnt(), loginInfo.getLoginFailDt());
 		}
 
 		this.setMenuListTo(loginInfo);
@@ -72,14 +72,18 @@ public class LoginService {
 		mapper.updateLoginEndDt(loginInfo);		// 마지막 접속날짜 등록
 	}
 
-	public void lockedLogin(LoginInfo loginInfo) {
-		int pwdFailCnt = CommonUtil.getNullValue(loginInfo.getLoginFailCnt());
-		long minute = this.getLeftMinuteBetweenNowDateAnd(loginInfo.getLoginFailDt());
+	public void lockedLoginChecker(String mbrId, String loginFailCnt, String loginFailDate) {
+		Assert.hasLength(mbrId, "mbrId is empty");
+		Assert.hasLength(loginFailCnt, "loginFailCnt is empty");
+		Assert.hasLength(loginFailDate, "loginFailDate is empty");
+
+		int pwdFailCnt = CommonUtil.getNullValue(loginFailCnt);
+		long minute = this.getLeftMinuteBetweenNowDateAnd(loginFailDate);
 
 		// 10분 초과 5회 이상 계정 잠금해제
 		if(minute > LOGIN_BLOCK_MINUTE && pwdFailCnt >= PASSWORD_FAIL_COUNT) {
 			log.info("===== Success Login =====");
-			mapper.setUserUnLockAndResetFailCnt(loginInfo);
+			mapper.setUserUnLockAndResetFailCnt(mbrId);
 		} else if(pwdFailCnt == 0){
 			throw new AdminException(SystemStatusCode.LOGIN_FAIL_LOCK, "로그인 실패 - 아이디 잠금상태");
 		} else {
@@ -87,16 +91,21 @@ public class LoginService {
 		}
 	}
 
-	public void unLockedLogin(LoginInfo loginInfo) {
-		int pwdFailCnt = CommonUtil.getNullValue(loginInfo.getLoginFailCnt());
-		long minute = this.getLeftMinuteBetweenNowDateAnd(loginInfo.getLoginFailDt());
+	public void unLockedLoginChecker(String mbrId, String loginFailCnt, String loginFailDate) {
+		Assert.hasLength(mbrId, "mbrId is empty");
+		Assert.hasLength(loginFailCnt, "loginFailCnt is empty");
+		Assert.hasLength(loginFailDate, "loginFailDate is empty");
 
+		int pwdFailCnt = CommonUtil.getNullValue(loginFailCnt);
+		long minute = this.getLeftMinuteBetweenNowDateAnd(loginFailDate);
+
+		//  실패 n회 이상 로그인제한 n분 이하
 		if (pwdFailCnt >= PASSWORD_FAIL_COUNT && minute <= LOGIN_BLOCK_MINUTE) {
 			throw new AdminException(SystemStatusCode.LOGIN_FAIL_LOCK_LEFT_TIME, "로그인전 인증 실패 (10분 미만 잠금상태)");
 		}
 
 		log.info("===== Success Login =====");
-		mapper.setUserUnLockAndResetFailCnt(loginInfo);
+		mapper.setUserUnLockAndResetFailCnt(mbrId);
 	}
 
 	public long getLeftMinuteBetweenNowDateAnd(String loginFailDt) {
@@ -110,13 +119,9 @@ public class LoginService {
 
 	public void failLogin(LoginInfo loginInfo) {
 		Assert.notNull(loginInfo, "loginInfo is null");
-//		List<LoginInfo> loginInfoList = mapper.getLoginInfoOnlyId(loginInfoParam); // 아이디로만 사용자 정보 조회
 
-//		if (loginInfoList.size() == 0) throw new AdminException(SystemStatusCode.NOT_FOUND_USER_ID, "사용자 아이디 없음");
-
-//		LoginInfo loginInfo = loginInfoList.get(0);
 		if ("Y".equalsIgnoreCase(loginInfo.getUseYn())) {
-			this.unlockedLoginForFail(loginInfo);
+			this.unlockedLoginForFail(loginInfo.getMbrId(), loginInfo.getLoginFailCnt());
 		} else {
 			this.lockedLoginForFail(loginInfo);
 		}
@@ -124,17 +129,18 @@ public class LoginService {
 		throw new AdminException(SystemStatusCode.FAIL_LOGIN, "### 로그인 실패");
 	}
 
-	public void unlockedLoginForFail(LoginInfo loginInfo) {
-		int pwdFailCnt = CommonUtil.getNullValue(loginInfo.getLoginFailCnt());
+	public void unlockedLoginForFail(String mbrId, String loginFailCnt) {
+		int pwdFailCnt = CommonUtil.getNullValue(loginFailCnt);
 		if(pwdFailCnt >= 5) {	// 5회 오류나면 아이디 잠금 ( 사용여부 N 처리)
-			int lockCnt = mapper.setUserLock(loginInfo);
+			int lockCnt = mapper.setUserLock(mbrId);
 			throw new AdminException(SystemStatusCode.LOGIN_FAIL_LOCKED_USER_ID, "### 로그인 실패 - 아이디 잠금 성공");
 		}
 
-		LocalDateTime nowDateTime = LocalDateTime.now();
-		loginInfo.setLoginFailDt(nowDateTime.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
-
-		mapper.updateLoginFailCnt(loginInfo); // 비밀번호 오류 회수 +1
+		mapper.updateLoginFailCnt(LoginInfo.builder()
+				.mbrId(mbrId)
+				.loginFailDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))
+				.build()
+		); // 비밀번호 오류 회수 +1
 	}
 
 	public void lockedLoginForFail(LoginInfo loginInfo) {
@@ -143,7 +149,7 @@ public class LoginService {
 
 		if(minute > LOGIN_BLOCK_MINUTE && pwdFailCnt >= PASSWORD_FAIL_COUNT) {
 //			logger.info("### 로그인실패 - 10분경과 아이디 잠금해제 ");
-			mapper.setUserUnLockAndResetFailCnt(loginInfo);
+			mapper.setUserUnLockAndResetFailCnt(loginInfo.getMbrId());
 //			loginInfoListSize = -1;
 
 			// SYSDATE set
@@ -201,7 +207,7 @@ public class LoginService {
 	}
 
 	public int setUserLock(LoginInfo loginInfo) {
-		return mapper.setUserLock(loginInfo);
+		return mapper.setUserLock(loginInfo.getMbrId());
 	}
 
 	public int updateLoginFailCnt(LoginInfo loginInfo) {
@@ -233,7 +239,7 @@ public class LoginService {
 	}
 
 	public int setUserUnLock(LoginInfo loginInfo) {
-		return mapper.setUserUnLockAndResetFailCnt(loginInfo);
+		return mapper.setUserUnLockAndResetFailCnt(loginInfo.getMbrId());
 	}
 	
 	public int getOldPwValidate(LoginInfo loginInfo) {
