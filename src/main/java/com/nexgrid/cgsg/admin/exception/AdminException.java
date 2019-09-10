@@ -1,13 +1,15 @@
 package com.nexgrid.cgsg.admin.exception;
 
+import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
 import lombok.Data;
+import org.springframework.security.core.AuthenticationException;
 
 @Data
-public class AdminException extends RuntimeException {
-    private String code;
+public class AdminException extends AuthenticationException {
+    private SystemStatusCode code;
 
 
-    public AdminException(String code, String message) {
+    public AdminException(SystemStatusCode code, String message) {
         super(message);
         this.code = code;
     }

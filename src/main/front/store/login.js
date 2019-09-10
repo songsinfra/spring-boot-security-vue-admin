@@ -13,17 +13,6 @@ export const mutations = {
 export const actions = {
     async setUser({commit}, {id, password}) {
         try {
-            // this.$axios.setToken("dGVzdENsaWVudDpzZWNyZXQ=", "basic");
-            // const token = await this.$axios.$post('/api/oauth/token', '', {
-            //     params: {
-            //         "grant_type": "password",
-            //         "client_id": "testClient",
-            //         "username": id,
-            //         "password": password,
-            //     }
-            // });
-            // this.$axios.setToken(null, "basic");
-
             const response = await this.$axios.$post('/api/login', '', {
                 params: {
                     "grant_type": "password",
@@ -33,16 +22,17 @@ export const actions = {
                 }
             });
 
-            debugger;
             commit('setUser', response);
             Cookie.set('auth', response);
         }catch (e) {
-            console.log(e);
+            console.dir(e);
+            throw e;
         }
     },
 
     async logout({commit, state}) {
         try {
+            await this.$axios.$post('/api/logout')
             commit('setUser', null);
             Cookie.remove('auth');
         }catch (e) {

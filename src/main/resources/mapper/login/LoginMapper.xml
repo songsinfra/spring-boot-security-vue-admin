@@ -28,13 +28,14 @@
 			, LOGIN_END_DT 	    as loginEndDt
 			, USE_YN 			as useYn
 			, LOGIN_FAIL_CNT 	as loginFailCnt
+			, TO_CHAR(LOGIN_FAIL_DT,'YYYYMMddHH24mi') AS loginFailDt
 			, APPLY_DT 		    as applyDt
 			, MBR_PW			as mbrPw
 			, DECODE(MBR_ID,'admin','Y','N') as managerYn
 		FROM TB_MBR_INFO A
 		WHERE 1=1	
 		AND MBR_ID = #{mbrId}
-		AND use_yn = 'Y'
+-- 		AND use_yn = 'Y'
 	</select>
 
 	<select id="getCommonMenuList" resultType="com.nexgrid.cgsg.admin.vo.MenuInfo">
@@ -100,7 +101,7 @@
 		AND		 USE_YN = 'Y'
 	</select>
 
-	<insert id="updateLoginFailCnt">
+	<insert id="updateLoginFailCnt" parameterType="com.nexgrid.cgsg.admin.vo.LoginInfo">
 		/* LoginMapper.updateLoginFailCnt */
 		
 		UPDATE TB_MBR_INFO

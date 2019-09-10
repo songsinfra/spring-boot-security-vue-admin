@@ -12,7 +12,7 @@ public class ExceptionController {
     @ResponseBody
     public ResultInfo adminException(AdminException exception) {
         ResultInfo resultInfo = new ResultInfo();
-        resultInfo.setCode(exception.getCode());
+        resultInfo.setCode(exception.getCode().getCode());
         resultInfo.setMsg(exception.getMessage());
 
         return resultInfo;

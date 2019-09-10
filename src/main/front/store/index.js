@@ -1,18 +1,21 @@
 import cookieparser from "cookieparser";
 
 export const state = () => ({
-    csrf : ''
+    csrf : '',
+    error : {}
 });
 
 export const mutations = {
     setCsrf(state, csrf) {
         state.csrf = csrf;
+    },
+    setError(state, error) {
+        state.error = error;
     }
 };
 
 export const actions = {
     async nuxtServerInit({commit}, {req}) {
-
         try {
             let auth = null
             debugger;

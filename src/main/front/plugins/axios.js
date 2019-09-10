@@ -3,9 +3,9 @@ import Cookie from 'js-cookie';
 export default function ({ $axios, redirect, store, $bvModal }) {
     $axios.onRequest(async request => {
         setCsrf(request);
-
         // const preToken = request.headers.common['Authorization'];
         // if(!preToken) setToken(request);
+
 
         return request;
     })
@@ -14,14 +14,11 @@ export default function ({ $axios, redirect, store, $bvModal }) {
         return response;
     })
 
-    $axios.onError(error => {
-        debugger;
-        const code = parseInt(error.response && error.response.status)
-        $bvModal.msgBoxOk('Action completed');
-        if (code === 400) {
-            redirect('/400')
-        }
-    })
+    // $axios.onError(error => {
+    //     store.commit('setError', error.response.data);
+    //
+    //     return error;
+    // })
 
     function saveCsrfFromResponse(response) {
         const cookies = response.headers['set-cookie'];

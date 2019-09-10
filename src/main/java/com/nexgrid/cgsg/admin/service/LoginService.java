@@ -1,5 +1,6 @@
 package com.nexgrid.cgsg.admin.service;
 
+import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
 import com.nexgrid.cgsg.admin.exception.AdminException;
 import com.nexgrid.cgsg.admin.mapper.LoginMapper;
 import com.nexgrid.cgsg.admin.utils.CommonUtil;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,6 +31,19 @@ public class LoginService {
 	private LoginMapper mapper;
 
 	public LoginInfo login(LoginInfo loginInfoParams) {
+		List<LoginInfo> loginInfoList = mapper.getLoginInfo(loginInfoParams);
+
+		if (loginInfoList.size() == 0) this.failLogin(loginInfoParams);
+
+		LoginInfo loginInfo = loginInfoList.get(0);
+		this.successLogin(loginInfo);
+
+		return loginInfo;
+	}
+
+	public LoginInfo login(String userId) {
+		LoginInfo loginInfoParams = LoginInfo.builder().mbrId(userId).build();
+
 		List<LoginInfo> loginInfoList = mapper.getLoginInfo(loginInfoParams);
 
 		if (loginInfoList.size() == 0) this.failLogin(loginInfoParams);
@@ -66,9 +81,9 @@ public class LoginService {
 			log.info("===== Success Login =====");
 			mapper.setUserUnLockAndResetFailCnt(loginInfo);
 		} else if(pwdFailCnt == 0){
-			throw new AdminException("2003", "로그인 실패 - 아이디 잠금상태");
+			throw new AdminException(SystemStatusCode.LOGIN_FAIL_LOCK, "로그인 실패 - 아이디 잠금상태");
 		} else {
-			throw new AdminException("2002", "로그인전 인증 실패 (10분 미만 잠금상태)");
+			throw new AdminException(SystemStatusCode.LOGIN_FAIL_LOCK_LEFT_TIME, "로그인전 인증 실패 (10분 미만 잠금상태)");
 		}
 	}
 
@@ -77,7 +92,7 @@ public class LoginService {
 		long minute = this.getLeftMinuteBetweenNowDateAnd(loginInfo.getLoginFailDt());
 
 		if (pwdFailCnt >= PASSWORD_FAIL_COUNT && minute <= LOGIN_BLOCK_MINUTE) {
-			throw new AdminException("2002", "로그인전 인증 실패 (10분 미만 잠금상태)");
+			throw new AdminException(SystemStatusCode.LOGIN_FAIL_LOCK_LEFT_TIME, "로그인전 인증 실패 (10분 미만 잠금상태)");
 		}
 
 		log.info("===== Success Login =====");
@@ -85,32 +100,35 @@ public class LoginService {
 	}
 
 	public long getLeftMinuteBetweenNowDateAnd(String loginFailDt) {
+		if(StringUtils.isEmpty(loginFailDt)) return 0;
+
 		LocalDateTime loginDateTime = LocalDateTime.parse(loginFailDt, DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
 		LocalDateTime nowDateTime = LocalDateTime.now();
 
 		return ChronoUnit.MINUTES.between(loginDateTime, nowDateTime);
 	}
 
-	public void failLogin(LoginInfo loginInfoParam) {
-		List<LoginInfo> loginInfoList = mapper.getLoginInfoOnlyId(loginInfoParam); // 아이디로만 사용자 정보 조회
+	public void failLogin(LoginInfo loginInfo) {
+		Assert.notNull(loginInfo, "loginInfo is null");
+//		List<LoginInfo> loginInfoList = mapper.getLoginInfoOnlyId(loginInfoParam); // 아이디로만 사용자 정보 조회
 
-		if (loginInfoList.size() == 0) throw new AdminException("2000", "사용자 아이디 없음");
+//		if (loginInfoList.size() == 0) throw new AdminException(SystemStatusCode.NOT_FOUND_USER_ID, "사용자 아이디 없음");
 
-		LoginInfo loginInfo = loginInfoList.get(0);
+//		LoginInfo loginInfo = loginInfoList.get(0);
 		if ("Y".equalsIgnoreCase(loginInfo.getUseYn())) {
 			this.unlockedLoginForFail(loginInfo);
 		} else {
 			this.lockedLoginForFail(loginInfo);
 		}
 
-		throw new AdminException("2009", "### 로그인 실패");
+		throw new AdminException(SystemStatusCode.FAIL_LOGIN, "### 로그인 실패");
 	}
 
 	public void unlockedLoginForFail(LoginInfo loginInfo) {
 		int pwdFailCnt = CommonUtil.getNullValue(loginInfo.getLoginFailCnt());
 		if(pwdFailCnt >= 5) {	// 5회 오류나면 아이디 잠금 ( 사용여부 N 처리)
 			int lockCnt = mapper.setUserLock(loginInfo);
-			throw new AdminException("2009", "### 로그인 실패 - 아이디 잠금 성공");
+			throw new AdminException(SystemStatusCode.LOGIN_FAIL_LOCKED_USER_ID, "### 로그인 실패 - 아이디 잠금 성공");
 		}
 
 		LocalDateTime nowDateTime = LocalDateTime.now();
@@ -137,7 +155,7 @@ public class LoginService {
 			int uptCnt = mapper.updateLoginFailCnt(loginInfo);
 			//log.debug("### 비밀번호 오류 회수 없데이트 : " + uptCnt);
 		} else {
-			throw new AdminException("2009", "### 로그인 실패 - 아이디 잠금상태");
+			throw new AdminException(SystemStatusCode.LOGIN_FAIL_LOCK, "### 로그인 실패 - 아이디 잠금상태");
 		}
 	}
 
