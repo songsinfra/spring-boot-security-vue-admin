@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nexgrid.cgsg.admin.mapper.MenuMapper">
+	<resultMap id="menuResultMap" type="com.nexgrid.cgsg.admin.vo.MenuInfo">
+        <result property="menuId" column="MENU_ID" />
+		<result property="menuName" column="MENU_NM" />
+		<result property="upMenuName" column="UPMENU_NM" />
+		<result property="upMenuId" column="UPMENU_ID" />
+		<result property="menuURL" column="MENU_URL" />
+		<result property="ordNo" column="ORD_NO" />
+		<result property="useYn" column="USE_YN" />
+	</resultMap>
+
+	<select id="getRootMenuList" resultType="com.nexgrid.cgsg.admin.vo.MenuInfo">
+		/* LoginMapper.getCommonMenuList */
+
+		<![CDATA[
+		SELECT
+			 MENU_ID AS menuId
+			,MENU_NM AS menuName
+		FROM TB_MENU_MST
+		WHERE 1=1
+		AND DEPTH = '1'
+		AND USE_YN = 'Y'
+		AND MENU_ID IN (
+			SELECT A.UPMENU_ID
+			FROM (
+			SELECT A.UPMENU_ID
+				 , COUNT(A.UPMENU_ID) AS CNT
+			FROM TB_MENU_MST A JOIN TB_ROLE_MENU B ON A.MENU_ID = B.MENU_ID
+			WHERE A.DEPTH = '2'
+			AND A.USE_YN = 'Y'
+			AND B.ROLE_CD = (SELECT ROLE_CD FROM TB_MBR_INFO WHERE MBR_ID = #{mbrId})
+			GROUP BY A.UPMENU_ID
+			HAVING COUNT(A.UPMENU_ID) > 0
+			) A
+		)
+		ORDER BY MENU_ID
+		]]>
+	</select>
+
+	<select id="getSubMenuList" resultType="com.nexgrid.cgsg.admin.vo.MenuInfo">
+		/* LoginMapper.getSubMenuList2 */
+
+		SELECT
+			C.UPMENU_ID AS upMenuID
+			,C.MENU_ID AS menuId
+			,C.MENU_NM AS menuName
+			,C.MENU_URL AS menuURL
+		FROM TB_ROLE_MST A
+		LEFT JOIN TB_ROLE_MENU B ON A.ROLE_CODE=B.ROLE_CD
+		LEFT JOIN TB_MENU_MST C ON B.MENU_ID=C.MENU_ID
+		WHERE A.ROLE_CODE=(
+			SELECT ROLE_CD
+			FROM TB_MBR_INFO
+			WHERE MBR_ID = #{mbrId}
+			AND USE_YN = 'Y'
+		)
+		AND C.USE_YN = 'Y'
+		ORDER BY C.ORD_NO
+	</select>
+
+	<select id="getMenuList" resultMap="menuResultMap">
+		SELECT 
+		        A.MENU_ID
+		        ,NVL2(A.UPMENU_ID, A.MENU_NM, '') AS MENU_NM
+		        ,A.UPMENU_ID
+		        ,NVL(B.MENU_NM, A.MENU_NM) AS UPMENU_NM
+				,A.USE_YN
+				,A.ORD_NO
+		FROM    TB_MENU_MST A LEFT OUTER JOIN TB_MENU_MST B ON A.UPMENU_ID = B.MENU_ID 
+		WHERE   1=1 
+		<if test='searchUseYn != "Y"'>
+  	 	<![CDATA[ 
+ 	 	 	AND A.USE_YN = 'Y'
+		]]>
+		</if>
+		ORDER BY A.MENU_ID, A.ORD_NO
+	</select>
+	
+	<select id="getRoleMenuList" resultMap="menuResultMap">
+		SELECT 
+		        A.MENU_ID
+		        ,A.MENU_NM
+		        ,A.UPMENU_ID
+		        ,B.MENU_NM AS UPMENU_NM
+				,A.USE_YN
+				,A.ORD_NO
+		FROM    TB_MENU_MST A INNER JOIN TB_MENU_MST B ON A.UPMENU_ID = B.MENU_ID AND B.USE_YN = 'Y'
+		WHERE   1=1 
+ 	 	 	AND A.USE_YN = 'Y'
+		ORDER BY A.UPMENU_ID, A.ORD_NO		
+	</select>
+	
+
+	<select id="getMenuInfo" resultMap="menuResultMap">
+		SELECT 
+		        A.MENU_ID
+		        ,A.MENU_NM
+		        ,A.UPMENU_ID
+		        ,B.MENU_NM AS UPMENU_NM
+				,A.USE_YN
+				,A.MENU_URL
+				,A.ORD_NO
+		FROM    TB_MENU_MST A INNER JOIN TB_MENU_MST B ON A.UPMENU_ID = B.MENU_ID 
+		WHERE   A.MENU_ID = #{menuId}
+	</select>
+
+<!-- PSJ 메뉴등록 - 상위메뉴 조회  2018-10-18  -->
+	<select id="getUpMenuList" resultMap="menuResultMap">
+	<![CDATA[
+		SELECT 
+		        A.MENU_ID
+		        ,A.MENU_NM
+		FROM    TB_MENU_MST A 
+		WHERE   A.DEPTH='1'
+		AND		A.USE_YN = 'Y'
+		]]>
+	</select>
+	
+	<select id="getMenuCnt" resultType="int">
+	<![CDATA[
+		SELECT 
+		        count(1)+1 as cnt
+		FROM    TB_MENU_MST A 
+		WHERE   A.UPMENU_ID =#{upMenuId}
+		]]>
+	</select>
+	
+	<select id="getUpMenuCnt" resultType="int">
+	<![CDATA[
+		SELECT 
+		        count(1) as cnt
+		FROM    TB_MENU_MST A 
+		WHERE   A.DEPTH ='1'
+		]]>
+	</select>
+
+	<insert id="setMenuAdd">
+		INSERT INTO TB_MENU_MST
+		(
+			MENU_ID
+			,MENU_NM
+			,UPMENU_ID
+			,ORD_NO
+			,DEPTH
+			,MENU_URL
+			,USE_YN
+		)
+		VALUES
+		(
+			#{menuId}
+			,#{menuName}
+			,#{upMenuId}
+			<if test='@com.nexgrid.gfn.common.util.StringUtil@empty(ordNo)'>
+			,( select nvl(max(ORD_NO)+'1', '1') from TB_MENU_MST where UPMENU_ID = #{upMenuId} )
+			</if>
+			<if test='!@com.nexgrid.gfn.common.util.StringUtil@empty(ordNo)'>
+			,#{ordNo}
+			</if>
+			,'2'
+			,#{menuURL}
+			,#{useYn}
+		)
+	</insert>
+
+	<insert id="setMenuUpd">
+		<![CDATA[
+		UPDATE TB_MENU_MST
+		SET 
+			MENU_NM = #{menuName}
+			,USE_YN = #{useYn}
+			,ORD_NO = #{ordNo}
+		WHERE MENU_ID = #{menuId}
+		]]>
+	</insert>
+	
+	<insert id="setUpMenuAdd">
+		INSERT INTO TB_MENU_MST
+		(
+			MENU_ID
+			,MENU_NM
+			,ORD_NO
+			,DEPTH
+			,USE_YN
+		)
+		VALUES
+		(
+			#{menuId}
+			,#{menuName}
+			,'0'
+			,'1'
+			,#{useYn}
+
+		)
+	</insert>
+
+</mapper>	

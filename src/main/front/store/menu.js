@@ -4,15 +4,13 @@ export const state = () => {
 
 export const mutations = {
     addMenu(state, menu) {
-        state.menus.push(menu);
+        state.menuList = menu;
     }
 };
 
 export const actions = {
-    addMenu({commit}, menu) {
-
-        this.$axios.$post('')
-
-        commit('menu/addMenu', menu);
+    async addMenu({commit}) {
+        const menuList = await this.$axios.$post('/api/menu/getLayoutMenuList');
+        commit('addMenu', menuList);
     }
 };

@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ResultInfo {
     private String code;
-    private String msg;
+    private String message;
 }

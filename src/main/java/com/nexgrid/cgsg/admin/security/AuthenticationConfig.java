@@ -96,10 +96,10 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
                 if (exception instanceof AdminException) {
                     AdminException e = (AdminException) exception;
                     resultInfo.setCode(e.getCode().getCode());
-                    resultInfo.setMsg(e.getMessage());
+                    resultInfo.setMessage(e.getMessage());
                 } else if (exception instanceof BadCredentialsException) {
                     resultInfo.setCode(SystemStatusCode.FAIL_LOGIN.getCode());
-                    resultInfo.setMsg(exception.getMessage());
+                    resultInfo.setMessage(exception.getMessage());
                 }
 
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -113,7 +113,7 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
             @Override
             public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
                 ResultInfo resultInfo = new ResultInfo();
-                resultInfo.setMsg(SystemStatusCode.LOGIN_SUCCESS.getCode());
+                resultInfo.setMessage(SystemStatusCode.LOGIN_SUCCESS.getCode());
                 response.getWriter().append(objectMapper.writeValueAsString(resultInfo));
             }
         };
@@ -142,11 +142,13 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
 
                 loginService.successLogin(loginInfo);
             } catch (AuthenticationException e) {
-                if(e instanceof BadCredentialsException){
+                if (e instanceof BadCredentialsException) {
                     loginService.failLogin(loginInfo);
-                } else{
+                } else {
                     throw e;
                 }
+            } catch (Exception e) {
+                throw new AdminException(SystemStatusCode.INTERNAL_ERROR, e.getMessage());
             }
         }
 

@@ -2,6 +2,8 @@ package com.nexgrid.cgsg.admin.vo;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class MenuInfo {
 
@@ -32,4 +34,6 @@ public class MenuInfo {
 	private String searchMenuId;	// 메뉴ID
 	private String searchMenuName;	// 메뉴명
 	private String searchUseYn;		// 사용여부
+
+	private List<MenuInfo> subMenu;
 }

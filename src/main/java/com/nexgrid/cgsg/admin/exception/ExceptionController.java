@@ -13,7 +13,7 @@ public class ExceptionController {
     public ResultInfo adminException(AdminException exception) {
         ResultInfo resultInfo = new ResultInfo();
         resultInfo.setCode(exception.getCode().getCode());
-        resultInfo.setMsg(exception.getMessage());
+        resultInfo.setMessage(exception.getMessage());
 
         return resultInfo;
     }

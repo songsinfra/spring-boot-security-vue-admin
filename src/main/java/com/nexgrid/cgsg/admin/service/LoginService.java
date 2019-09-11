@@ -63,7 +63,6 @@ public class LoginService {
 			this.unLockedLoginChecker(loginInfo.getMbrId(), loginInfo.getLoginFailCnt(), loginInfo.getLoginFailDt());
 		}
 
-		this.setMenuListTo(loginInfo);
 		this.setLoginEndDate(loginInfo);
 	}
 
@@ -123,7 +122,7 @@ public class LoginService {
 		if ("Y".equalsIgnoreCase(loginInfo.getUseYn())) {
 			this.unlockedLoginForFail(loginInfo.getMbrId(), loginInfo.getLoginFailCnt());
 		} else {
-			this.lockedLoginForFail(loginInfo);
+			this.lockedLoginForFail(loginInfo.getMbrId(), loginInfo.getLoginFailCnt(), loginInfo.getLoginFailDt());
 		}
 
 		throw new AdminException(SystemStatusCode.FAIL_LOGIN, "### 로그인 실패");
@@ -138,27 +137,25 @@ public class LoginService {
 
 		mapper.updateLoginFailCnt(LoginInfo.builder()
 				.mbrId(mbrId)
+				.loginFailCnt(loginFailCnt)
 				.loginFailDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))
 				.build()
 		); // 비밀번호 오류 회수 +1
 	}
 
-	public void lockedLoginForFail(LoginInfo loginInfo) {
-		int pwdFailCnt = CommonUtil.getNullValue(loginInfo.getLoginFailCnt());
-		long minute = this.getLeftMinuteBetweenNowDateAnd(loginInfo.getLoginFailDt());
+	public void lockedLoginForFail(String mbrId, String loginFailCnt, String loginFailDate) {
+		int pwdFailCnt = CommonUtil.getNullValue(loginFailCnt);
+		long minute = this.getLeftMinuteBetweenNowDateAnd(loginFailDate);
 
 		if(minute > LOGIN_BLOCK_MINUTE && pwdFailCnt >= PASSWORD_FAIL_COUNT) {
 //			logger.info("### 로그인실패 - 10분경과 아이디 잠금해제 ");
-			mapper.setUserUnLockAndResetFailCnt(loginInfo.getMbrId());
-//			loginInfoListSize = -1;
+			mapper.setUserUnLockAndResetFailCnt(mbrId); // ### 로그인실패 - 10분경과 아이디 잠금해제
 
-			// SYSDATE set
-			LocalDateTime nowDateTime = LocalDateTime.now();
-			loginInfo.setLoginFailDt(nowDateTime.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
-
-			// 비밀번호 오류 회수 +1
-			loginInfo.setLoginFailCnt("0");
-			int uptCnt = mapper.updateLoginFailCnt(loginInfo);
+			mapper.updateLoginFailCnt(LoginInfo.builder()
+					.mbrId(mbrId)
+					.loginFailCnt("0")
+					.loginFailDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))
+					.build());
 			//log.debug("### 비밀번호 오류 회수 없데이트 : " + uptCnt);
 		} else {
 			throw new AdminException(SystemStatusCode.LOGIN_FAIL_LOCK, "### 로그인 실패 - 아이디 잠금상태");
@@ -175,28 +172,6 @@ public class LoginService {
 
 		return changeDate.isBefore(passwordChangeDate);
 	}
-
-	public LoginInfo setMenuListTo(LoginInfo loginInfo) {
-		//Map menuList = new HashMap();
-
-		//---------------------------------------------------------------------------
-		//전체 하위 메뉴 목록 - 보안 점검사항 추가 : 2017.02.29 kyh
-		//SessionInterceptor 에서 처리 로직.
-//		List<MenuInfo> subMenuListAll = mapper.getAllSubMenuList(loginInfo);
-//		menuList.put("subMenuListAll", subMenuListAll);
-		//---------------------------------------------------------------------------
-
-		// 공통메뉴 처리 - 세션에 'commonMenuList'명으로 공통메뉴 목록 객체를 저장
-		List<MenuInfo> commonMenuList = mapper.getCommonMenuList(loginInfo);
-		loginInfo.setCommonMenuList(commonMenuList);
-
-		// 각 사용자 권한에 따른 하위메뉴 목록 - 세션에 'subMenuList'명으로 하위메뉴 목록 객체를 저장
-		List<MenuInfo> subMenuList = mapper.getSubMenuList2(loginInfo);
-		loginInfo.setSubMenuList(subMenuList);
-
-		return loginInfo;
-	}
-
 
 	public List<LoginInfo> getLoginInfo(LoginInfo loginInfo) {
 		return mapper.getLoginInfo(loginInfo);
