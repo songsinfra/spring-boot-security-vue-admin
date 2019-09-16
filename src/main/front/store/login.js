@@ -34,7 +34,9 @@ export const actions = {
         try {
             await this.$axios.$post('/api/logout')
             commit('setUser', null);
+            commit('menu/addMenu', null);
             Cookie.remove('auth');
+            Cookie.remove('menuList');
         }catch (e) {
             console.log(e);
         }

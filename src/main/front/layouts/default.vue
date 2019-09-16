@@ -82,7 +82,8 @@
                     { src:'/js/core/app.js'},
                 ],
             }
-        }
+        },
+
     }
 </script>
 

@@ -184,17 +184,14 @@
 </template>
 <script>
     export default {
-        fetch ({ store, redirect }) {
-
+        fetch({store, error}) {
         },
         data() {
             return {
                 project: "default"
             }
-
         },
-        async asyncData({$axios, error}) {
-
+        async asyncData({$axios, error, store}) {
             try {
                 const res = await $axios.$post('/api/front/constant', {test: 'test'});
                 console.log(`res : ${res}`);
@@ -209,7 +206,7 @@
             async test() {
                 const res = await this.$axios.$post('/api/test/loginProcessForAuth',{test:'test'});
                 console.log(res);
-            }
+            },
         }
     }
 </script>

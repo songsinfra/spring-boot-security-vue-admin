@@ -1,5 +1,7 @@
+import Cookie from 'js-cookie';
+
 export const state = () => {
-    menus:[]
+    menuList:[]
 };
 
 export const mutations = {
@@ -12,5 +14,6 @@ export const actions = {
     async addMenu({commit}) {
         const menuList = await this.$axios.$post('/api/menu/getLayoutMenuList');
         commit('addMenu', menuList);
+        Cookie.set('menuList', menuList);
     }
 };

@@ -16,7 +16,7 @@
                     <a href="#">
                         <i class="ft-home"></i>
                         <span class="menu-title" data-i18n="">{{menu.menuName}}</span>
-                        <span class="badge badge badge-info badge-pill float-right mr-2">{{menu.subMenu.length}}</span>
+                        <span class="badge badge badge-info badge-pill float-right mr-2">{{menu.subMenu && menu.subMenu.length}}</span>
                     </a>
                     <ul class="menu-content">
                         <li class="" v-for="subMenu in menu.subMenu" :key="subMenu.menuId">
@@ -50,7 +50,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class=" nav-item"><a href="https://themeselection.com/demo/chameleon-admin-template/documentation"><i
+                <li class=" nav-item"><a href="#"><i
                         class="ft-book"></i><span class="menu-title" data-i18n="">Documentation</span></a>
                 </li>
             </ul>
@@ -69,7 +69,7 @@
             }
         },
         computed: {
-            menuList() {
+            menuList(){
                 return this.$store.state.menu.menuList;
             }
         },
@@ -81,7 +81,9 @@
             showMenu() {
                 this.vMenu = !this.vMenu;
             }
-        }
+        },
+
+
     }
 </script>
 
