@@ -153,10 +153,10 @@
 			#{menuId}
 			,#{menuName}
 			,#{upMenuId}
-			<if test='@com.nexgrid.gfn.common.util.StringUtil@empty(ordNo)'>
+			<if test='@com.nexgrid.cgsg.admin.utils.StringUtil@empty(ordNo)'>
 			,( select nvl(max(ORD_NO)+'1', '1') from TB_MENU_MST where UPMENU_ID = #{upMenuId} )
 			</if>
-			<if test='!@com.nexgrid.gfn.common.util.StringUtil@empty(ordNo)'>
+			<if test='!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(ordNo)'>
 			,#{ordNo}
 			</if>
 			,'2'
@@ -165,7 +165,7 @@
 		)
 	</insert>
 
-	<insert id="setMenuUpd">
+	<insert id="setMenuUpdate">
 		<![CDATA[
 		UPDATE TB_MENU_MST
 		SET 

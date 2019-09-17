@@ -14,20 +14,20 @@ public interface MenuMapper {
 
 	List<MenuInfo> getSubMenuList(String mbrId);
 
-	List<MenuInfo> getMenuList(MenuInfo menuInfo);
+	List<MenuInfo> getMenuList(String searchUseYn);
 
 	List<MenuInfo> getUpMenuList();
 	
 	int setMenuAdd(MenuInfo menuInfo);
-	int setMenuUpd(MenuInfo menuInfo);
+	int setMenuUpdate(MenuInfo menuInfo);
 	
-	int getMenuCnt(MenuInfo menuInfo);
-	int getUpMenuCnt(MenuInfo menuInfo);
+	int getMenuCnt(String upMenuId);
+	int getUpMenuCnt();
 	
 	int setUpMenuAdd(MenuInfo menuInfo);
 	
-	MenuInfo getMenuInfo(MenuInfo menuInfo);
+	MenuInfo getMenuInfo(String menuId);
 	
-	List<MenuInfo> getRoleMenuList(MenuInfo menuInfo);
+	List<MenuInfo> getRoleMenuList();
 
 }

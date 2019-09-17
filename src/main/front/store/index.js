@@ -42,7 +42,7 @@ function setUserInfo(state, req, commit) {
 
     if(!state.login.user) return;
 
-    console.log(req.headers.cookie);
+    // console.log(req.headers.cookie);
     if (req.headers.cookie) {
         const parsed = cookieparser.parse(req.headers.cookie);
         try {

@@ -3,22 +3,19 @@ import Cookie from 'js-cookie';
 export default function ({ $axios, redirect, store, $bvModal }) {
     $axios.onRequest(async request => {
         setCsrf(request);
-        // const preToken = request.headers.common['Authorization'];
-        // if(!preToken) setToken(request);
-
 
         return request;
     })
 
     $axios.onResponse(async response => {
         return response;
-    })
+    });
 
-    // $axios.onError(error => {
-    //     store.commit('setError', error.response.data);
-    //
-    //     return error;
-    // })
+    $axios.onError(error => {
+        store.commit('setError', error.response.data);
+
+        return error;
+    });
 
     function saveCsrfFromResponse(response) {
         const cookies = response.headers['set-cookie'];

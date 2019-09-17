@@ -20,7 +20,7 @@
                     </a>
                     <ul class="menu-content">
                         <li class="" v-for="subMenu in menu.subMenu" :key="subMenu.menuId">
-                            <a class="menu-item" href="dashboard-analytics.html">{{subMenu.menuName}}</a>
+                            <nuxt-link :to="subMenu.menuURL">{{subMenu.menuName}}</nuxt-link>
                         </li>
                     </ul>
                 </li>
