@@ -65,12 +65,21 @@
         data: () => {
             return {
                 vMenu: false,
-                vMenuHover: false
+                vMenuHover: false,
+                menuList : []
             }
         },
         computed: {
-            menuList(){
-                return this.$store.state.menu.menuList;
+            // menuList(){
+            //     return this.$store.state.menu.menuList;
+            // }
+        },
+        async beforeCreate() {
+            try {
+                const menuList = await this.$axios.$post('/api/menu/getLayoutMenuList');
+                this.menuList = menuList;
+            } catch (e) {
+                this.$bvModal.msgBoxOk(e.message);
             }
         },
         methods:{

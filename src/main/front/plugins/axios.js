@@ -11,11 +11,11 @@ export default function ({ $axios, redirect, store, $bvModal }) {
         return response;
     });
 
-    $axios.onError(error => {
-        store.commit('setError', error.response.data);
-
-        return error;
-    });
+    // $axios.onError(error => {
+    //     store.commit('setError', error.response.data);
+    //
+    //     return error;
+    // });
 
     function saveCsrfFromResponse(response) {
         const cookies = response.headers['set-cookie'];

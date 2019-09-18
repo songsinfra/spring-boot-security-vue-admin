@@ -1,111 +1,114 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <section id="collapsible">
         <div class="row">
             <div class="col-lg-12 col-xl-12">
                 <div class="card">
-                    <div class="p-1">
-                        <p><span class="text-bold-600">Example 1:</span> Table with outer spacing</p>
+                    <div class="card-header">
+                        <h4 class="card-title">Project Revenue</h4>
+                        <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                        <div class="heading-elements">
+                            <ul class="list-inline float-right">
+                                <li><b-button @click="createUpMenu">상위메뉴등록</b-button></li>
+                                <li><b-button @click="createMenu">등록</b-button></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-content collapse show pt-sm-1">
                         <b-table :items="items"
                                  :fields="fields"
-                                 @row-clicked="onRowSelected"
-                                 selectable
-                                 :select-mode="'single'"
                         >
+                            <template v-slot:action="{item}">
+                                <b-button v-if="!item.menuName" variant="danger" @click="updateUpMenu(item)">수정</b-button>
+                                <b-button v-if="item.menuName" variant="danger" @click="updateMenu(item)">수정</b-button>
+                            </template>
                         </b-table>
                     </div>
                 </div>
             </div>
         </div>
-        <b-modal id="modal_update_menu" title="메뉴 수정">
-            <b-form>
-                <b-form-group
-                        id="upMenuId-group-1"
-                        label="상위메뉴:"
-                        label-for="upMenuId-1"
-                >
-                    <b-form-input
-                            id="upMenuId-1"
-                            v-model="selectedMenu.upMenuId"
-                            required
-                    ></b-form-input>
-                </b-form-group>
-                <b-form-group
-                        id="menuName-group-1"
-                        label="메뉴명:"
-                        label-for="menuName-1"
-                        description="We'll never share your email with anyone else."
-                >
-                    <b-form-input
-                            id="menuName-1"
-                            v-model="selectedMenu.menuName"
-                            required
-                    ></b-form-input>
-                </b-form-group>
-                <b-form-group
-                        id="ordNo-group-1"
-                        label="정렬값:"
-                        label-for="ordNo-1"
-                >
-                    <b-form-input
-                            id="ordNo-1"
-                            v-model="selectedMenu.ordNo"
-                            required
-                    ></b-form-input>
-                </b-form-group>
-                <b-form-group
-                        id="useYn-group-1"
-                        label="사용여부:"
-                        label-for="useYn-1"
-                >
-                    <b-form-input
-                            id="useYn-1"
-                            v-model="selectedMenu.useYn"
-                            required
-                    ></b-form-input>
-                </b-form-group>
-                <b-form-group
-                        id="input-group-1"
-                        label="URL:"
-                        label-for="menuURL-1"
-                >
-                    <b-form-input
-                            id="menuURL-1"
-                            v-model="selectedMenu.menuURL"
-                            required
-                    ></b-form-input>
-                </b-form-group>
-            </b-form>
-        </b-modal>
+        <new-menu :selected-menu="selectedMenu" :state="modalState"/>
+        <new-up-menu :selected-menu="selectedMenu"/>
     </section>
+
 </template>
 
 <script>
+    import NewMenu from '~/components/menu/newMenu.vue';
+    import NewUpMenu from '~/components/menu/newUpMenu.vue';
+    import axios from 'axios';
+
     export default {
         name: "index",
         layout: 'default',
+        components: {NewMenu, NewUpMenu},
         data(){
             return {
-                fields: ['menuId', 'menuName', 'upMenuId', 'useYn', 'ordNo'],
+                fields: [
+                    { key: 'upMenuName', label : '1Depth'},
+                    { key: 'menuName', label : '2Depth'},
+                    { key: 'useYn', label : '사용여부',
+                        formatter:(value)=> value === 'Y' ? '사용' : '미사용'
+                    },
+                    { key: 'ordNo', label : '정렬값'},
+                    { key: 'action', label : '수정'},
+                ],
                 items: [],
                 selectedMenu : {},
-                form:{}
+                form:{},
+                searchUseYn:"",
+                modalState: ""
             }
         },
-        async asyncData({$axios, error}){
-            try {
-                const response = await $axios.$post('/api/menu/getMenuList');
-                // debugger;
-                return {
-                    items : response.data
-                };
-            } catch (e) {
-                //this.$bvModal.msgBoxOk(e.message());
-            }
+        // async asyncData(){
+        //     try {
+        //         const response = await axios.post('/api/menu/getMenuList');
+        //         console.log(response.data);
+        //         // this.items = response.data.data;
+        //         return {
+        //             items : response.data.data
+        //         }
+        //     } catch (e) {
+        //         //this.$bvModal.msgBoxOk(e.message());
+        //     }
+        // },
+        beforeMount(){
+            this.refreshGrid();
+        },
+        created() {
+            debugger;
+            console.dir(this);
+            this.$eventBus.$on('refreshGrid', this.refreshGrid)
         },
         methods: {
-            onRowSelected(item, test) {
+            createUpMenu(item) {
                 this.selectedMenu = item;
-                this.$bvModal.show("modal_update_menu");
+                this.modalState = "CREATE";
+                this.$bvModal.show('modal_update_up_menu');
+            },
+            updateUpMenu(item) {
+                this.selectedMenu = item;
+                this.modalState = "UPDATE";
+                this.$bvModal.show('modal_update_up_menu');
+            },
+            createMenu(item) {
+                this.selectedMenu = item;
+                this.modalState = "CREATE";
+                this.$bvModal.show('modal_update_menu');
+            },
+            updateMenu(item) {
+                this.selectedMenu = item;
+                this.modalState = "UPDATE";
+                this.$bvModal.show('modal_update_menu');
+            },
+            async refreshGrid() {
+                try {
+                    const response = await axios.post('/api/menu/getMenuList', { searchUseYn: this.searchUseYn});
+
+                    console.log(response.data);
+                    this.items = response.data.data;
+                } catch (e) {
+                    this.$bvModal.msgBoxOk(e.message);
+                }
             }
         }
     }

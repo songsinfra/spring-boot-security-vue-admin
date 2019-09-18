@@ -22,7 +22,8 @@ module.exports = {
         // bootstrapVueCSS: false // Or `bvCSS: false`
     },
     plugins: [
-        '~/plugins/axios'
+        '~/plugins/axios',
+        '~/plugins/eventBus'
     ],
     axios: {
         proxyHeaders: true,

@@ -17,8 +17,8 @@ export const mutations = {
 export const actions = {
     async nuxtServerInit({commit, dispatch, state}, {req}) {
         try {
-            setUserInfo(state, req, commit);
-            setMenuList(state, req, commit);
+            // setUserInfo(state, req, commit);
+            // setMenuList(state, req, commit);
         } catch (e) {
             console.log(e);
         }
@@ -27,8 +27,11 @@ export const actions = {
 
 function setMenuList(state, req, commit) {
     if (!state.menu.menuList) {
-        const parsed = cookieparser.parse(req.headers.cookie);
         try {
+            const parsed = cookieparser.parse(req.headers.cookie);
+
+            console.log(parsed);
+            if(!parsed.menuList) return;
 
             commit('menu/addMenu', JSON.parse(parsed.menuList));
         } catch (err) {

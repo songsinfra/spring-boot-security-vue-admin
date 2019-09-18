@@ -28,9 +28,9 @@ public class MenuController {
     }
 
     @RequestMapping(value = "/getMenuList", method = RequestMethod.POST)
-    public DataResponse<MenuInfo> getMenuList(@ModelAttribute MenuInfo menuInfo) {
+    public DataResponse<MenuInfo> getMenuList(@RequestBody MenuInfo menuInfo) {
 
-        List<MenuInfo> mbrList = menuService.getMenuList(menuInfo.getMenuId());
+        List<MenuInfo> mbrList = menuService.getMenuList(menuInfo.getSearchUseYn());
 
         DataResponse<MenuInfo> dataResponse = new DataResponse<MenuInfo>();
         dataResponse.setData(mbrList);
@@ -40,7 +40,7 @@ public class MenuController {
     }
 
     @RequestMapping(value = "/getRoleMenuList", method = RequestMethod.POST)
-    public DataResponse<MenuInfo> getRoleMenuList(@ModelAttribute MenuInfo menuInfo) {
+    public DataResponse<MenuInfo> getRoleMenuList(@RequestBody MenuInfo menuInfo) {
 
         logger.info("##### 사용중인 메뉴 조회  #####");
         logger.debug("=== getRoleMenuList : " + menuInfo.toString());
@@ -56,7 +56,7 @@ public class MenuController {
     }
 
     @RequestMapping(value = "/getUpMenuList", method = RequestMethod.POST)
-    public List<MenuInfo> getUpMenuList(@ModelAttribute MenuInfo menuInfo) {
+    public List<MenuInfo> getUpMenuList(@RequestBody MenuInfo menuInfo) {
 
         logger.info("##### 상위메뉴 조회  #####");
         logger.debug("=== getUpMenuList");
@@ -65,7 +65,7 @@ public class MenuController {
     }
 
     @RequestMapping(value = "/getMenuInfo", method = RequestMethod.POST)
-    public MenuInfo getMenuInfo(@ModelAttribute MenuInfo menuInfo) {
+    public MenuInfo getMenuInfo(@RequestBody MenuInfo menuInfo) {
 
         logger.info("##### 메뉴 정보 조회  #####");
         logger.debug("=== getMenuInfo");
@@ -75,7 +75,7 @@ public class MenuController {
 
     @RequestMapping(value = "/setMenuAdd", method = RequestMethod.POST)
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor={Exception.class})
-    public int setMenuAdd(@ModelAttribute MenuInfo menuInfo) {
+    public int setMenuAdd(@RequestBody MenuInfo menuInfo) {
 
         logger.info("##### 메뉴 등록  #####");
         logger.debug("=== setMenuAdd : " + menuInfo.toString());
@@ -83,9 +83,9 @@ public class MenuController {
         return menuService.setMenuInfo(menuInfo);
     }
 
-    @RequestMapping(value = "/setMenuUpd", method = RequestMethod.POST)
+    @RequestMapping(value = "/setMenuUpdate", method = RequestMethod.POST)
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor={Exception.class})
-    public int setMenuUpd(@ModelAttribute MenuInfo menuInfo) {
+    public int setMenuUpd(@RequestBody MenuInfo menuInfo) {
 
         logger.info("##### 메뉴 수정  #####");
         logger.debug("=== setMenuUpd : " + menuInfo.toString());
@@ -95,7 +95,7 @@ public class MenuController {
 
     @RequestMapping(value = "/setUpMenuAdd", method = RequestMethod.POST)
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor={Exception.class})
-    public int setUpMenuAdd(@ModelAttribute MenuInfo menuInfo) {
+    public int setUpMenuAdd(@RequestBody MenuInfo menuInfo) {
 
         logger.info("##### 상위메뉴 등록  #####");
         logger.debug("=== setUpMenuAdd : " + menuInfo.toString());

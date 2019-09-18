@@ -1,0 +1,9 @@
+import Vue from 'vue'
+
+const eventBus = new Vue();
+Vue.prototype.$eventBus = eventBus;
+
+export default ({app}, inject) => {
+    inject('eventBus', eventBus);
+}
+
