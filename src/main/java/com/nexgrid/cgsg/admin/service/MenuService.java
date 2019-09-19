@@ -68,6 +68,9 @@ public class MenuService {
 
 
     public int setUpMenuAdd(MenuInfo menuInfo) {
+        Assert.hasLength(menuInfo.getMenuName(), "menuName is null");
+        Assert.hasLength(menuInfo.getUseYn(), "useYn is null");
+
         int upMenuCnt = menuMapper.getUpMenuCnt();
 
         menuInfo.setMenuId(this.generateMenuId(upMenuCnt));

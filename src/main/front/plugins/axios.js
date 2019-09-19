@@ -12,7 +12,7 @@ export default function ({ $axios, redirect, store, $bvModal }) {
     });
 
     // $axios.onError(error => {
-    //     store.commit('setError', error.response.data);
+    //     if(error.message === 'Network Error') redirect('/login/login');
     //
     //     return error;
     // });

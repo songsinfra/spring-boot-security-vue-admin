@@ -1,6 +1,6 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <b-modal id="modal_update_menu"
-             @ok="ok"
+             @ok.prevent="ok"
              ref="modal"
              @show="showModal"
              centered
@@ -11,17 +11,28 @@
                     label="상위메뉴:"
                     label-for="upMenuId-1"
             >
-                <b-form-input
-                        id="upMenuId-1"
-                        v-model="menuInfo.upMenuId"
-                        required
-                ></b-form-input>
+                <b-form-select v-model="menuInfo.upMenuId"
+                               :options="upMenuIdOption"
+                               :value-field="'menuId'"
+                               :text-field="'menuName'"
+                               :disabled="state !=='CREATE'"
+                               :class="'form-control'"
+                >
+                    <template v-slot:first>
+                        <option :value="undefined" disabled>-- 선택하세요 --</option>
+                    </template>
+                </b-form-select>
+<!--                <b-form-input-->
+<!--                        id="upMenuId-1"-->
+<!--                        v-model="menuInfo.upMenuId"-->
+<!--                        required-->
+<!--                ></b-form-input>-->
             </b-form-group>
             <b-form-group
                     id="menuName-group-1"
                     label="메뉴명:"
                     label-for="menuName-1"
-                    description="We'll never share your email with anyone else."
+                    :class="'mt-1'"
             >
                 <b-form-input
                         id="menuName-1"
@@ -45,18 +56,16 @@
                     label="사용여부:"
                     label-for="useYn-1"
             >
-                <b-form-input
-                        id="useYn-1"
-                        v-model="menuInfo.useYn"
-                        required
-                ></b-form-input>
+                <b-form-select id="useYn-1"
+                               v-model="menuInfo.useYn" :options="useYnOption"
+                ></b-form-select>
             </b-form-group>
             <b-form-group
                     id="input-group-1"
                     label="URL:"
                     label-for="menuURL-1"
             >
-                <b-form-input
+                <b-form-input :disabled="state !=='CREATE'"
                         id="menuURL-1"
                         v-model="menuInfo.menuURL"
                         required
@@ -72,12 +81,21 @@
         props: ['selectedMenu', 'state'],
         data(){
             return {
-                menuInfo: {}
+                menuInfo: {},
+                selectedUpMenuId: null,
+            }
+        },
+        computed: {
+            upMenuIdOption() {
+                return this.$store.state.menu.upMenuList;
+            },
+            useYnOption() {
+                return this.$store.state.menu.useYnList;
             }
         },
         watch: {
             selectedMenu() {
-                console.log("change selectedMenu");
+                if(this.$props.state === 'CREATE') this.menuInfo = {};
             }
         },
         methods:{
@@ -103,11 +121,12 @@
                     console.dir(e);
                     e = (e.response && e.response.data) || e;
 
-                    this.$bvModal.msgBoxOk(e.message);
+                    await this.$bvModal.msgBoxOk(e.message);
                 }
             },
             async showModal() {
                 try {
+
                     this.$nextTick(async () => {
                         if(!this.$props.selectedMenu.menuId) return;
 
@@ -119,7 +138,7 @@
                     })
 
                 } catch (e) {
-                    this.$bvModal.msgBoxOk(e.message);
+                     await this.$bvModal.msgBoxOk(e.message);
                 }
             }
         }

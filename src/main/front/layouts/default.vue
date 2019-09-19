@@ -77,9 +77,9 @@
                     ['data-menu'] : 'vertical-menu'
                 },
                 script: [
-                    { src:'/vendors/js/vendors.min.js'},
-                    { src:'/js/core/app-menu.js'},
-                    { src:'/js/core/app.js'},
+                    // { src:'/vendors/js/vendors.min.js'},
+                    // { src:'/js/core/app-menu.js'},
+                    // { src:'/js/core/app.js'},
                 ],
             }
         },

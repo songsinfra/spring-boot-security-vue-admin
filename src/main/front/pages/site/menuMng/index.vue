@@ -3,17 +3,15 @@
         <div class="row">
             <div class="col-lg-12 col-xl-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Project Revenue</h4>
-                        <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
-                        <div class="heading-elements">
-                            <ul class="list-inline float-right">
-                                <li><b-button @click="createUpMenu">상위메뉴등록</b-button></li>
-                                <li><b-button @click="createMenu">등록</b-button></li>
-                            </ul>
-                        </div>
+                    <div class="card-header p-1">
+                        <ul class="list-inline float-right m-0">
+                            <li class="mr-1"><b-form-checkbox v-model="searchUseYn" value="Y"
+                                                              unchecked-value="" @change="changeChckbox">미사용메뉴표시</b-form-checkbox></li>
+                            <li><b-button @click="createUpMenu">상위메뉴등록</b-button></li>
+                            <li><b-button @click="createMenu">등록</b-button></li>
+                        </ul>
                     </div>
-                    <div class="card-content collapse show pt-sm-1">
+                    <div class="card-content collapse show">
                         <b-table :items="items"
                                  :fields="fields"
                         >
@@ -27,7 +25,7 @@
             </div>
         </div>
         <new-menu :selected-menu="selectedMenu" :state="modalState"/>
-        <new-up-menu :selected-menu="selectedMenu"/>
+        <new-up-menu :selected-menu="selectedMenu" :state="modalState"/>
     </section>
 
 </template>
@@ -41,6 +39,10 @@
         name: "index",
         layout: 'default',
         components: {NewMenu, NewUpMenu},
+        async fetch({store}) {
+            console.log("menuMng fetch");
+
+        },
         data(){
             return {
                 fields: [
@@ -59,25 +61,12 @@
                 modalState: ""
             }
         },
-        // async asyncData(){
-        //     try {
-        //         const response = await axios.post('/api/menu/getMenuList');
-        //         console.log(response.data);
-        //         // this.items = response.data.data;
-        //         return {
-        //             items : response.data.data
-        //         }
-        //     } catch (e) {
-        //         //this.$bvModal.msgBoxOk(e.message());
-        //     }
-        // },
         beforeMount(){
             this.refreshGrid();
         },
-        created() {
-            debugger;
-            console.dir(this);
-            this.$eventBus.$on('refreshGrid', this.refreshGrid)
+        async created() {
+            this.$eventBus.$on('refreshGrid', this.refreshGrid);
+            await this.$store.dispatch('menu/addUpMenuList');
         },
         methods: {
             createUpMenu(item) {
@@ -100,6 +89,11 @@
                 this.modalState = "UPDATE";
                 this.$bvModal.show('modal_update_menu');
             },
+            changeChckbox() {
+                this.$nextTick(_=>{
+                    this.refreshGrid();
+                })
+            },
             async refreshGrid() {
                 try {
                     const response = await axios.post('/api/menu/getMenuList', { searchUseYn: this.searchUseYn});
@@ -107,7 +101,7 @@
                     console.log(response.data);
                     this.items = response.data.data;
                 } catch (e) {
-                    this.$bvModal.msgBoxOk(e.message);
+                   await this.$bvModal.msgBoxOk(e.message);
                 }
             }
         }

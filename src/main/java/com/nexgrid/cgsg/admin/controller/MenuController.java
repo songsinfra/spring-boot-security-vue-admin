@@ -56,7 +56,7 @@ public class MenuController {
     }
 
     @RequestMapping(value = "/getUpMenuList", method = RequestMethod.POST)
-    public List<MenuInfo> getUpMenuList(@RequestBody MenuInfo menuInfo) {
+    public List<MenuInfo> getUpMenuList() {
 
         logger.info("##### 상위메뉴 조회  #####");
         logger.debug("=== getUpMenuList");
