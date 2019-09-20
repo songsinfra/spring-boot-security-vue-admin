@@ -38,11 +38,11 @@
                     ['data-col']: '1-column'
                 },
                 script: [
-                    { src:'/vendors/js/vendors.min.js'},
-                    { src:'/js/core/app-menu.js'},
-                    { src:'/js/core/app.js'},
-                    { src:'/vendors/js/forms/validation/jqBootstrapValidation.js'},
-                    { src:'/js/scripts/forms/form-login-register.js'},
+                    // { src:'/vendors/js/vendors.min.js'},
+                    // { src:'/js/core/app-menu.js'},
+                    // { src:'/js/core/app.js'},
+                    // { src:'/vendors/js/forms/validation/jqBootstrapValidation.js'},
+                    // { src:'/js/scripts/forms/form-login-register.js'},
                 ],
             }
         }

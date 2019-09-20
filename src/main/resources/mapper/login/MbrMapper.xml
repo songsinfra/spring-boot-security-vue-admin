@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nexgrid.cgsg.admin.mapper.MbrMapper">
+	
+	<resultMap id="memberResultMap" type="com.nexgrid.cgsg.admin.vo.MbrInfo">
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="mbrPw" column="MBR_PW"/>
+		<result property="mbrNm" column="MBR_NM"/>
+		<result property="email" column="EMAIL"/>
+		<result property="tel" column="TEL"/>
+		<result property="roleCd" column="ROLE_CD"/>
+		<result property="loginEndDt" column="LOGIN_END_DT"/>
+		<result property="useYn" column="USE_YN"/>
+		<result property="loginFailCnt" column="LOGIN_FAIL_CNT"/>
+		<result property="applyDt" column="APPLY_DT"/>
+		<result property="codeNm" column="CODE_NM"/>
+		<result property="mbrPwOld1" column="MBR_PW_OLD1"/>
+		<result property="mbrPwOld2" column="MBR_PW_OLD2"/>
+		<result property="remark" column="REMARK"/>
+		<result property="mbrCompany" column="COMPANY"/>
+		<result property="mbrDptmt" column="DEPARTMENT"/>
+	</resultMap>
+
+	<select id="getMemberList" resultMap="memberResultMap">
+		/* MbrMapper.getMemberList */
+		
+		SELECT 
+			mbr_id
+			,mbr_pw
+			,mbr_nm
+			,company
+			,department
+			,tel
+			,email
+			,role_cd
+			,(SELECT code_nm FROM tb_role_mst WHERE role_code = A.role_cd) AS code_nm
+			,TO_CHAR(login_end_dt, 'YYYY-MM-DD HH24:MI:SS') AS login_end_dt
+			,use_yn
+			,login_fail_cnt
+			,TO_CHAR(apply_dt, 'YYYY-MM-DD') AS apply_dt
+		FROM tb_mbr_info A
+		WHERE 1 = 1
+		<choose>
+			<when test='managerYn == "Y"'>
+			</when>
+			<otherwise>
+				AND mbr_id = #{mbrId}
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="getCompanyList" resultType="java.util.List">
+		/* MbrMapper.getCompanyList */
+		
+		SELECT 
+			DISTINCT COMPANY as mbrCompany
+		FROM tb_mbr_info A
+		WHERE 1 = 1
+		AND COMPANY is not null
+	</select>
+	
+	<select id="isDuplicationMember" resultType="int">
+		/* MbrMapper.getMemberValidate */
+		
+		SELECT
+			COUNT(mbr_id) AS cnt
+		FROM tb_mbr_info
+		WHERE 0 = 0
+		<if test='!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(mbrId)'>
+        	AND mbr_id = #{mbrId}
+	    </if>
+	    <if test='!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(tel)'>
+	        AND tel = #{tel}
+	    </if>
+	</select>
+	
+	<select id="getMbrOldInfo" resultMap="memberResultMap">
+		/* MbrMapper.getMbrOldInfo */
+		
+		SELECT  mbr_id
+				,mbr_pw
+				, mbr_pw_old1
+				, mbr_pw_old2
+		FROM tb_mbr_info
+		WHERE mbr_id = #{mbrId}
+	</select>
+
+	<insert id="insertMbr">
+		/* MbrMapper.insertMbr */
+		
+		INSERT INTO tb_mbr_info
+		(
+			mbr_id,
+			use_yn,
+			role_cd,
+			mbr_pw,
+			mbr_nm,
+			tel,
+			email,
+			company,
+			department
+		)
+		VALUES
+		(
+			#{mbrId}
+			,'Y'
+			,#{roleCd}
+			,#{mbrPw}
+			,#{mbrNm}
+			,#{tel}
+			,#{email}
+			,#{mbrCompany}
+			,#{mbrDptmt}
+		)
+	</insert>
+	
+	<update id="updateMemberInfo">
+	    /* MbrMapper.updateMemberInfo */
+	    
+		UPDATE tb_mbr_info
+		SET
+			email = #{email}
+			,use_yn = #{useYn}
+		<if test='useYn == "N"'>
+			,login_fail_cnt = 0
+		</if>
+	    <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(roleCd)">
+			,role_cd = #{roleCd}
+	    </if>
+	    <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(tel)">
+		    ,tel = #{tel}
+	    </if>
+	    <if test="mbrPw != null">
+		    ,pw_apply_dt = TO_DATE(#{pwApplyDt}, 'yyyy/mm/dd hh24:mi:ss')
+		    ,mbr_pw = #{mbrPw}    
+	    </if>
+	    <if test="mbrPwOld1 != null">
+		    ,mbr_pw_old1 = #{mbrPwOld1}
+	    </if>
+	     <if test="mbrPwOld2 != null">
+		    ,mbr_pw_old2 = #{mbrPwOld2}
+	    </if>
+		WHERE mbr_id = #{mbrId}
+	</update>
+	
+	<update id="setMemberPwdInit">
+		/* MbrMapper.setMemberPwdInit */
+		
+		UPDATE tb_mbr_info
+		SET
+			use_yn = 'Y'
+			,login_fail_cnt = 0
+			,mbr_pw = #{newPw}
+			,mbr_pw_old1 = #{mbrPw}
+			,mbr_pw_old2 = #{mbrPwOld1}
+			,pw_apply_dt = TO_DATE(#{pwApplyDt}, 'yyyy/mm/dd hh24:mi:ss')
+		WHERE mbr_id = #{mbrId}
+	</update>
+	
+	<delete id="deleteMbr">
+		/* MbrMapper.deleteMbr */
+		
+		DELETE FROM tb_mbr_info
+		WHERE mbr_id = #{mbrId}
+	</delete>
+</mapper>

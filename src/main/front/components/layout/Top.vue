@@ -365,8 +365,8 @@
                                 </div>
                             </ul>
                         </li>
-                        <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link"
-                                                                       href="#" data-toggle="dropdown"> <span
+                        <li class="dropdown dropdown-user nav-item" :class="{show : isShowProfile}"><a class="dropdown-toggle nav-link dropdown-user-link"
+                                                                       href="#" @click="isShowProfile = !isShowProfile"> <span
                                 class="avatar avatar-online"><img src="/images/portrait/small/avatar-s-19.png"
                                                                   alt="avatar"></span></a>
                             <div class="dropdown-menu dropdown-menu-right">
@@ -401,6 +401,11 @@
             logout() {
                 this.$store.dispatch('login/logout');
                 this.$router.push("/login/login");
+            }
+        },
+        data() {
+            return {
+                isShowProfile: false
             }
         }
 

@@ -30,6 +30,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
@@ -41,7 +43,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
+public class AuthenticationConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
     @Autowired
     private CustomDaoAuthenticationProvider customDaoAuthenticationProvider;
@@ -53,17 +55,22 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
     private LoginService loginService;
 
     @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins("http://localhost:3000");
+    }
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         CookieCsrfTokenRepository csrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
         csrfTokenRepository.setCookiePath("/");
 
         http.csrf()
-                .csrfTokenRepository(csrfTokenRepository)
-                .ignoringAntMatchers("/front/constant")
-                .ignoringAntMatchers("/menu/**")
-                .ignoringAntMatchers("/login/**")
-                .and()
-//                .disable()
+//                .csrfTokenRepository(csrfTokenRepository)
+//                .ignoringAntMatchers("/front/constant")
+//                .ignoringAntMatchers("/menu/**")
+//                .ignoringAntMatchers("/login/**")
+//                .and()
+                .disable()
                 .authorizeRequests()
                 //.anyRequest().authenticated()
                 .antMatchers("/login/**").permitAll()
@@ -75,6 +82,8 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessHandler(this.getLogoutSuccessHandler())
         ;
     }
+
+
 
     private AuthenticationSuccessHandler getAuthenticationSuccessHandler() {
         return new AuthenticationSuccessHandler() {
