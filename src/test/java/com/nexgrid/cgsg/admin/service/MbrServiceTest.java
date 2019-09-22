@@ -81,11 +81,18 @@ public class MbrServiceTest {
 
     @Test
     public void isDuplicateMbrId_검색된_회원_없음() {
-        String mbrId = "";
+        String mbrId = "$$$";
         String tel = "";
         boolean duplicateMbrId = mbrService.isDuplicateMember(mbrId, tel);
 
         assertThat(duplicateMbrId).isFalse();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void isDuplicateMbrId_검색_입력값_없음() {
+        String mbrId = "";
+        String tel = "";
+        boolean duplicateMbrId = mbrService.isDuplicateMember(mbrId, tel);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -127,6 +134,7 @@ public class MbrServiceTest {
 
     @Test
     public void updatePwd() {
+
     }
 
     @Test

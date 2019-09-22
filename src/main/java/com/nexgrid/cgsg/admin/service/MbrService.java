@@ -32,6 +32,7 @@ public class MbrService {
     }
 
     public boolean isDuplicateMember(String mbrId, String tel) {
+        if(StringUtil.empty(mbrId) && StringUtil.empty(tel)) throw new IllegalArgumentException("mbrId, tel is null");
 
         int duplicationMbrId = mbrMapper.isDuplicationMember(mbrId, tel);
 
