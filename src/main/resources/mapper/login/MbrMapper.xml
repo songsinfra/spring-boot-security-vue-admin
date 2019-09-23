@@ -59,7 +59,7 @@
 		WHERE COMPANY is not null
 	</select>
 	
-	<select id="isDuplicationMember" resultType="int">
+	<select id="isDuplicateMember" resultType="int">
 		/* MbrMapper.getMemberValidate */
 		
 		SELECT
@@ -107,10 +107,10 @@
 			,#{roleCd}
 			,#{mbrPw}
 			,#{mbrNm}
-			,#{tel}
-			,#{email}
-			,#{mbrCompany}
-			,#{mbrDptmt}
+			,#{tel, jdbcType=VARCHAR}
+			,#{email, jdbcType=VARCHAR}
+			,#{mbrCompany, jdbcType=VARCHAR}
+			,#{mbrDptmt, jdbcType=VARCHAR}
 		)
 	</insert>
 	

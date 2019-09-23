@@ -16,7 +16,7 @@ public interface MbrMapper {
 	public MbrInfo getMbrOldInfo(String mbrId);
 
 	/* id중복체크 */
-	public int isDuplicationMember(String mbrId, String tel);
+	public int isDuplicateMember(String mbrId, String tel);
 
 	/*	회원정보 등록 */
 	public int insertMbr(MbrInfo mbrInfo);

@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class ResultInfo {
     private String code;
     private String message;
+    private Object data;
 }
