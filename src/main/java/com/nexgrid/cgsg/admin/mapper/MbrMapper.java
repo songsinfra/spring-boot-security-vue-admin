@@ -26,6 +26,6 @@ public interface MbrMapper {
 	/*회원정보 초기화*/
 	public int setMemberPwdInit(MbrInfo mbrInfo);
 
-	public int deleteMbr(String mbrId);
+	public int deleteMbr(List<String> mbrIdList);
 
 }

@@ -65,23 +65,25 @@ public class MbrService {
         Assert.hasLength(newPwd, "newPwd is null");
 
         MbrInfo mbrOldInfo = mbrMapper.getMbrOldInfo(mbrId);
+        Assert.notNull(mbrOldInfo, "registered Member is not found");
 
         MbrInfo mbrInfoParam = MbrInfo.builder()
-                        .newPw(newPwd)
-                        .pwApplyDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))
-                        .mbrPw(mbrOldInfo.getMbrPw())
-                        .mbrPwOld1(mbrOldInfo.getMbrPwOld1())
-                        .build()
-                ;
+                .newPw(newPwd)
+                .mbrId(mbrId)
+                .pwApplyDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))
+                .mbrPw(mbrOldInfo.getMbrPw())
+                .mbrPwOld1(StringUtil.nvl(mbrOldInfo.getMbrPwOld1(), ""))
+                .build();
 
         return mbrMapper.setMemberPwdInit(mbrInfoParam);
     }
 
     @Transactional
-    public void deleteMbr(List<String> mbrIdList){
-        for (String mbrId: mbrIdList) {
-            mbrMapper.deleteMbr(mbrId);
-        }
+    public int deleteMbr(List<String> mbrIdList){
+        Assert.notNull(mbrIdList, "mbrIdList is null");
+        Assert.isTrue(mbrIdList.size() > 0, "mbrIdList is empty");
+
+        return mbrMapper.deleteMbr(mbrIdList);
     }
 
     public List<String> getCompanyList() {

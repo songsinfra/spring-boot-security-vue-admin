@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -132,17 +133,56 @@ public class MbrServiceTest {
         assertThat(insertCnt).isEqualTo(1);
     }
 
-    @Test
-    public void updatePwd() {
+    @Test(expected = IllegalArgumentException.class)
+    public void updatePwd_등록된_사용자없음() {
+        String mbrId = "amin1";
+        String newPwd = "test12321";
 
+        int updateCnt = mbrService.updatePwd(mbrId, newPwd);
     }
 
     @Test
+    @Transactional
+    public void updatePwd() {
+        String mbrId = "admin1";
+        String newPwd = "test12321";
+
+        int updateCnt = mbrService.updatePwd(mbrId, newPwd);
+
+        assertThat(updateCnt).isEqualTo(1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deleteMbr_입력데이터_없음() {
+        List<String> mbrIdList = new ArrayList<>();
+
+        int deleteCnt = mbrService.deleteMbr(mbrIdList);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deleteMbr_입력데이터_null() {
+        List<String> mbrIdList = null;
+
+        int deleteCnt = mbrService.deleteMbr(mbrIdList);
+    }
+
+    @Test
+    @Transactional
     public void deleteMbr() {
+        List<String> mbrIdList = new ArrayList<>();
+        mbrIdList.add("admin1");
+        mbrIdList.add("admin2");
+
+        int deleteCnt = mbrService.deleteMbr(mbrIdList);
+
+        assertThat(deleteCnt).isEqualTo(mbrIdList.size());
     }
 
     @Test
     public void getCompanyList() {
+        List<String> companyList = mbrService.getCompanyList();
+
+        assertThat(companyList).size().isGreaterThan(0);
     }
 
 }

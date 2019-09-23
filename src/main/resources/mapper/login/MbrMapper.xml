@@ -50,14 +50,13 @@
 		</choose>
 	</select>
 
-	<select id="getCompanyList" resultType="java.util.List">
+	<select id="getCompanyList" resultType="string">
 		/* MbrMapper.getCompanyList */
 		
 		SELECT 
 			DISTINCT COMPANY as mbrCompany
 		FROM tb_mbr_info A
-		WHERE 1 = 1
-		AND COMPANY is not null
+		WHERE COMPANY is not null
 	</select>
 	
 	<select id="isDuplicationMember" resultType="int">
@@ -162,6 +161,10 @@
 		/* MbrMapper.deleteMbr */
 		
 		DELETE FROM tb_mbr_info
-		WHERE mbr_id = #{mbrId}
+		WHERE mbr_id in
+		<foreach item="item" index="index" collection="list"
+				 open="(" separator="," close=")">
+			#{item}
+		</foreach>
 	</delete>
 </mapper>
