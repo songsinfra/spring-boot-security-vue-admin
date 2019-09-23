@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nexgrid.cgsg.admin.mapper.AuthMapper">
+	<resultMap id="authResultMap" type="com.nexgrid.cgsg.admin.vo.AuthInfo">
+		<result property="menuId" 		column="MENU_ID"/>
+		<result property="roleCode" 	column="ROLE_CODE"/>
+		<result property="codeNm" 		column="CODE_NM"/>
+		<result property="managerYn" 	column="MANAGER_YN"/>
+		<result property="useYn" 		column="USE_YN"/>		
+	</resultMap>
+	
+	<!-- 등록된 권한 리스트 -->
+	<select id="selectRoleMst" resultMap="authResultMap">
+		SELECT 
+        	role_code,
+	        code_nm,
+	        manager_yn,
+	        use_yn
+		FROM tb_role_mst 
+		WHERE 1 = 1
+		
+	    <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(useYn)">
+  	 	     AND use_yn = #{useYn}
+		</if>
+	</select>
+	
+	<!-- 권한코드로 메뉴조회 -->
+	<select id="selectRuleMenuList" resultMap="authResultMap">
+		SELECT 
+	        role_cd
+	        ,menu_id
+		FROM tb_role_menu
+		WHERE role_cd = #{roleCode}
+	    <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(menuId)">
+			AND menu_id = #{menuId}
+		</if>
+	</select>
+	
+	<!-- 권한코드 중복체크 -->
+	<select id="isDuplicateRoleCode" resultType="int">
+			SELECT
+				COUNT(ROLE_CD) AS cnt
+			FROM tb_role_menu
+			WHERE 0 = 0
+			AND role_cd = #{roleCode}
+	</select>
+	
+	<!-- 권한에 등록된 메뉴 삭제 -->
+	<insert id="deleteRoleMenu">
+		DELETE FROM tb_role_menu
+		WHERE role_cd = #{roleCode}
+	</insert>
+
+	<!-- 권한 메뉴등록 -->
+	<insert id="insertRoleMenu">
+		INSERT INTO TB_ROLE_MENU
+		(
+			role_cd
+			,menu_id
+		)
+		VALUES
+		(
+			#{roleCode}
+			,#{menuId}
+		)
+	</insert>
+
+	<!-- 권한 등록 -->
+	<insert id="insertRoleMst">
+		INSERT INTO TB_ROLE_MST
+		(
+			role_code
+			,code_nm
+			,manager_yn
+			,use_yn
+		)
+		VALUES
+		(
+			#{roleCode}
+			,#{codeNm}
+			,#{managerYn}
+			,#{useYn}
+		)
+	</insert>
+
+	<!-- 권한 수정 -->
+	<insert id="updateRoleMst">
+		UPDATE tb_role_mst
+		SET 
+			code_nm = #{codeNm}
+			,use_yn = #{useYn}
+		WHERE role_code = #{roleCode}
+	</insert>
+
+</mapper>
