@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -46,7 +45,9 @@ public class MbrInfo {
 	private String applyDt;
 	private String codeNm;
 
+	@Size(max = 512, message = "mbrPw의 크기가 512보다 큽니다")
 	private String newPw;
+
 	private String mbrPwOld1;
 	private String mbrPwOld2;
 

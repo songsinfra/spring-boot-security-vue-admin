@@ -98,9 +98,10 @@ public class MbrServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void updateMemberInfo_등록된_멤버가_없음_오류() {
-        int insertCnt = mbrService.updateMemberInfo(MbrInfo.builder()
+        mbrService.updateMemberInfo(MbrInfo.builder()
                 .mbrId("insertMbr1")
                 .mbrNm("홍길동")
+                .newPw("newPassword")
                 .roleCd("R-001")
                 .mbrPw("pwd")
                 .mbrCompany("넥스그리드")
@@ -110,8 +111,6 @@ public class MbrServiceTest {
                 .email("hong@nexgrid.co.kr")
                 .build()
         );
-
-        assertThat(insertCnt).isEqualTo(1);
     }
 
     @Test

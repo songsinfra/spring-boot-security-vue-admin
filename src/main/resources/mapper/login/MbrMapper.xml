@@ -119,8 +119,12 @@
 	    
 		UPDATE tb_mbr_info
 		SET
+		<if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(email)">
 			email = #{email}
+		</if>
+		<if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(useYn)">
 			,use_yn = #{useYn}
+		</if>
 		<if test='useYn == "N"'>
 			,login_fail_cnt = 0
 		</if>

@@ -43,7 +43,7 @@ public class MbrService {
         Assert.notNull(mbrInfo, "mbrInfo is null");
         Assert.hasLength(mbrInfo.getMbrId(), "mbrId is null");
 
-        if (StringUtil.empty(mbrInfo.getNewPw())) {
+        if (!StringUtil.empty(mbrInfo.getNewPw())) {
             this.setPwdHistoryTo(mbrInfo);
         }
 

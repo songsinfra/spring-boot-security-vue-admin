@@ -3,12 +3,12 @@ package com.nexgrid.cgsg.admin.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
 import com.nexgrid.cgsg.admin.vo.MbrInfo;
+import com.nexgrid.cgsg.admin.vo.UpdatePwdParam;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -25,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Configuration
 public class MbrControllerTest {
 
     @Autowired
@@ -35,29 +34,6 @@ public class MbrControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-//    @Bean
-//    public UserDetailsService getTestUserDetailsService() {
-//        return new UserDetailsService() {
-//            @Override
-//            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//                String password = "password";
-//
-//                List<GrantedAuthority> authorityList = new ArrayList<>();
-//                authorityList.add(new SimpleGrantedAuthority("ROLE_USER"));
-//
-//                LoginInfo loginInfo = LoginInfo.builder()
-//                        .managerYn("Y")
-//                        .mbrId("admin1")
-//                        .build();
-//
-//                AdminUser adminUser = new AdminUser(username, password, authorityList, loginInfo);
-//
-//                return adminUser;
-//            }
-//        };
-//
-//    }
 
     @Before
     public void setup() {
@@ -218,6 +194,168 @@ public class MbrControllerTest {
         mvc.perform(post("/mbr/isDuplicateMember")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mbrInfo))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(SystemStatusCode.INVALID_PARAMETER.getCode()));
+    }
+
+    @Test
+    @Transactional
+    public void updateMemberInfo_등록된_ID가_없어_업데이트_안됨() throws Exception {
+        MbrInfo mbrInfo = MbrInfo.builder()
+                .mbrId("null")
+                .roleCd("R-001")
+                .mbrPw("password")
+                .mbrNm("관리자")
+                .tel("01012341234")
+                .email("test@test.co.kr")
+                .mbrCompany("넥스그리드99")
+                .mbrDptmt("컨버젼스팀")
+                .build();
+
+        mvc.perform(post("/mbr/updateMemberInfo")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mbrInfo))
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SystemStatusCode.LOGIN_SUCCESS.getCode()))
+                .andExpect(jsonPath("$.message").value("0 건 업데이트 되었습니다."));
+    }
+
+    @Test
+    @Transactional
+    public void updateMemberInfo_비밀번호변경_아이디없음() throws Exception {
+        MbrInfo mbrInfo = MbrInfo.builder()
+                .mbrId("null")
+                .roleCd("R-001")
+                .mbrPw("password")
+                .newPw("password")
+                .mbrNm("관리자")
+                .tel("01012341234")
+                .email("test@test.co.kr")
+                .mbrCompany("넥스그리드99")
+                .mbrDptmt("컨버젼스팀")
+                .build();
+
+        mvc.perform(post("/mbr/updateMemberInfo")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mbrInfo))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(SystemStatusCode.INVALID_PARAMETER.getCode()));
+    }
+
+    @Test
+    @Transactional
+    public void updateMemberInfo_비밀번호_변경() throws Exception {
+        MbrInfo mbrInfo = MbrInfo.builder()
+                .mbrId("admin1")
+                .roleCd("R-001")
+                .newPw("password")
+                .mbrNm("관리자")
+                .tel("01012341234")
+                .email("test@test.co.kr")
+                .mbrCompany("넥스그리드99")
+                .mbrDptmt("컨버젼스팀")
+                .build();
+
+        mvc.perform(post("/mbr/updateMemberInfo")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mbrInfo))
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SystemStatusCode.LOGIN_SUCCESS.getCode()))
+                .andExpect(jsonPath("$.message").value("1 건 업데이트 되었습니다."));
+    }
+
+    @Test
+    @Transactional
+    public void updateMemberInfo() throws Exception {
+        MbrInfo mbrInfo = MbrInfo.builder()
+                .mbrId("admin1")
+                .roleCd("R-001")
+                .mbrNm("관리자")
+                .tel("01012341234")
+                .email("test@test.co.kr")
+                .mbrCompany("넥스그리드99")
+                .mbrDptmt("컨버젼스팀")
+                .build();
+
+        mvc.perform(post("/mbr/updateMemberInfo")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mbrInfo))
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SystemStatusCode.LOGIN_SUCCESS.getCode()))
+                .andExpect(jsonPath("$.message").value("1 건 업데이트 되었습니다."));
+    }
+
+    @Test
+    @Transactional
+    public void updatePwd() throws Exception {
+        UpdatePwdParam pwdInfo = UpdatePwdParam.builder()
+                .mbrId("admin1")
+                .mbrNewPw("newPwd")
+                .build();
+
+        mvc.perform(post("/mbr/updatePwd")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(pwdInfo))
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SystemStatusCode.LOGIN_SUCCESS.getCode()))
+                .andExpect(jsonPath("$.message").value("1 건 업데이트 되었습니다."));
+    }
+
+    @Test
+    @Transactional
+    public void updatePwd_mbrId_없음() throws Exception {
+        UpdatePwdParam pwdInfo = UpdatePwdParam.builder()
+                .mbrNewPw("newPwd")
+                .build();
+
+        mvc.perform(post("/mbr/updatePwd")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(pwdInfo))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(SystemStatusCode.INVALID_PARAMETER.getCode()));
+    }
+
+    @Test
+    @Transactional
+    public void updatePwd_newPwd_없음() throws Exception {
+        UpdatePwdParam pwdInfo = UpdatePwdParam.builder()
+                .mbrId("admin1")
+                .build();
+
+        mvc.perform(post("/mbr/updatePwd")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(pwdInfo))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(SystemStatusCode.INVALID_PARAMETER.getCode()));
+    }
+
+    @Test
+    @Transactional
+    public void updatePwd_등록이_안된_mbrId_PWD_변경() throws Exception {
+        UpdatePwdParam pwdInfo = UpdatePwdParam.builder()
+                .mbrId("null")
+                .mbrNewPw("newPwd")
+                .build();
+
+        mvc.perform(post("/mbr/updatePwd")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(pwdInfo))
         )
                 .andDo(print())
                 .andExpect(status().isBadRequest())

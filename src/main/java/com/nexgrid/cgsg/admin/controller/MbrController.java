@@ -4,10 +4,7 @@ import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
 import com.nexgrid.cgsg.admin.exception.AdminException;
 import com.nexgrid.cgsg.admin.security.AdminUser;
 import com.nexgrid.cgsg.admin.service.MbrService;
-import com.nexgrid.cgsg.admin.vo.DuplicateMbrInfo;
-import com.nexgrid.cgsg.admin.vo.LoginInfo;
-import com.nexgrid.cgsg.admin.vo.MbrInfo;
-import com.nexgrid.cgsg.admin.vo.ResultInfo;
+import com.nexgrid.cgsg.admin.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -41,7 +37,10 @@ public class MbrController {
     public ResultInfo insertMbr(@RequestBody @Validated MbrInfo mbrInfo) {
         int insertCnt = mbrService.insertMbr(mbrInfo);
 
-        return ResultInfo.builder().code(SystemStatusCode.LOGIN_SUCCESS.getCode()).build();
+        return ResultInfo.builder()
+                .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+                .message(String.format("%s 건 입력되었습니다.", insertCnt))
+                .build();
     }
 
     @RequestMapping("isDuplicateMember")
@@ -54,6 +53,26 @@ public class MbrController {
                 .build();
     }
 
+    @RequestMapping("/updateMemberInfo")
+    public ResultInfo updateMemberInfo(@RequestBody @Validated MbrInfo mbrInfo) {
 
+        int updateCnt = mbrService.updateMemberInfo(mbrInfo);
+        String message = String.format("%s 건 업데이트 되었습니다.", updateCnt);
 
+        return ResultInfo.builder()
+                .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+                .message(message)
+                .build();
+    }
+
+    @RequestMapping("/updatePwd")
+    public ResultInfo updatePwd(@RequestBody @Validated UpdatePwdParam mbrInfo) {
+        int updateCnt = mbrService.updatePwd(mbrInfo.getMbrId(), mbrInfo.getMbrNewPw());
+        String message = String.format("%s 건 업데이트 되었습니다.", updateCnt);
+
+        return ResultInfo.builder()
+                .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+                .message(message)
+                .build();
+    }
 }
