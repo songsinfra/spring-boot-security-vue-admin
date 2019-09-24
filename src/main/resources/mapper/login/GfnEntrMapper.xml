@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nexgrid.cgsg.admin.mapper.EntrMapper">
+    <resultMap id="authResultMap" type="com.nexgrid.cgsg.admin.vo.AuthInfo">
+        <result property="menuId" 		column="MENU_ID"/>
+        <result property="roleCode" 	column="ROLE_CODE"/>
+        <result property="codeNm" 		column="CODE_NM"/>
+        <result property="managerYn" 	column="MANAGER_YN"/>
+        <result property="useYn" 		column="USE_YN"/>
+    </resultMap>
+
+    <select id="selectEntrItem" >
+        SELECT
+            ITEM_CODE, SOC_TYPE_CODE, PROD_CD, ITEM_NM, STATUS_CD, MEMO, CREATE_ID, CREATE_DT, UPDATE_ID, UPDATE_DT
+        FROM TB_GFN_ENTR_ITEM
+        WHERE ITEM_CODE = #{itemCode}
+    </select>
+
+    <select id="selectEntrItemList" resultMap="authResultMap">
+        SELECT
+        ITEM_CODE, SOC_TYPE_CODE, PROD_CD, ITEM_NM, STATUS_CD, MEMO, CREATE_ID, CREATE_DT, UPDATE_ID, UPDATE_DT
+        FROM TB_GFN_ENTR_ITEM
+        <where>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(itemNm)">
+                AND ITEM_NM = #{itemNm}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertEntrItem">
+		INSERT INTO TB_GFN_ENTR_ITEM
+		(
+			ITEM_CODE
+            ,SOC_TYPE_CODE
+            ,PROD_CD
+            ,ITEM_NM
+            ,STATUS_CD
+            ,MEMO
+            ,CREATE_ID
+            ,CREATE_DT
+		)
+		VALUES
+		(
+			#{itemCode}
+			,#{socTypeCode}
+			,#{prodCd}
+			,#{itemNm}
+			,#{statusCd}
+			,#{memo, jdbcType=VARCHAR}
+			,#{createId, jdbcType=VARCHAR}
+			,sysdate
+		)
+	</insert>
+
+    <insert id="updateEntrItem">
+        UPDATE TB_GFN_ENTR_ITEM
+		SET
+            UPDATE_DT = sysdate
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(socTypeCode)">
+                ,SOC_TYPE_CODE = #{socTypeCode}
+            </if>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(prodCd)">
+                ,PROD_CD = #{prodCd}
+            </if>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(itemNm)">
+                ,ITEM_NM = #{itemNm}
+            </if>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(statusCd)">
+                ,STATUS_CD = #{statusCd}
+            </if>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(memo)">
+                ,MEMO = #{memo}
+            </if>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(updateId)">
+                ,UPDATE_ID = #{updateId}
+            </if>
+		WHERE ITEM_CODE = #{itemCode}
+	</insert>
+
+    <!-- 권한 수정 -->
+    <insert id="deleteEntrItem">
+		UPDATE TB_GFN_ENTR_ITEM
+		SET
+		    UPDATE_DT = sysdate
+		    ,UPDATE_ID = #{updateId, jdbcType=VARCHAR}
+			,STATUS_CD = '0'
+		WHERE ITEM_CODE = #{itemCode}
+	</insert>
+
+</mapper>

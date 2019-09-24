@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nexgrid.cgsg.admin.mapper.EntrMapper">
+    <resultMap id="authResultMap" type="com.nexgrid.cgsg.admin.vo.AuthInfo">
+        <result property="menuId" 		column="MENU_ID"/>
+        <result property="roleCode" 	column="ROLE_CODE"/>
+        <result property="codeNm" 		column="CODE_NM"/>
+        <result property="managerYn" 	column="MANAGER_YN"/>
+        <result property="useYn" 		column="USE_YN"/>
+    </resultMap>
+
+    <select id="selectAddItem" >
+        SELECT
+            ADD_ITEM_CODE
+            ,ADD_ITEM_TYPE
+            ,ADD_ITEM_NM
+            ,SVC_SELL_PRICE
+            ,SVC_BASE_PRICE
+            ,ADD_ITEM_DETAIL
+            ,ADD_ITEM_NOTICE
+            ,SVC_TERM_TYPE
+            ,SVC_TERM_UNIT
+            ,SVC_TERM_NUM
+            ,SVC_TERM_DATE
+            ,CREATE_ID
+            ,CREATE_DT
+            ,UPDATE_ID
+            ,UPDATE_DT
+        FROM TB_GFN_ADD_ITEM
+        WHERE ADD_ITEM_CODE = #{addItemCode}
+    </select>
+
+    <select id="selectAddItemList" resultMap="authResultMap">
+        SELECT
+            ADD_ITEM_CODE
+            ,ADD_ITEM_NM
+            ,CREATE_ID
+            ,CREATE_DT
+        FROM TB_GFN_ADD_ITEM
+        WHERE ADD_ITEM_NM = #{addItemNm}
+    </select>
+
+    <insert id="insertAddItem">
+		INSERT INTO TB_GFN_ADD_ITEM
+		(
+			ADD_ITEM_CODE
+            ,ADD_ITEM_TYPE
+            ,ADD_ITEM_NM
+            ,SVC_SELL_PRICE
+            ,SVC_BASE_PRICE
+            ,ADD_ITEM_DETAIL
+            ,ADD_ITEM_NOTICE
+            ,SVC_TERM_TYPE
+            ,SVC_TERM_UNIT
+            ,SVC_TERM_NUM
+            ,SVC_TERM_DATE
+            ,CREATE_ID
+            ,CREATE_DT
+		)
+		VALUES
+		(
+			#{addItemCode}
+			,#{addItemType}
+			,#{addItemNm}
+			,#{svcSellPrice}
+			,#{svcBasePrice}
+			,#{addItemDetail}
+			,#{addItemNotice}
+			,#{svcTermType}
+			,#{svcTermUnit}
+			,#{svcTermNum}
+			,#{svcTermDate}
+			,#{createId, jdbcType=VARCHAR}
+			,sysdate
+		)
+	</insert>
+
+    <insert id="updateAddItem">
+        UPDATE TB_GFN_ADD_ITEM
+		SET
+            UPDATE_DT = sysdate
+        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(addItemType)">
+            ,ADD_ITEM_TYPE = #{addItemType}
+        </if>
+        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(addItemNm)">
+            ,ADD_ITEM_NM = #{addItemNm}
+        </if>
+        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(svcSellPrice)">
+            ,SVC_SELL_PRICE = #{svcSellPrice}
+        </if>
+        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(svcBasePrice)">
+            ,SVC_BASE_PRICE = #{svcBasePrice}
+        </if>
+
+        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(addItemDetail)">
+            ,ADD_ITEM_DETAIL = #{addItemDetail}
+        </if>
+        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(addItemNotice)">
+            ,ADD_ITEM_NOTICE = #{addItemNotice}
+        </if>
+        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(svcTermType)">
+            ,SVC_TERM_TYPE = #{svcTermType}
+        </if>
+        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(svcTermUnit)">
+            ,SVC_TERM_UNIT = #{svcTermUnit}
+        </if>
+        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(svcTermNum)">
+            ,SVC_TERM_NUM = #{svcTermNum}
+        </if>
+
+        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(svcTermDate)">
+            ,SVC_TERM_DATE = #{svcTermDate}
+        </if>
+        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(socTypeCode)">
+            ,UPDATE_ID = #{updateId}
+        </if>
+		WHERE ADD_ITEM_CODE = #{addItemCode}
+	</insert>
+
+    <!-- 권한 수정 -->
+    <insert id="deleteEntrItem">
+		DELETE FROM TB_GFN_ADD_ITEM
+		WHERE ADD_ITEM_CODE = #{addItemCode}
+	</insert>
+
+</mapper>
