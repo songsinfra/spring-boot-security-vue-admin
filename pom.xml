@@ -89,6 +89,12 @@
             <scope>system</scope>
             <systemPath>${basedir}/src/main/resources/libs/ojdbc7.jar</systemPath>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -2,9 +2,11 @@ package com.nexgrid.cgsg.admin.exception;
 
 import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.security.core.AuthenticationException;
 
 @Data
+@EqualsAndHashCode
 public class AdminException extends AuthenticationException {
     private SystemStatusCode code;
 

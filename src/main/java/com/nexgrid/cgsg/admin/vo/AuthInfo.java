@@ -1,61 +1,30 @@
 package com.nexgrid.cgsg.admin.vo;
 
-import com.nexgrid.cgsg.admin.utils.CommonUtil;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class AuthInfo {
+	@Size(max = 10, message = "roleCode의 크기가 10보다 큽니다")
+	@NotNull(message = "roleCode의 값이 없습니다.")
 	private String roleCode;
+
+	@Size(max = 30, message = "codeNm의 크기가 10보다 큽니다")
 	private String codeNm;
+
+	@Size(max = 2, message = "managerYn의 크기가 2보다 큽니다")
 	private String managerYn;
-	private String useYn;	
-	private String menuId;	
 
-	public String getMenuId() {
-		return menuId;
-	}
+	@Size(max = 1, message = "useYn의 크기가 10보다 큽니다")
+	@NotNull(message = "useYn의 값이 없습니다.")
+	private String useYn;
 
-	public void setMenuId(String menuId) {
-		this.menuId = menuId;
-	}
-
-	public String getRoleCode() {
-		return CommonUtil.replaceSeparator(roleCode);
-	}
-
-	public void setRoleCode(String roleCode) {
-		this.roleCode = roleCode;
-	}
-
-	public String getCodeNm() {
-		return CommonUtil.replaceSeparator(codeNm);
-	}
-
-	public void setCodeNm(String codeNm) {
-		this.codeNm = codeNm;
-	}
-
-	public String getManagerYn() {
-		return managerYn;
-	}
-
-	public void setManagerYn(String managerYn) {
-		this.managerYn = managerYn;
-	}
-
-	public String getUseYn() {
-		return useYn;
-	}
-
-	public void setUseYn(String useYn) {
-		this.useYn = useYn;
-	}
-
-
+	@Size(max = 8, message = "menuId의 크기가 8보다 큽니다")
+	private String menuId;
 }

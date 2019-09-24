@@ -15,7 +15,7 @@ public class AuthService {
 	@Autowired
 	AuthMapper authMapper;
 
-	public List<AuthInfo> selectRoleMst(String useYn) {
+	public List<AuthInfo> selectRoleMstList(String useYn) {
 		return authMapper.selectRoleMst(useYn);
 	}
 
@@ -26,18 +26,20 @@ public class AuthService {
 	}
 
 	@Transactional
-	public int insertRoleMenuList(String roleCode, List<AuthInfo> authInfoList) {
+	public int insertRoleMenuList(String roleCode, List<String> menuIdList) {
 		Assert.hasLength(roleCode, "roleCode is null");
-		Assert.notNull(authInfoList, "authInfoList is null");
-		Assert.isTrue(authInfoList.size() > 0, "authInfoList size is 0");
+		Assert.notNull(menuIdList, "menuIdList is null");
+		Assert.isTrue(menuIdList.size() > 0, "authInfoList size is 0");
 
 		int insertCnt = 0;
 
 		//해당 권한코드 roleCode 전체 delete
 		authMapper.deleteRoleMenu(roleCode);
 
-		for (AuthInfo authInfo : authInfoList) {
-			insertCnt += authMapper.insertRoleMenu(roleCode, authInfo.getMenuId());
+		for (String menuId : menuIdList) {
+			Assert.hasLength(menuId, "menuId is empty");
+
+			insertCnt += authMapper.insertRoleMenu(roleCode, menuId);
 		}
 
 		return insertCnt;
@@ -46,6 +48,7 @@ public class AuthService {
 	public int insertRoleMst(AuthInfo authInfo) {
 		Assert.notNull(authInfo, "authInfo is null");
 		Assert.hasLength(authInfo.getRoleCode(), "roleCode is null");
+		Assert.hasLength(authInfo.getManagerYn(), "managerYn is null");
 
 		return authMapper.insertRoleMst(authInfo);
 	}

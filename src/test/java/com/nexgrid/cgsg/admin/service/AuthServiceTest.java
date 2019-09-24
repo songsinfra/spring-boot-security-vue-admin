@@ -24,26 +24,26 @@ public class AuthServiceTest {
     @Test
     public void selectRoleMst_useYn_Y() {
         String useYn = "Y";
-        List<AuthInfo> authInfos = authService.selectRoleMst(useYn);
+        List<AuthInfo> authInfos = authService.selectRoleMstList(useYn);
         assertThat(authInfos).size().isGreaterThan(0);
     }
 
     @Test
     public void selectRoleMst_useYn_N() {
         String useYn = "N";
-        authService.selectRoleMst(useYn);
+        authService.selectRoleMstList(useYn);
     }
 
     @Test
     public void selectRoleMst_useYn_NULL() {
         String useYn = null;
-        authService.selectRoleMst(useYn);
+        authService.selectRoleMstList(useYn);
     }
 
     @Test
     public void selectRoleMst_useYn_empty() {
         String useYn = "";
-        authService.selectRoleMst(useYn);
+        authService.selectRoleMstList(useYn);
     }
 
     @Test
@@ -76,38 +76,51 @@ public class AuthServiceTest {
     @Transactional
     public void insertRoleMenuList() {
         String roleCode = "R-001";
-        List<AuthInfo> authInfoList = new ArrayList<>();
-        authInfoList.add(AuthInfo.builder().menuId("menu1").build());
-        authInfoList.add(AuthInfo.builder().menuId("menu2").build());
-        authInfoList.add(AuthInfo.builder().menuId("menu3").build());
+        List<String> menuIdList = new ArrayList<>();
+        menuIdList.add("menu1");
+        menuIdList.add("menu2");
+        menuIdList.add("menu3");
 
-        int insertCnt = authService.insertRoleMenuList(roleCode, authInfoList);
+        int insertCnt = authService.insertRoleMenuList(roleCode, menuIdList);
 
-        assertThat(insertCnt).isEqualTo(authInfoList.size());
+        assertThat(insertCnt).isEqualTo(menuIdList.size());
     }
 
     @Test(expected = IllegalArgumentException.class)
+    @Transactional
     public void insertRoleMenuList_roleCode_없음() {
         String roleCode = "";
-        List<AuthInfo> authInfoList = new ArrayList<>();
+        List<String> menuIdList = new ArrayList<>();
 
-        authService.insertRoleMenuList(roleCode, authInfoList);
+        authService.insertRoleMenuList(roleCode, menuIdList);
     }
 
     @Test(expected = IllegalArgumentException.class)
+    @Transactional
     public void insertRoleMenuList_authInfoList_size0() {
         String roleCode = "R-001";
-        List<AuthInfo> authInfoList = new ArrayList<>();
+        List<String> menuIdList = new ArrayList<>();
 
-        authService.insertRoleMenuList(roleCode, authInfoList);
+        authService.insertRoleMenuList(roleCode, menuIdList);
     }
 
     @Test(expected = IllegalArgumentException.class)
+    @Transactional
     public void insertRoleMenuList_authInfoList_null() {
         String roleCode = "R-001";
-        List<AuthInfo> authInfoList = null;
+        List<String> menuIdList = null;
 
-        authService.insertRoleMenuList(roleCode, authInfoList);
+        authService.insertRoleMenuList(roleCode, menuIdList);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @Transactional
+    public void insertRoleMenuList_authInfoList_empty() {
+        String roleCode = "R-001";
+        List<String> menuIdList = new ArrayList<>();
+        menuIdList.add("");
+
+        authService.insertRoleMenuList(roleCode, menuIdList);
     }
 
     @Test
