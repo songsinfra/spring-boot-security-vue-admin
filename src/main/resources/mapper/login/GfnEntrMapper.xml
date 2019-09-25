@@ -1,40 +1,51 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.nexgrid.cgsg.admin.mapper.EntrMapper">
-    <resultMap id="authResultMap" type="com.nexgrid.cgsg.admin.vo.AuthInfo">
-        <result property="menuId" 		column="MENU_ID"/>
-        <result property="roleCode" 	column="ROLE_CODE"/>
-        <result property="codeNm" 		column="CODE_NM"/>
-        <result property="managerYn" 	column="MANAGER_YN"/>
-        <result property="useYn" 		column="USE_YN"/>
+<mapper namespace="com.nexgrid.cgsg.admin.mapper.GfnEntrMapper">
+    <resultMap id="gfnEntrInfoMap" type="com.nexgrid.cgsg.admin.vo.GfnEntrInfo">
+        <result property="entrItemCode" 	column="ENTR_ITEM_CODE"/>
+        <result property="socTypeCode" 		column="SOC_TYPE_CODE"/>
+        <result property="prodCd" 		    column="PROD_CD"/>
+        <result property="entrItemNm" 		column="ENTR_ITEM_NM"/>
+        <result property="statusCd" 		column="STATUS_CD"/>
+        <result property="memo" 		    column="MEMO"/>
+        <result property="createId" 		column="CREATE_ID"/>
+        <result property="createDt" 		column="CREATE_DT"/>
+        <result property="updateId" 		column="UPDATE_ID"/>
+        <result property="updateDt" 		column="UPDATE_DT"/>
     </resultMap>
 
-    <select id="selectEntrItem" >
+    <resultMap id="gfnMapInfoMap" type="com.nexgrid.cgsg.admin.vo.GfnMapInfo">
+        <result property="addItemCode" 	column="ADD_ITEM_CODE"/>
+        <result property="entrItemCode" 	column="ENTR_ITEM_CODE"/>
+        <result property="createId" 	column="CREATE_ID"/>
+        <result property="createDt" 	column="CREATE_DT"/>
+        <result property="statusCd" 	column="STATUS_CD"/>
+    </resultMap>
+
+    <select id="selectEntrItem" resultMap="gfnEntrInfoMap">
         SELECT
-            ITEM_CODE, SOC_TYPE_CODE, PROD_CD, ITEM_NM, STATUS_CD, MEMO, CREATE_ID, CREATE_DT, UPDATE_ID, UPDATE_DT
+            ENTR_ITEM_CODE, SOC_TYPE_CODE, PROD_CD, ENTR_ITEM_NM, STATUS_CD, MEMO, CREATE_ID, CREATE_DT, UPDATE_ID, UPDATE_DT
         FROM TB_GFN_ENTR_ITEM
-        WHERE ITEM_CODE = #{itemCode}
+        WHERE ENTR_ITEM_CODE = #{entrItemCode}
     </select>
 
-    <select id="selectEntrItemList" resultMap="authResultMap">
+    <select id="selectEntrItemList" resultMap="gfnEntrInfoMap">
         SELECT
-        ITEM_CODE, SOC_TYPE_CODE, PROD_CD, ITEM_NM, STATUS_CD, MEMO, CREATE_ID, CREATE_DT, UPDATE_ID, UPDATE_DT
+        ENTR_ITEM_CODE, SOC_TYPE_CODE, PROD_CD, ENTR_ITEM_NM, STATUS_CD, MEMO, CREATE_ID, CREATE_DT, UPDATE_ID, UPDATE_DT
         FROM TB_GFN_ENTR_ITEM
-        <where>
-            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(itemNm)">
-                AND ITEM_NM = #{itemNm}
-            </if>
-        </where>
+        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(entrItemNm)">
+            WHERE ENTR_ITEM_NM like '%' || #{entrItemNm} ||  '%'
+        </if>
     </select>
 
     <insert id="insertEntrItem">
 		INSERT INTO TB_GFN_ENTR_ITEM
 		(
-			ITEM_CODE
+			 ENTR_ITEM_CODE
             ,SOC_TYPE_CODE
             ,PROD_CD
-            ,ITEM_NM
+            ,ENTR_ITEM_NM
             ,STATUS_CD
             ,MEMO
             ,CREATE_ID
@@ -42,10 +53,10 @@
 		)
 		VALUES
 		(
-			#{itemCode}
+			 #{entrItemCode}
 			,#{socTypeCode}
 			,#{prodCd}
-			,#{itemNm}
+			,#{entrItemNm}
 			,#{statusCd}
 			,#{memo, jdbcType=VARCHAR}
 			,#{createId, jdbcType=VARCHAR}
@@ -57,25 +68,23 @@
         UPDATE TB_GFN_ENTR_ITEM
 		SET
             UPDATE_DT = sysdate
+            ,MEMO = #{memo, jdbcType=VARCHAR}
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(socTypeCode)">
                 ,SOC_TYPE_CODE = #{socTypeCode}
             </if>
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(prodCd)">
                 ,PROD_CD = #{prodCd}
             </if>
-            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(itemNm)">
-                ,ITEM_NM = #{itemNm}
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(entrItemNm)">
+                ,ENTR_ITEM_NM = #{entrItemNm}
             </if>
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(statusCd)">
                 ,STATUS_CD = #{statusCd}
             </if>
-            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(memo)">
-                ,MEMO = #{memo}
-            </if>
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(updateId)">
                 ,UPDATE_ID = #{updateId}
             </if>
-		WHERE ITEM_CODE = #{itemCode}
+		WHERE ENTR_ITEM_CODE = #{entrItemCode}
 	</insert>
 
     <!-- 권한 수정 -->
@@ -85,7 +94,42 @@
 		    UPDATE_DT = sysdate
 		    ,UPDATE_ID = #{updateId, jdbcType=VARCHAR}
 			,STATUS_CD = '0'
-		WHERE ITEM_CODE = #{itemCode}
+		WHERE ENTR_ITEM_CODE = #{entrItemCode}
 	</insert>
+
+    <select id="selectAddItemListWithMap" resultMap="gfnEntrInfoMap">
+        SELECT
+            ad.ADD_ITEM_CODE
+            ,ad.ADD_ITEM_NM
+            ,ad.CREATE_ID
+            ,ad.CREATE_DT
+        FROM TB_GFN_ADD_ITEM ad inner join TB_GFN_ITEM_MAP map on ad.ENTR_ITEM_CODE = map.ENTR_ITEM_CODE
+        WHERE ADD_ITEM_CODE = #{addItemCode}
+    </select>
+
+    <insert id="insertMapItem">
+		INSERT INTO TB_GFN_ITEM_MAP
+		(
+			ADD_ITEM_CODE
+            ,ENTR_ITEM_CODE
+            ,CREATE_ID
+            ,CREATE_DT
+            ,STATUS_CD
+		)
+		VALUES
+		(
+			#{addItemCode}
+			,#{entrItemCode}
+			,#{createId}
+			, sysdate
+			,#{statusCd}
+		)
+	</insert>
+
+    <!-- 권한 수정 -->
+    <delete id="deleteMapItem">
+		DELETE FROM TB_GFN_ITEM_MAP
+		WHERE ADD_ITEM_CODE = #{addItemCode}
+	</delete>
 
 </mapper>
