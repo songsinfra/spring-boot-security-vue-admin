@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.nexgrid.cgsg.admin.mapper.EntrMapper">
-    <resultMap id="authResultMap" type="com.nexgrid.cgsg.admin.vo.AuthInfo">
-        <result property="menuId" 		column="MENU_ID"/>
-        <result property="roleCode" 	column="ROLE_CODE"/>
-        <result property="codeNm" 		column="CODE_NM"/>
-        <result property="managerYn" 	column="MANAGER_YN"/>
-        <result property="useYn" 		column="USE_YN"/>
+<mapper namespace="com.nexgrid.cgsg.admin.mapper.GfnAddMapper">
+    <resultMap id="gfnAddInfoMap" type="com.nexgrid.cgsg.admin.vo.GfnAddInfo">
+        <result property="addItemCode" 		column="ADD_ITEM_CODE"/>
+        <result property="addItemType" 		column="ADD_ITEM_TYPE"/>
+        <result property="addItemNm" 		column="ADD_ITEM_NM"/>
+        <result property="svcSellPrice" 		column="SVC_SELL_PRICE"/>
+        <result property="svcBasePrice" 		column="SVC_BASE_PRICE"/>
+        <result property="addItemDetail" 		column="ADD_ITEM_DETAIL"/>
+        <result property="addItemNotice" 		column="ADD_ITEM_NOTICE"/>
+        <result property="svcTermType" 		column="SVC_TERM_TYPE"/>
+        <result property="svcTermUnit" 		column="SVC_TERM_UNIT"/>
+        <result property="svcTermNum" 		column="SVC_TERM_NUM"/>
+        <result property="svcTermDate" 		column="SVC_TERM_DATE"/>
+        <result property="createId" 		column="CREATE_ID"/>
+        <result property="createDt" 		column="CREATE_DT"/>
+        <result property="updateId" 		column="UPDATE_ID"/>
+        <result property="updateDt" 		column="UPDATE_DT"/>
     </resultMap>
 
-    <select id="selectAddItem" >
+    <select id="selectAddItem" resultMap="gfnAddInfoMap">
         SELECT
             ADD_ITEM_CODE
             ,ADD_ITEM_TYPE
@@ -31,20 +41,28 @@
         WHERE ADD_ITEM_CODE = #{addItemCode}
     </select>
 
-    <select id="selectAddItemList" resultMap="authResultMap">
+    <select id="selectAddItemCount" resultType="int">
+        SELECT
+        count(1)+1 as cnt
+        FROM TB_GFN_ADD_ITEM
+    </select>
+
+    <select id="selectAddItemList" resultMap="gfnAddInfoMap">
         SELECT
             ADD_ITEM_CODE
             ,ADD_ITEM_NM
             ,CREATE_ID
             ,CREATE_DT
         FROM TB_GFN_ADD_ITEM
-        WHERE ADD_ITEM_NM = #{addItemNm}
+        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(addItemNm)">
+            WHERE ADD_ITEM_NM like '%' || #{addItemNm} || '%'
+        </if>
     </select>
 
     <insert id="insertAddItem">
 		INSERT INTO TB_GFN_ADD_ITEM
 		(
-			ADD_ITEM_CODE
+			 ADD_ITEM_CODE
             ,ADD_ITEM_TYPE
             ,ADD_ITEM_NM
             ,SVC_SELL_PRICE
@@ -60,17 +78,17 @@
 		)
 		VALUES
 		(
-			#{addItemCode}
+			 #{addItemCode}
 			,#{addItemType}
-			,#{addItemNm}
-			,#{svcSellPrice}
-			,#{svcBasePrice}
-			,#{addItemDetail}
-			,#{addItemNotice}
-			,#{svcTermType}
-			,#{svcTermUnit}
-			,#{svcTermNum}
-			,#{svcTermDate}
+			,#{addItemNm, jdbcType=VARCHAR}
+			,#{svcSellPrice, jdbcType=NUMERIC}
+			,#{svcBasePrice, jdbcType=NUMERIC}
+			,#{addItemDetail, jdbcType=VARCHAR}
+			,#{addItemNotice, jdbcType=VARCHAR}
+			,#{svcTermType, jdbcType=VARCHAR}
+			,#{svcTermUnit, jdbcType=VARCHAR}
+			,#{svcTermNum, jdbcType=VARCHAR}
+			,#{svcTermDate, jdbcType=VARCHAR}
 			,#{createId, jdbcType=VARCHAR}
 			,sysdate
 		)
@@ -112,14 +130,14 @@
         <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(svcTermDate)">
             ,SVC_TERM_DATE = #{svcTermDate}
         </if>
-        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(socTypeCode)">
+        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(updateId)">
             ,UPDATE_ID = #{updateId}
         </if>
 		WHERE ADD_ITEM_CODE = #{addItemCode}
 	</insert>
 
     <!-- 권한 수정 -->
-    <insert id="deleteEntrItem">
+    <insert id="deleteAddItem">
 		DELETE FROM TB_GFN_ADD_ITEM
 		WHERE ADD_ITEM_CODE = #{addItemCode}
 	</insert>
