@@ -15,6 +15,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 
 @Service
 public class GfnAddService {
@@ -35,35 +36,32 @@ public class GfnAddService {
     public int insertAddItemForGfn(GfnAddInfo gfnAddInfo) {
         this.validateDataForGfn(gfnAddInfo);
 
+        // GFN ID 생성
+        gfnAddInfo.setAddItemCode(this.generateAddItemCode());
+
+        return this.setAddItemForGfn(info -> gfnAddMapper.insertAddItem((GfnAddInfo)info), gfnAddInfo);
+    }
+
+    public int updateAddItemForGfn(GfnAddInfo gfnAddInfo) {
+        this.validateDataForGfn(gfnAddInfo);
+        Assert.hasLength(gfnAddInfo.getAddItemCode(), "addItemCode is null");
+
+        return this.setAddItemForGfn(info -> gfnAddMapper.updateAddItem((GfnAddInfo)info), gfnAddInfo);
+    }
+
+    private int setAddItemForGfn(Function function, GfnAddInfo gfnAddInfo) {
         if (StringUtils.equalsIgnoreCase(SvcTermType.LIMIT_DATE.getType(), gfnAddInfo.getSvcTermType())) {
             Date fullTime = this.convertToFullTime(gfnAddInfo.getSvcTermDate());
             gfnAddInfo.setSvcTermDate(fullTime);
+
+            //clear unused Data svcTermData
+            gfnAddInfo.setSvcTermUnit(null);
+            gfnAddInfo.setSvcTermNum(null);
         }
 
-        // GFN ID 생성
-        gfnAddInfo.setAddItemCode(this.generateAddItemCode());
         gfnAddInfo.setSvcBasePrice(0);
 
-
-        return gfnAddMapper.insertAddItem(gfnAddInfo);
-    }
-
-    public int insertAddItemForUcube(GfnAddInfo gfnAddInfo) {
-        this.validateDataForUcude(gfnAddInfo);
-
-        return gfnAddMapper.insertAddItem(gfnAddInfo);
-    }
-
-    private void validateDataForUcude(GfnAddInfo gfnAddInfo) {
-        Assert.notNull(gfnAddInfo, "gfnAddInfo is null");
-        Assert.hasLength(gfnAddInfo.getAddItemType(),"addItemType is null");
-        Assert.isTrue(StringUtils.equalsIgnoreCase(AddItemType.UCUBE.getType(), gfnAddInfo.getAddItemType()),
-                "addItemType is invalid");
-
-        Assert.isTrue(StringUtils.equalsIgnoreCase(SvcTermType.NONE.getType(), gfnAddInfo.getSvcTermType()),
-                "SvcTermType is invalid");
-
-        Assert.hasLength(gfnAddInfo.getAddItemCode(), "addItemCode is null");
+        return (int) function.apply(gfnAddInfo);
     }
 
     private void validateDataForGfn(GfnAddInfo gfnAddInfo) {
@@ -84,6 +82,31 @@ public class GfnAddService {
         }
     }
 
+    public int insertAddItemForUcube(GfnAddInfo gfnAddInfo) {
+        this.validateDataForUcude(gfnAddInfo);
+
+        return gfnAddMapper.insertAddItem(gfnAddInfo);
+    }
+
+    public int updateAddItemForUcube(GfnAddInfo gfnAddInfo) {
+        this.validateDataForUcude(gfnAddInfo);
+
+        return gfnAddMapper.updateAddItem(gfnAddInfo);
+    }
+
+    private void validateDataForUcude(GfnAddInfo gfnAddInfo) {
+        Assert.notNull(gfnAddInfo, "gfnAddInfo is null");
+        Assert.hasLength(gfnAddInfo.getAddItemCode(),"addItemCode is null");
+        Assert.hasLength(gfnAddInfo.getAddItemType(),"addItemType is null");
+        Assert.isTrue(StringUtils.equalsIgnoreCase(AddItemType.UCUBE.getType(), gfnAddInfo.getAddItemType()),
+                "addItemType is invalid");
+
+        Assert.isTrue(StringUtils.equalsIgnoreCase(SvcTermType.NONE.getType(), gfnAddInfo.getSvcTermType()),
+                "SvcTermType is invalid");
+
+        Assert.hasLength(gfnAddInfo.getAddItemCode(), "addItemCode is null");
+    }
+
 
     public String generateAddItemCode() {
         int count = gfnAddMapper.selectAddItemCount();
@@ -97,13 +120,6 @@ public class GfnAddService {
                 .plusDays(1).minus(1, ChronoUnit.SECONDS);
 
         return Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
-    }
-
-    public int updateAddItem(GfnAddInfo gfnAddInfo) {
-        Assert.notNull(gfnAddInfo, "gfnAddInfo is null");
-        Assert.hasLength(gfnAddInfo.getAddItemCode(), "addItemCode is null");
-
-        return gfnAddMapper.updateAddItem(gfnAddInfo);
     }
 
     public int deleteAddItem(String addItemCode) {

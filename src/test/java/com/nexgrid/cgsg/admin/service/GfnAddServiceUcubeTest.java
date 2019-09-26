@@ -1,5 +1,6 @@
 package com.nexgrid.cgsg.admin.service;
 
+import com.nexgrid.cgsg.admin.base.BaseServiceTest;
 import com.nexgrid.cgsg.admin.constants.AddItemType;
 import com.nexgrid.cgsg.admin.constants.SvcTermType;
 import com.nexgrid.cgsg.admin.vo.GfnAddInfo;
@@ -17,13 +18,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class GfnAddServiceUcubeTest {
+public class GfnAddServiceUcubeTest extends BaseServiceTest {
 
     @Autowired
     private GfnAddService gfnAddService;
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     private GfnAddInfo.GfnAddInfoBuilder getInitGfnAddInfoForUcube() {
         return GfnAddInfo.builder()
@@ -51,57 +49,70 @@ public class GfnAddServiceUcubeTest {
     @Test
     @Transactional
     public void insertAddItemForUcube_gfnAddInfo_null() {
+        this.assertException(IllegalArgumentException.class, "gfnAddInfo is null");
+
         GfnAddInfo gfnAddInfo = null;
 
-        this.exception_insertAddItemForGfn(gfnAddInfo, IllegalArgumentException.class, "gfnAddInfo is null");
+        int insertCnt = gfnAddService.insertAddItemForUcube(gfnAddInfo);
+    }
+
+    @Test
+    @Transactional
+    public void insertAddItemForUcube_addItemCode_null() {
+        this.assertException(IllegalArgumentException.class, "addItemCode is null");
+
+        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForUcube()
+                .addItemCode(null)
+                .build();
+
+        int insertCnt = gfnAddService.insertAddItemForUcube(gfnAddInfo);
     }
 
     @Test
     @Transactional
     public void insertAddItemForUcube_addItemType_null() {
+        this.assertException(IllegalArgumentException.class, "addItemType is null");
+
         GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForUcube()
                 .addItemType(null)
                 .build();
 
-        this.exception_insertAddItemForGfn(gfnAddInfo, IllegalArgumentException.class, "addItemType is null");
+        int insertCnt = gfnAddService.insertAddItemForUcube(gfnAddInfo);
     }
 
     @Test
     @Transactional
     public void insertAddItemForUcube_addItemType_잘못된값() {
+        this.assertException(IllegalArgumentException.class, "addItemType is invalid");
+
         GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForUcube()
                 .addItemType(SvcTermType.AVAILABLE_DATE.getType())
                 .build();
 
-        this.exception_insertAddItemForGfn(gfnAddInfo, IllegalArgumentException.class, "addItemType is invalid");
+        int insertCnt = gfnAddService.insertAddItemForUcube(gfnAddInfo);
     }
 
     @Test
     @Transactional
     public void insertAddItemForUcube_AddItemCode_null() {
+        this.assertException(IllegalArgumentException.class, "addItemCode is null");
+
         GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForUcube()
                 .addItemCode(null)
                 .build();
-
-        this.exception_insertAddItemForGfn(gfnAddInfo, IllegalArgumentException.class, "addItemCode is null");
-    }
-
-
-    public void exception_insertAddItemForGfn(GfnAddInfo gfnAddInfo, Class exception, String exceptionMsg) {
-        expectedException.expect(exception);
-        expectedException.expectMessage(CoreMatchers.containsString(exceptionMsg));
 
         int insertCnt = gfnAddService.insertAddItemForUcube(gfnAddInfo);
     }
 
 
-
-
     @Test
-    public void updateAddItem() {
-    }
+    @Transactional
+    public void updateAddItem_ucube() {
+        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForUcube()
+                .addItemCode("TES00001")
+                .build();
 
-    @Test
-    public void deleteAddItem() {
+        int updateCnt = gfnAddService.updateAddItemForUcube(gfnAddInfo);
+        assertThat(updateCnt).isEqualTo(1);
     }
 }

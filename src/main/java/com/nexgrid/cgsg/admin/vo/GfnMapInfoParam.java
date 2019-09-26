@@ -14,16 +14,13 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GfnMapInfo {
+public class GfnMapInfoParam {
     @Size(max = 10, message = "addItemCode 의 크기가 10보다 큽니다")
-    @NotNull(message = "addItemCode 의 값이 없습니다.")
-    @NotEmpty(message = "addItemCode 의 값이 없습니다.")
     private String addItemCode;
 
     @Size(max = 10, message = "entrItemCode 의 크기가 10보다 큽니다")
-    @NotNull(message = "entrItemCode 의 값이 없습니다.")
-    @NotEmpty(message = "entrItemCode 의 값이 없습니다.")
     private String entrItemCode;
+
     private String createId;
     private Date createDt;
     private String statusCd;

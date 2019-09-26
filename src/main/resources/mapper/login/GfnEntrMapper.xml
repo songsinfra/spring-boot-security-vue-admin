@@ -23,6 +23,24 @@
         <result property="statusCd" 	column="STATUS_CD"/>
     </resultMap>
 
+    <resultMap id="gfnAddInfoMap" type="com.nexgrid.cgsg.admin.vo.GfnAddInfo">
+        <result property="addItemCode" 		column="ADD_ITEM_CODE"/>
+        <result property="addItemType" 		column="ADD_ITEM_TYPE"/>
+        <result property="addItemNm" 		column="ADD_ITEM_NM"/>
+        <result property="svcSellPrice" 		column="SVC_SELL_PRICE"/>
+        <result property="svcBasePrice" 		column="SVC_BASE_PRICE"/>
+        <result property="addItemDetail" 		column="ADD_ITEM_DETAIL"/>
+        <result property="addItemNotice" 		column="ADD_ITEM_NOTICE"/>
+        <result property="svcTermType" 		column="SVC_TERM_TYPE"/>
+        <result property="svcTermUnit" 		column="SVC_TERM_UNIT"/>
+        <result property="svcTermNum" 		column="SVC_TERM_NUM"/>
+        <result property="svcTermDate" 		column="SVC_TERM_DATE"/>
+        <result property="createId" 		column="CREATE_ID"/>
+        <result property="createDt" 		column="CREATE_DT"/>
+        <result property="updateId" 		column="UPDATE_ID"/>
+        <result property="updateDt" 		column="UPDATE_DT"/>
+    </resultMap>
+
     <select id="selectEntrItem" resultMap="gfnEntrInfoMap">
         SELECT
             ENTR_ITEM_CODE, SOC_TYPE_CODE, PROD_CD, ENTR_ITEM_NM, STATUS_CD, MEMO, CREATE_ID, CREATE_DT, UPDATE_ID, UPDATE_DT
@@ -97,14 +115,14 @@
 		WHERE ENTR_ITEM_CODE = #{entrItemCode}
 	</insert>
 
-    <select id="selectAddItemListWithMap" resultMap="gfnEntrInfoMap">
+    <select id="selectAddItemListWithMap" resultMap="gfnAddInfoMap">
         SELECT
             ad.ADD_ITEM_CODE
             ,ad.ADD_ITEM_NM
             ,ad.CREATE_ID
             ,ad.CREATE_DT
-        FROM TB_GFN_ADD_ITEM ad inner join TB_GFN_ITEM_MAP map on ad.ENTR_ITEM_CODE = map.ENTR_ITEM_CODE
-        WHERE ADD_ITEM_CODE = #{addItemCode}
+        FROM TB_GFN_ADD_ITEM ad inner join TB_GFN_ITEM_MAP map on ad.ADD_ITEM_CODE = map.ADD_ITEM_CODE
+        WHERE map.ENTR_ITEM_CODE = #{entrItemCode}
     </select>
 
     <insert id="insertMapItem">
@@ -120,7 +138,7 @@
 		(
 			#{addItemCode}
 			,#{entrItemCode}
-			,#{createId}
+			,#{createId, jdbcType=VARCHAR}
 			, sysdate
 			,#{statusCd}
 		)
@@ -130,6 +148,7 @@
     <delete id="deleteMapItem">
 		DELETE FROM TB_GFN_ITEM_MAP
 		WHERE ADD_ITEM_CODE = #{addItemCode}
+		    AND ENTR_ITEM_CODE = #{entrItemCode}
 	</delete>
 
 </mapper>

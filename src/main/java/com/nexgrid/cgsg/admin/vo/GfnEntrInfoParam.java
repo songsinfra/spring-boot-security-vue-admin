@@ -14,31 +14,21 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class GfnEntrInfo {
+public class GfnEntrInfoParam {
 
     @Size(max = 10, message = "entrItemCode 의 크기가 10보다 큽니다")
-    @NotNull(message = "entrItemCode 의 값이 없습니다.")
-    @NotEmpty(message = "entrItemCode 의 값이 없습니다.")
     private String entrItemCode;
 
     @Size(max = 1, message = "socTypeCode 의 크기가 1보다 큽니다")
-    @NotNull(message = "socTypeCode 의 값이 없습니다.")
-    @NotEmpty(message = "socTypeCode 의 값이 없습니다.")
     private String socTypeCode;
 
     @Size(max = 20, message = "prodCd 의 크기가 20보다 큽니다")
-    @NotNull(message = "prodCd 의 값이 없습니다.")
-    @NotEmpty(message = "prodCd 의 값이 없습니다.")
     private String prodCd;
 
     @Size(max = 120, message = "entrItemNm 의 크기가 120보다 큽니다")
-    @NotNull(message = "entrItemNm 의 값이 없습니다.")
-    @NotEmpty(message = "entrItemNm 의 값이 없습니다.")
     private String entrItemNm;
 
     @Size(max = 1, message = "statusCd 의 크기가 1보다 큽니다")
-    @NotNull(message = "statusCd 의 값이 없습니다.")
-    @NotEmpty(message = "statusCd 의 값이 없습니다.")
     private String statusCd;
 
     @Size(max = 2048, message = "memo 의 크기가 2018보다 큽니다")

@@ -1,5 +1,6 @@
 package com.nexgrid.cgsg.admin.service;
 
+import com.nexgrid.cgsg.admin.base.BaseServiceTest;
 import com.nexgrid.cgsg.admin.constants.AddItemType;
 import com.nexgrid.cgsg.admin.constants.SvcTermType;
 import com.nexgrid.cgsg.admin.constants.SvcTermUnit;
@@ -26,13 +27,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class GfnAddServiceTest {
+public class GfnAddServiceTest extends BaseServiceTest {
 
     @Autowired
     private GfnAddService gfnAddService;
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
 //    @Test
 //    public void 테스트용데이터생성() {
@@ -237,13 +236,25 @@ public class GfnAddServiceTest {
 
     @Test
     @Transactional
-    public void updateAddItem() {
+    public void updateAddItem_gfn() {
         GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
                 .addItemCode("TES00001")
                 .build();
 
-        int updateCnt = gfnAddService.updateAddItem(gfnAddInfo);
+        int updateCnt = gfnAddService.updateAddItemForGfn(gfnAddInfo);
         assertThat(updateCnt).isEqualTo(1);
+    }
+
+    @Test
+    @Transactional
+    public void updateAddItem_gfn_addItemCode_null() {
+        assertException(IllegalArgumentException.class, "addItemCode is null");
+
+        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+                .addItemCode(null)
+                .build();
+
+        int updateCnt = gfnAddService.updateAddItemForGfn(gfnAddInfo);
     }
 
     @Test

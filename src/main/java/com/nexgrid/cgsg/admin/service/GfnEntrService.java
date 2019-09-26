@@ -1,6 +1,7 @@
 package com.nexgrid.cgsg.admin.service;
 
 import com.nexgrid.cgsg.admin.mapper.GfnEntrMapper;
+import com.nexgrid.cgsg.admin.vo.GfnAddInfo;
 import com.nexgrid.cgsg.admin.vo.GfnEntrInfo;
 import com.nexgrid.cgsg.admin.vo.GfnMapInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class GfnEntrService {
     public int insertEntrItem(GfnEntrInfo gfnEntrInfo) {
         Assert.notNull(gfnEntrInfo, "gfnEntrInfo is null");
         Assert.hasLength(gfnEntrInfo.getEntrItemCode(), "EntrItemCode is null");
-        Assert.hasLength(gfnEntrInfo.getSocTypeCode(), "SocType is null");
+        Assert.hasLength(gfnEntrInfo.getSocTypeCode(), "SocTypeCode is null");
         Assert.hasLength(gfnEntrInfo.getProdCd(), "ProdCd is null");
         Assert.hasLength(gfnEntrInfo.getEntrItemNm(), "EntrItemNm is null");
         Assert.hasLength(gfnEntrInfo.getStatusCd(), "StatusCd is null");
@@ -50,10 +51,10 @@ public class GfnEntrService {
         return gfnEntrMapper.deleteEntrItem(entrItemCode, updateId);
     }
 
-    public List<GfnEntrInfo> selectAddItemListWithMap(String addItemCode) {
-        Assert.hasLength(addItemCode, "addItemCode is null");
+    public List<GfnAddInfo> selectAddItemListWithMap(String entrItemCode) {
+        Assert.hasLength(entrItemCode, "entrItemCode is null");
 
-        return gfnEntrMapper.selectAddItemListWithMap(addItemCode);
+        return gfnEntrMapper.selectAddItemListWithMap(entrItemCode);
     }
 
     public int insertMapItem(GfnMapInfo gfnMapInfo) {
@@ -64,8 +65,10 @@ public class GfnEntrService {
         return gfnEntrMapper.insertMapItem(gfnMapInfo);
     }
 
-    public int deleteMapItem(String addItemCode) {
+    public int deleteMapItem(String entrItemCode, String addItemCode) {
+        Assert.hasLength(entrItemCode, "entrItemCode is null");
         Assert.hasLength(addItemCode, "addItemCode is null");
-        return gfnEntrMapper.deleteMapItem(addItemCode);
+
+        return gfnEntrMapper.deleteMapItem(entrItemCode, addItemCode);
     }
 }

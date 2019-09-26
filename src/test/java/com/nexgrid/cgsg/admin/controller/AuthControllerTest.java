@@ -1,25 +1,21 @@
 package com.nexgrid.cgsg.admin.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexgrid.cgsg.admin.base.BaseControllerTest;
 import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
 import com.nexgrid.cgsg.admin.vo.AuthInfo;
 import com.nexgrid.cgsg.admin.vo.DuplicateRoleCodeParam;
 import com.nexgrid.cgsg.admin.vo.RoleMenuListParam;
 import com.nexgrid.cgsg.admin.vo.RoleMstParam;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 
@@ -32,23 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AuthControllerTest {
-
-    @Autowired
-    private WebApplicationContext context;
-
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Before
-    public void setup() {
-        mvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
-    }
+@Transactional
+public class AuthControllerTest extends BaseControllerTest {
 
     @Test
     public void selectRoleMst_useYn_Y() throws Exception {
@@ -289,18 +270,12 @@ public class AuthControllerTest {
     @Test
     @Transactional
     public void isDuplicateRoleCode_DuplicateRoleCodeParam_변수체크() throws Exception {
-        String URL = "/auth/updateRoleMst";
-        String NULL_MSG = "없습니다";
-        String OVER_SIZE_MSG = "큽니다";
+        String URL = "/auth/isDuplicateRoleCode";
 
         this.checkParam(URL, DuplicateRoleCodeParam.builder().roleCode(null).build(), NULL_MSG);
         this.checkParam(URL, DuplicateRoleCodeParam.builder().roleCode(genStr(11)).build(), OVER_SIZE_MSG);
     }
 
-
-    private String genStr(int count) {
-        return RandomStringUtils.randomAlphabetic(count);
-    }
 
     public ResultActions successRequestAndCheckMsg(String url, Object model) throws Exception {
         return  mvc.perform(post(url)
@@ -320,17 +295,4 @@ public class AuthControllerTest {
                     .andExpect(jsonPath("$.data").value(containsString(containStrForData)));
         }
     }
-
-    public void checkParam(String url, Object model, String containStr) throws Exception {
-        mvc.perform(post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(model))
-        )
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(SystemStatusCode.INVALID_PARAMETER.getCode()))
-                .andExpect(jsonPath("$.message").value(containsString(containStr)))
-        ;
-    }
-
 }

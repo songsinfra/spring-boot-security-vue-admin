@@ -1,5 +1,6 @@
 package com.nexgrid.cgsg.admin.mapper;
 
+import com.nexgrid.cgsg.admin.vo.GfnAddInfo;
 import com.nexgrid.cgsg.admin.vo.GfnEntrInfo;
 import com.nexgrid.cgsg.admin.vo.GfnMapInfo;
 import org.apache.ibatis.annotations.Mapper;
@@ -19,9 +20,9 @@ public interface GfnEntrMapper {
 
     int deleteEntrItem(String entrItemCode, String updateId);
 
-    List<GfnEntrInfo> selectAddItemListWithMap(String addItemCode);
+    List<GfnAddInfo> selectAddItemListWithMap(String entrItemCode);
 
     int insertMapItem(GfnMapInfo gfnMapInfo);
 
-    int deleteMapItem(String addItemCode);
+    int deleteMapItem(String entrItemCode, String addItemCode);
 }

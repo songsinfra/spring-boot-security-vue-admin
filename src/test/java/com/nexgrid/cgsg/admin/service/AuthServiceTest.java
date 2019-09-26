@@ -87,7 +87,7 @@ public class AuthServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    @Transactional
+
     public void insertRoleMenuList_roleCode_없음() {
         String roleCode = "";
         List<String> menuIdList = new ArrayList<>();
