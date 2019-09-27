@@ -14,6 +14,7 @@ public enum SystemStatusCode {
     LOGIN_FAIL_LOCKED_USER_ID("44401005"),
     INTERNAL_ERROR("44401006"),
     INVALID_PARAMETER("44401007"),
+    ACCESS_DENIED("44401008"),
     ;
 
     private String code;

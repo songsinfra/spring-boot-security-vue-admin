@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -34,6 +35,12 @@ public class LoginController {
 
 	@Autowired
 	private LoginService loginService;
+
+    @RequestMapping("/whois")
+	public LoginInfo whois(Principal principal) {
+        List<LoginInfo> loginInfoList = loginService.getLoginInfo2(LoginInfo.builder().mbrId(principal.getName()).build());
+        return loginInfoList.get(0);
+    }
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public LoginInfo login(@RequestBody LoginInfo loginInfo) {

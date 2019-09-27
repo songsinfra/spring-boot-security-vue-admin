@@ -39,7 +39,7 @@
 
     export default {
         name: "default",
-        middleware: 'auth',
+        // middleware: 'auth',
         components: {
             Top,
             LeftMenu,

@@ -1,13 +1,44 @@
+import Vue from 'vue'
 import Cookie from 'js-cookie';
 
 export const state = () => ({
-    user:{}
+    authUser: { authenticated: false },
+    session: null,
 });
 
 export const mutations = {
-    setUser(state, payload) {
-        state.user = payload;
-    }
+    setUser (
+        state,
+        authUser = null
+    ) {
+        let values = { authenticated: false }
+        if (authUser !== null) {
+            values = Object.assign(values, authUser)
+        }
+        for (const [
+            key,
+            value
+        ] of Object.entries(values)) {
+            Vue.set(state.authUser, key, value)
+        }
+    },
+};
+
+export const getters = {
+    authenticated(state) {
+        console.log('getter start');
+        const hasAuthenticated = Reflect.has(state.authUser, 'authenticated');
+
+        let authenticated = false
+        console.log('hasAuthenticated', hasAuthenticated);
+        if (hasAuthenticated) {
+            authenticated = state.authUser.authenticated
+        }
+        return authenticated
+    },
+    authUser (state) {
+        return state.authUser
+    },
 };
 
 export const actions = {
@@ -22,8 +53,10 @@ export const actions = {
                 }
             });
 
-            commit('setUser', response);
-            Cookie.set('auth', response);
+            const user = Object.assign({}, response);
+            user.authenticated = true;
+
+            commit('setUser', user);
         }catch (e) {
             console.dir(e);
             throw e;

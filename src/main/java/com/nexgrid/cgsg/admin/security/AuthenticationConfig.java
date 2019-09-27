@@ -18,13 +18,13 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -34,10 +34,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import javax.servlet.http.Cookie;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,61 +69,72 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter implement
 //                .and()
                 .disable()
                 .authorizeRequests()
-                //.anyRequest().authenticated()
-                .antMatchers("/login/**").permitAll()
-                .antMatchers("/menu/**").authenticated()
-                .and().formLogin().successHandler(this.getAuthenticationSuccessHandler())
-                .failureHandler(this.geAuthenticationFailureHandler())
+                    //.anyRequest().authenticated()
+                    .antMatchers("/login/**").permitAll()
+                    .antMatchers("/menu/**").authenticated()
                 .and()
-                .logout()
-                .logoutSuccessHandler(this.getLogoutSuccessHandler())
+                    .formLogin()
+                        .successHandler(this.getAuthenticationSuccessHandler())
+                        .failureHandler(this.geAuthenticationFailureHandler())
+                .and()
+                    .logout()
+                        .logoutSuccessHandler(this.getLogoutSuccessHandler())
+                .and()
+                    .exceptionHandling()
+                        .authenticationEntryPoint(this.getAuthenticationEntryPoint())
         ;
     }
 
+    private AuthenticationEntryPoint getAuthenticationEntryPoint() {
+        return (request, response, authException) -> {
+            ResultInfo resultInfo = ResultInfo.builder()
+                    .code(SystemStatusCode.ACCESS_DENIED.getCode())
+                    .message(authException.getMessage())
+                    .build();
+
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().append(objectMapper.writeValueAsString(resultInfo));
+        };
+    }
 
 
     private AuthenticationSuccessHandler getAuthenticationSuccessHandler() {
-        return new AuthenticationSuccessHandler() {
-            @Override
-            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                ResultInfo resultInfo = new ResultInfo();
-                resultInfo.setCode(SystemStatusCode.LOGIN_SUCCESS.getCode());
+        return (request, response, authentication) -> {
+            ResultInfo resultInfo = new ResultInfo();
+            resultInfo.setCode(SystemStatusCode.LOGIN_SUCCESS.getCode());
 
-                response.setStatus(HttpStatus.OK.value());
-                response.getWriter().append(objectMapper.writeValueAsString(resultInfo));
-            }
+            Cookie cookie = new Cookie("session", request.getSession().getId());
+            cookie.setPath("/");
+
+            response.addCookie(cookie);
+            response.setStatus(HttpStatus.OK.value());
+            response.getWriter().append(objectMapper.writeValueAsString(resultInfo));
         };
     }
 
     private AuthenticationFailureHandler geAuthenticationFailureHandler() {
-        return new AuthenticationFailureHandler() {
-            @Override
-            public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-                ResultInfo resultInfo = new ResultInfo();
+        return (request, response, exception) -> {
+            ResultInfo resultInfo = new ResultInfo();
 
-                if (exception instanceof AdminException) {
-                    AdminException e = (AdminException) exception;
-                    resultInfo.setCode(e.getCode().getCode());
-                    resultInfo.setMessage(e.getMessage());
-                } else if (exception instanceof BadCredentialsException) {
-                    resultInfo.setCode(SystemStatusCode.FAIL_LOGIN.getCode());
-                    resultInfo.setMessage(exception.getMessage());
-                }
-
-                response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.getWriter().append(objectMapper.writeValueAsString(resultInfo));
+            if (exception instanceof AdminException) {
+                AdminException e = (AdminException) exception;
+                resultInfo.setCode(e.getCode().getCode());
+                resultInfo.setMessage(e.getMessage());
+            } else if (exception instanceof BadCredentialsException) {
+                resultInfo.setCode(SystemStatusCode.FAIL_LOGIN.getCode());
+                resultInfo.setMessage(exception.getMessage());
             }
+
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.getWriter().append(objectMapper.writeValueAsString(resultInfo));
         };
     }
 
     private LogoutSuccessHandler getLogoutSuccessHandler() {
-        return new LogoutSuccessHandler() {
-            @Override
-            public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                ResultInfo resultInfo = new ResultInfo();
-                resultInfo.setMessage(SystemStatusCode.LOGIN_SUCCESS.getCode());
-                response.getWriter().append(objectMapper.writeValueAsString(resultInfo));
-            }
+        return (request, response, authentication) -> {
+            ResultInfo resultInfo = new ResultInfo();
+            resultInfo.setMessage(SystemStatusCode.LOGIN_SUCCESS.getCode());
+            response.getWriter().append(objectMapper.writeValueAsString(resultInfo));
         };
     }
 

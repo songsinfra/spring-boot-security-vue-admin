@@ -64,4 +64,7 @@ module.exports = {
             pathRewrite: {'^/api': ''},
         }    // proxy url
     },
+    router:{
+        middleware: 'auth'
+    }
 }

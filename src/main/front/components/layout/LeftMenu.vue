@@ -91,12 +91,18 @@
             //     return this.$store.state.menu.menuList;
             // }
         },
-        async beforeCreate() {
+        async beforeCreate(context) {
+            console.dir(context);
             try {
                 const menuList = await this.$axios.$post('/api/menu/getLayoutMenuList');
                 this.menuList = menuList;
             } catch (e) {
-                this.$bvModal.msgBoxOk(e.message);
+                if (e.response.status === 401) {
+                    window.location = '/login/login';
+                } else {
+                    console.dir( e);
+                    await this.$bvModal.msgBoxOk(e.message);
+                }
             }
         },
         methods:{
