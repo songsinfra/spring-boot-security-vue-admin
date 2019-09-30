@@ -1,11 +1,15 @@
 <template>
-    <b-modal id="modal_update_up_menu"
-             centered
-             @ok.prevent="handleOk"
-             ref="modal"
-             @show="showModal"
-             title="메뉴 수정">
-        <b-form ref="form" @submit.stop.prevent="handleSubmit">
+    <b-modal
+            id="modal_update_up_menu"
+            centered
+            @ok.prevent="handleOk"
+            ref="modal"
+            @show="showModal"
+            title="메뉴 수정">
+        <b-form
+                ref="form"
+                @submit.stop.prevent="handleSubmit"
+        >
             <b-form-group
                     id="upMenuName-group-1"
                     label="상위메뉴명:"
@@ -22,8 +26,11 @@
                     label="사용여부:"
                     label-for="useYn-1"
             >
-                <b-form-select id="useYn-1" :required="true"
-                               v-model="upMenu.useYn" :options="useYnOption"
+                <b-form-select
+                        id="useYn-1"
+                        :required="true"
+                        v-model="upMenu.useYn"
+                        :options="useYnOption"
                 ></b-form-select>
             </b-form-group>
         </b-form>
@@ -33,7 +40,7 @@
 <script>
     export default {
         props: ['selectedMenu', 'state'],
-        name: "newUpMenu",
+        name: "modalUpMenu",
         data() {
             return {
                 upMenu: {}
@@ -44,11 +51,7 @@
                 return this.$store.state.menu.useYnList;
             }
         },
-        watch: {
-            selectedMenu() {
-                if(this.$props.state === 'CREATE') this.upMenu = {};
-            }
-        },
+
         methods:{
            async handleOk() {
                debugger;
@@ -85,7 +88,10 @@
             async showModal() {
                 try {
                     this.$nextTick(async () => {
-                        if (!this.$props.selectedMenu.menuId) return;
+                        if (this.$props.state === 'CREATE') {
+                            this.upMenu = {};
+                            return;
+                        }
 
                         this.upMenu = {...this.$props.selectedMenu};
                     });

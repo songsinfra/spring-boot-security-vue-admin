@@ -43,7 +43,7 @@ module.exports = {
     },
     modules: [
         '@nuxtjs/axios',
-        'bootstrap-vue/nuxt'
+        'bootstrap-vue/nuxt',
     ],
     bootstrapVue: {
         bootstrapCSS: false, // Or `css: false`
@@ -51,7 +51,8 @@ module.exports = {
     },
     plugins: [
         '~/plugins/axios',
-        '~/plugins/eventBus'
+        '~/plugins/eventBus',
+        '~/plugins/jsModal'
     ],
     axios: {
         proxyHeaders: true,

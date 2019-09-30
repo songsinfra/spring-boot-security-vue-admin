@@ -32,7 +32,7 @@
                 <li class=" nav-item" v-for="menu in menuList" :key="menu.menuId" v-on:click="showMenu" v-bind:class="{ open : vMenu }">
                     <a href="#">
                         <i class="ft-home"></i>
-                        <span class="menu-title" data-i18n="">{{menu.menuName}}</span>
+                        <span class="menu-title" data-i18n="">{{menu.menuName}}{{menu.menuId}}</span>
                         <span class="badge badge badge-info badge-pill float-right mr-2">{{menu.subMenu && menu.subMenu.length}}</span>
                     </a>
                     <ul class="menu-content">
@@ -78,7 +78,7 @@
 
 <script>
     export default {
-        name: "leftMenu",
+        name: "LeftMenu",
         data: () => {
             return {
                 vMenu: false,
@@ -86,18 +86,24 @@
                 menuList : []
             }
         },
+
         computed: {
             // menuList(){
             //     return this.$store.state.menu.menuList;
             // }
         },
-        async beforeCreate(context) {
-            console.dir(context);
+
+        async beforeCreate() {
+            console.log('process.server :', process.server);
+            if(process.server) return;
+
             try {
                 const menuList = await this.$axios.$post('/api/menu/getLayoutMenuList');
                 this.menuList = menuList;
             } catch (e) {
-                if (e.response.status === 401) {
+                console.log("window 2------> ", e);
+                if (e.response.status === 401|| e.response.status === 504) {
+                    console.log("window ------> ", window);
                     window.location = '/login/login';
                 } else {
                     console.dir( e);
@@ -105,11 +111,13 @@
                 }
             }
         },
+
         methods:{
             goMenu({redirect, store}, menuId) {
 
                 return redirect(menuId);
             },
+
             showMenu() {
                 this.vMenu = !this.vMenu;
             }

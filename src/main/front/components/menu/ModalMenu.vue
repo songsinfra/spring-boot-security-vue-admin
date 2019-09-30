@@ -1,32 +1,32 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <b-modal id="modal_update_menu"
-             @ok.prevent="ok"
-             ref="modal"
-             @show="showModal"
-             centered
-             title="메뉴 수정">
+    <b-modal
+            id="modal_update_menu"
+            @ok.prevent="ok"
+            ref="modal"
+            @show="showModal"
+            centered
+            title="메뉴 수정">
         <b-form>
             <b-form-group
                     id="upMenuId-group-1"
                     label="상위메뉴:"
                     label-for="upMenuId-1"
             >
-                <b-form-select v-model="menuInfo.upMenuId"
-                               :options="upMenuIdOption"
-                               :value-field="'menuId'"
-                               :text-field="'menuName'"
-                               :disabled="state !=='CREATE'"
-                               :class="'form-control'"
+                <b-form-select
+                        v-model="menuInfo.upMenuId"
+                       :options="upMenuIdOption"
+                       :value-field="'menuId'"
+                       :text-field="'menuName'"
+                       :disabled="state !=='CREATE'"
+                       :class="'form-control'"
                 >
                     <template v-slot:first>
-                        <option :value="undefined" disabled>-- 선택하세요 --</option>
+                        <option
+                                :value="undefined"
+                                disabled
+                        >-- 선택하세요 --</option>
                     </template>
                 </b-form-select>
-<!--                <b-form-input-->
-<!--                        id="upMenuId-1"-->
-<!--                        v-model="menuInfo.upMenuId"-->
-<!--                        required-->
-<!--                ></b-form-input>-->
             </b-form-group>
             <b-form-group
                     id="menuName-group-1"
@@ -56,8 +56,10 @@
                     label="사용여부:"
                     label-for="useYn-1"
             >
-                <b-form-select id="useYn-1"
-                               v-model="menuInfo.useYn" :options="useYnOption"
+                <b-form-select
+                        id="useYn-1"
+                        v-model="menuInfo.useYn"
+                        :options="useYnOption"
                 ></b-form-select>
             </b-form-group>
             <b-form-group
@@ -65,7 +67,8 @@
                     label="URL:"
                     label-for="menuURL-1"
             >
-                <b-form-input :disabled="state !=='CREATE'"
+                <b-form-input
+                        :disabled="state !=='CREATE'"
                         id="menuURL-1"
                         v-model="menuInfo.menuURL"
                         required
@@ -77,7 +80,7 @@
 
 <script>
     export default {
-        name: "newMenu",
+        name: "modalMenu",
         props: ['selectedMenu', 'state'],
         data(){
             return {
@@ -93,11 +96,7 @@
                 return this.$store.state.menu.useYnList;
             }
         },
-        watch: {
-            selectedMenu() {
-                if(this.$props.state === 'CREATE') this.menuInfo = {};
-            }
-        },
+
         methods:{
             async ok(bvModalEvt) {
                 try {
@@ -128,7 +127,10 @@
                 try {
 
                     this.$nextTick(async () => {
-                        if(!this.$props.selectedMenu.menuId) return;
+                        if(this.$props.state === 'CREATE') {
+                            this.menuInfo = {};
+                            return;
+                        }
 
                         const menuId = this.$props.selectedMenu.menuId;
                         const response = await this.$axios.$post('/api/menu/getMenuInfo', {

@@ -1,7 +1,7 @@
 <template>
     <div>
-        <Top/>
-        <LeftMenu/>
+        <base-top/>
+        <base-left-menu/>
         <div class="app-content content">
             <div class="content-wrapper">
                 <div class="content-wrapper-before"></div>
@@ -28,22 +28,22 @@
                 </div>
             </div>
         </div>
-        <Footer/>
+        <base-footer/>
     </div>
 </template>
 
 <script>
-    import LeftMenu from '~/components/layout/leftMenu.vue';
-    import Top from '~/components/layout/Top.vue';
-    import Footer from '~/components/layout/Footer.vue';
+    import BaseLeftMenu from '~/components/layout/BaseLeftMenu.vue';
+    import BaseTop from '~/components/layout/BaseTop.vue';
+    import BaseFooter from '~/components/layout/BaseFooter.vue';
 
     export default {
         name: "default",
         // middleware: 'auth',
         components: {
-            Top,
-            LeftMenu,
-            Footer
+            BaseTop,
+            BaseLeftMenu,
+            BaseFooter
         },
         head() {
             return {

@@ -91,11 +91,11 @@
             async login(){
                 try {
                     await this.$store.dispatch('login/setUser', {id: this.user.username, password: this.user.password});
-                    // await this.$store.dispatch('menu/addMenu');
 
                     this.$router.push('/');
                 } catch (e) {
-                    await this.$bvModal.msgBoxOk(e.response.data.message);
+                    const msg = e.response.data.message || e.response.data;
+                    await this.$bvModal.msgBoxOk(msg);
                 }
             }
         }

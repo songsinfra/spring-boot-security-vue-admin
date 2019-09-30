@@ -1,7 +1,10 @@
 import cookieparser from 'cookieparser';
 
 export default async ({store, redirect, req, route, $axios})=> {
-    if (!req) { return }
+    if (!req) {
+        console.log('auth _ req ');
+        return;
+    }
 
     const session = req.headers.cookie && cookieparser.parse(req.headers.cookie).session;
 
