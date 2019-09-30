@@ -124,10 +124,9 @@
                 }
             },
             async showModal() {
-                try {
-
-                    this.$nextTick(async () => {
-                        if(this.$props.state === 'CREATE') {
+                this.$nextTick(async () => {
+                    try {
+                        if (this.$props.state === 'CREATE') {
                             this.menuInfo = {};
                             return;
                         }
@@ -137,11 +136,16 @@
                             menuId: menuId
                         });
                         this.menuInfo = response;
-                    })
-
-                } catch (e) {
-                     await this.$bvModal.msgBoxOk(e.message);
-                }
+                    } catch (e) {
+                        const status = e.response && e.response.status;
+                        console.log('error-------------', status);
+                        if (status === 401) {
+                            this.$router.push("/login/login");
+                        } else {
+                            await this.$bvModal.msgBoxOk(e.message);
+                        }
+                    }
+                });
             }
         }
     }
