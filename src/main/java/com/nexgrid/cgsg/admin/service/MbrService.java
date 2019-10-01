@@ -27,6 +27,9 @@ public class MbrService {
 
     public int insertMbr(MbrInfo mbrInfo) {
         Assert.notNull(mbrInfo, "mbrInfo is null");
+        Assert.notNull(mbrInfo.getRoleCd(), "roleCd is null");
+        Assert.notNull(mbrInfo.getMbrPw(), "mbrPw is null");
+        Assert.notNull(mbrInfo.getMbrNm(), "mbrNm is null");
 
         return mbrMapper.insertMbr(mbrInfo);
     }
@@ -39,7 +42,7 @@ public class MbrService {
         return duplicationMbrId > 0;
     }
 
-    public int updateMemberInfo(MbrInfo mbrInfo) {
+    public int updateMbr(MbrInfo mbrInfo) {
         Assert.notNull(mbrInfo, "mbrInfo is null");
         Assert.hasLength(mbrInfo.getMbrId(), "mbrId is null");
 
@@ -48,7 +51,7 @@ public class MbrService {
         }
 
         mbrInfo.setPwApplyDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
-        return mbrMapper.updateMemberInfo(mbrInfo);
+        return mbrMapper.updateMbr(mbrInfo);
     }
 
     private void setPwdHistoryTo(MbrInfo mbrInfo) {

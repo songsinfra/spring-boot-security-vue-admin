@@ -27,7 +27,6 @@
 		
 		SELECT 
 			mbr_id
-			,mbr_pw
 			,mbr_nm
 			,company
 			,department
@@ -114,8 +113,8 @@
 		)
 	</insert>
 	
-	<update id="updateMemberInfo">
-	    /* MbrMapper.updateMemberInfo */
+	<update id="updateMbr">
+	    /* MbrMapper.updateMbr */
 	    
 		UPDATE tb_mbr_info
 		SET

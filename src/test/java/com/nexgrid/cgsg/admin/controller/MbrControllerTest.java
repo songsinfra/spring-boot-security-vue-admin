@@ -2,6 +2,7 @@ package com.nexgrid.cgsg.admin.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
+import com.nexgrid.cgsg.admin.vo.DeleteMbrParam;
 import com.nexgrid.cgsg.admin.vo.MbrInfo;
 import com.nexgrid.cgsg.admin.vo.UpdatePwdParam;
 import org.junit.Before;
@@ -16,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.Arrays;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,7 +52,7 @@ public class MbrControllerTest {
         mvc.perform(post("/mbr/getMemberList"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].mbrId").value("admin1"));
+                .andExpect(jsonPath("$.data.[0].mbrId").value("admin1"));
     }
 
     @Test
@@ -64,7 +67,7 @@ public class MbrControllerTest {
     @Transactional
     public void insertMbr() throws Exception {
         MbrInfo mbrInfo = MbrInfo.builder()
-                .mbrId("test1")
+                .mbrId("iTest1")
                 .roleCd("R-001")
                 .mbrPw("password")
                 .mbrNm("관리자")
@@ -202,7 +205,7 @@ public class MbrControllerTest {
 
     @Test
     @Transactional
-    public void updateMemberInfo_등록된_ID가_없어_업데이트_안됨() throws Exception {
+    public void updateMbr_등록된_ID가_없어_업데이트_안됨() throws Exception {
         MbrInfo mbrInfo = MbrInfo.builder()
                 .mbrId("null")
                 .roleCd("R-001")
@@ -214,7 +217,7 @@ public class MbrControllerTest {
                 .mbrDptmt("컨버젼스팀")
                 .build();
 
-        mvc.perform(post("/mbr/updateMemberInfo")
+        mvc.perform(post("/mbr/updateMbr")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mbrInfo))
         )
@@ -226,7 +229,7 @@ public class MbrControllerTest {
 
     @Test
     @Transactional
-    public void updateMemberInfo_비밀번호변경_아이디없음() throws Exception {
+    public void updateMbr_비밀번호변경_아이디없음() throws Exception {
         MbrInfo mbrInfo = MbrInfo.builder()
                 .mbrId("null")
                 .roleCd("R-001")
@@ -239,7 +242,7 @@ public class MbrControllerTest {
                 .mbrDptmt("컨버젼스팀")
                 .build();
 
-        mvc.perform(post("/mbr/updateMemberInfo")
+        mvc.perform(post("/mbr/updateMbr")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mbrInfo))
         )
@@ -250,7 +253,7 @@ public class MbrControllerTest {
 
     @Test
     @Transactional
-    public void updateMemberInfo_비밀번호_변경() throws Exception {
+    public void updateMbr_비밀번호_변경() throws Exception {
         MbrInfo mbrInfo = MbrInfo.builder()
                 .mbrId("admin1")
                 .roleCd("R-001")
@@ -262,7 +265,7 @@ public class MbrControllerTest {
                 .mbrDptmt("컨버젼스팀")
                 .build();
 
-        mvc.perform(post("/mbr/updateMemberInfo")
+        mvc.perform(post("/mbr/updateMbr")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mbrInfo))
         )
@@ -274,7 +277,7 @@ public class MbrControllerTest {
 
     @Test
     @Transactional
-    public void updateMemberInfo() throws Exception {
+    public void updateMbr() throws Exception {
         MbrInfo mbrInfo = MbrInfo.builder()
                 .mbrId("admin1")
                 .roleCd("R-001")
@@ -285,7 +288,7 @@ public class MbrControllerTest {
                 .mbrDptmt("컨버젼스팀")
                 .build();
 
-        mvc.perform(post("/mbr/updateMemberInfo")
+        mvc.perform(post("/mbr/updateMbr")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mbrInfo))
         )
@@ -360,6 +363,22 @@ public class MbrControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value(SystemStatusCode.INVALID_PARAMETER.getCode()));
+    }
+
+    @Test
+    @Transactional
+    public void deleteMbr() throws Exception {
+        DeleteMbrParam deleteMbrParam = DeleteMbrParam.builder()
+                .mbrIdList(Arrays.asList("admin1","admin2"))
+                .build();
+
+        mvc.perform(post("/mbr/deleteMbr")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(deleteMbrParam))
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+        ;
     }
 
 }

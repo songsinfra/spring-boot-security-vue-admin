@@ -54,7 +54,6 @@
 
         methods:{
            async handleOk() {
-               debugger;
                console.dir(this.$refs.form);
                const result = this.$refs.form.checkValidity();
                if(!result) {

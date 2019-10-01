@@ -47,29 +47,29 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void selectRuleMenuList_rolecode에_해당하는_메뉴가져오기() {
+    public void selectRoleMenuList_rolecode에_해당하는_메뉴가져오기() {
         String roleCode = "R-001";
         String menuId = "";
-        List<AuthInfo> authInfos = authService.selectRuleMenuList(roleCode, menuId);
+        List<AuthInfo> authInfos = authService.selectRoleMenuList(roleCode, menuId);
 
         assertThat(authInfos).size().isGreaterThan(0);
     }
 
     @Test
-    public void selectRuleMenuListByRoleCodeAndMenuId() {
+    public void selectRoleMenuListByRoleCodeAndMenuId() {
         String roleCode = "R-001";
         String menuId = "AA01";
-        List<AuthInfo> authInfos = authService.selectRuleMenuList(roleCode, menuId);
+        List<AuthInfo> authInfos = authService.selectRoleMenuList(roleCode, menuId);
 
         assertThat(authInfos).size().isEqualTo(1);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void selectRuleMenuListByRoleCode_Null() {
+    public void selectRoleMenuListByRoleCode_Null() {
         String roleCode = null;
         String menuId = "";
 
-        authService.selectRuleMenuList(roleCode, menuId);
+        authService.selectRoleMenuList(roleCode, menuId);
     }
 
     @Test

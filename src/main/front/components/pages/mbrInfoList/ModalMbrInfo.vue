@@ -1,0 +1,244 @@
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+    <b-modal
+            id="modal_mbrInfo"
+            @ok.prevent="ok"
+            ref="modal"
+            @show="showModal"
+            centered
+            title="회원정보 수정">
+        <b-form>
+            <b-form-group
+                    id="roleCd-group-1"
+                    label="권한:"
+                    label-for="roleCd-1"
+            >
+                <b-form-select
+                        v-model="mbrInfo.roleCd"
+                        :options="authList"
+                        :value-field="'roleCode'"
+                        :text-field="'codeNm'"
+                        :disabled="state !=='CREATE'"
+                        :class="'form-control'"
+                >
+                    <template v-slot:first>
+                        <option
+                                :value="undefined"
+                                disabled
+                        >-- 선택하세요 --</option>
+                    </template>
+                </b-form-select>
+            </b-form-group>
+            <b-form-group
+                    id="mbrId-group-1"
+                    label="아이디:"
+                    label-for="mbrId-1"
+                    :class="'mt-1'"
+            >
+                <b-form-input
+                        id="mbrId-1"
+                        v-model="mbrInfo.mbrId"
+                        required
+                ></b-form-input>
+            </b-form-group>
+            <b-form-group
+                    id="mbrPw-group-1"
+                    label="비밀번호:"
+                    label-for="mbrPw-1"
+            >
+                <b-form-input
+                        id="mbrPw-1"
+                        v-model="mbrInfo.mbrPw"
+                        type="password"
+                        required
+                ></b-form-input>
+            </b-form-group>
+            <b-form-group
+                    id="mbrPwRe-group-1"
+                    label="비밀번호 확인:"
+                    label-for="mbrPwRe-1"
+            >
+                <b-form-input
+                        id="mbrPwRe-1"
+                        v-model="mbrInfo.mbrPwRe"
+                        type="password"
+                        required
+                ></b-form-input>
+            </b-form-group>
+            <b-form-group
+                    id="mbrNm-group-1"
+                    label="이름:"
+                    label-for="mbrNm-1"
+            >
+                <b-form-input
+                        id="mbrNm-1"
+                        v-model="mbrInfo.mbrNm"
+                        required
+                ></b-form-input>
+            </b-form-group>
+            <b-form-group
+                    id="input-group-1"
+                    label="회사:"
+                    label-for="mbrCompany-1"
+            >
+                <b-form-select
+                        v-model="mbrInfo.mbrCompany"
+                        :options="companyList"
+                        :value-field="'mbrCompany'"
+                        :text-field="'mbrCompany'"
+                        :class="'form-control'"
+                        @change="showMbrCompanyText = mbrInfo.mbrCompany === 'new'"
+                >
+                    <option :value="'new'">-- 직접입력 --</option>
+                </b-form-select>
+                <b-form-input
+                        id="mbrCompanyText-1"
+                        v-model="mbrInfo.mbrCompanyText"
+                        v-if="showMbrCompanyText"
+                ></b-form-input>
+            </b-form-group>
+            <b-form-group
+                    id="mbrDptmt-group-1"
+                    label="부서:"
+                    label-for="mbrDptmt-1"
+            >
+                <b-form-input
+                        id="mbrDptmt-1"
+                        v-model="mbrInfo.mbrDptmt"
+                        required
+                ></b-form-input>
+            </b-form-group>
+            <b-form-group
+                    id="tel-group-1"
+                    label="휴대폰:"
+                    label-for="tel-1"
+            >
+                <b-form-input
+                        id="tel-1"
+                        v-model="mbrInfo.tel"
+                        required
+                ></b-form-input>
+            </b-form-group>
+            <b-form-group
+                    id="email-group-1"
+                    label="이메일:"
+                    label-for="email-1"
+            >
+                <b-form-input
+                        id="email-1"
+                        v-model="mbrInfo.email"
+                        required
+                ></b-form-input>
+            </b-form-group>
+        </b-form>
+    </b-modal>
+</template>
+
+<script>
+    export default {
+        name: "ModalMbrInfo",
+
+        props: ['selectedMbrInfo', 'state'],
+
+        data() {
+            return {
+                mbrInfo: {},
+                authList: [],
+                companyList: [],
+                showMbrCompanyText : false
+            };
+        },
+
+        async beforeMount() {
+            await Promise.all([
+                this.getAuthList(),
+                this.getCompanyList()]
+            );
+        },
+
+        methods:{
+            showModal() {
+
+                this.$nextTick(async () => {
+                    try {
+                        if (this.$props.state === 'CREATE') {
+                            this.mbrInfo = {};
+                            return;
+                        }
+
+                        this.mbrInfo = {...this.$props.selectedMbrInfo};
+                    } catch (e) {
+
+                    }
+                });
+            },
+
+            async ok() {
+                try {
+
+                    const url = this.$props.state === 'CREATE' ? "/api/mbr/insertMbr" : "/api/mbr/updateMbr";
+                    const mbrInfo = {...this.mbrInfo};
+
+                    if (mbrInfo.mbrCompany === 'new') {
+                        mbrInfo.mbrCompany = mbrInfo.mbrCompanyText;
+                    }
+
+                    if(mbrInfo.mbrPw != mbrInfo.mbrPwRe){
+                        await this.$bvModal.msgBoxOk("입력한 비빌번호와 비빌번호 확인이 다릅니다.");
+                        return;
+                    }
+
+                    if(this.$props.state === 'CREATE' && await this.isDuplicateMember(mbrInfo.mbrId, mbrInfo.tel)){
+                        await this.$bvModal.msgBoxOk("등록된 ID가 있습니다.");
+                        return;
+                    }
+
+                    const response = await this.$axios.$post(url, mbrInfo);
+
+                    await this.$bvModal.msgBoxOk("저장이 완료 되었습니다.");
+                    this.$eventBus.$emit('refreshMbrList')
+                    this.$refs.modal.hide();
+                } catch (e) {
+                    console.dir(e);
+                    e = (e.response && e.response.data) || e;
+
+                    await this.$bvModal.msgBoxOk(e.message);
+                }
+
+            },
+
+            async isDuplicateMember(mbrId) {
+                try {
+                    const {data} = await this.$axios.post('/api/mbr/isDuplicateMember',{mbrId});
+                    return data.data;
+                } catch (e) {
+                    await this.$bvModal.msgBoxOk(e.message);
+                }
+            },
+
+           async getAuthList() {
+                try {
+                    const {data} = await this.$axios.post('/api/auth/selectRoleMstList');
+                    this.authList = data.data;
+                } catch (e) {
+                    await this.$bvModal.msgBoxOk(e.message);
+                }
+            },
+
+            async getCompanyList() {
+                try {
+                    const {data} = await this.$axios.post('/api/mbr/getCompanyList');
+                    this.companyList = data.data;
+                } catch (e) {
+                    await this.$bvModal.msgBoxOk(e.message);
+                }
+            },
+
+        }
+
+
+    }
+</script>
+
+<style scoped>
+
+</style>

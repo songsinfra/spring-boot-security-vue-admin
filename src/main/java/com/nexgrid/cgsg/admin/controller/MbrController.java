@@ -26,12 +26,28 @@ public class MbrController {
     private MbrService mbrService;
 
     @RequestMapping("/getMemberList")
-    public List<MbrInfo> getMemberList(Principal principal) {
+    public ResultInfo getMemberList(Principal principal) {
         if(principal == null) throw new AdminException(SystemStatusCode.INVALID_PARAMETER, "require Login");
 
         LoginInfo loginInfo  = ((AdminUser)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getLoginInfo();
-        return mbrService.getMemberList(loginInfo.getManagerYn(), loginInfo.getMbrId());
+        List<MbrInfo> memberList = mbrService.getMemberList(loginInfo.getManagerYn(), loginInfo.getMbrId());
+
+        return ResultInfo.builder()
+                .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+                .data(memberList)
+                .build();
     }
+
+    @RequestMapping("/getCompanyList")
+    public ResultInfo getCompanyList() {
+        List<String> companyList = mbrService.getCompanyList();
+
+        return ResultInfo.builder()
+                .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+                .data(companyList)
+                .build();
+    }
+
 
     @RequestMapping("/insertMbr")
     public ResultInfo insertMbr(@RequestBody @Validated MbrInfo mbrInfo) {
@@ -53,10 +69,10 @@ public class MbrController {
                 .build();
     }
 
-    @RequestMapping("/updateMemberInfo")
-    public ResultInfo updateMemberInfo(@RequestBody @Validated MbrInfo mbrInfo) {
+    @RequestMapping("/updateMbr")
+    public ResultInfo updateMbr(@RequestBody @Validated MbrInfo mbrInfo) {
 
-        int updateCnt = mbrService.updateMemberInfo(mbrInfo);
+        int updateCnt = mbrService.updateMbr(mbrInfo);
         String message = String.format("%s 건 업데이트 되었습니다.", updateCnt);
 
         return ResultInfo.builder()
@@ -69,6 +85,17 @@ public class MbrController {
     public ResultInfo updatePwd(@RequestBody @Validated UpdatePwdParam mbrInfo) {
         int updateCnt = mbrService.updatePwd(mbrInfo.getMbrId(), mbrInfo.getMbrNewPw());
         String message = String.format("%s 건 업데이트 되었습니다.", updateCnt);
+
+        return ResultInfo.builder()
+                .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+                .message(message)
+                .build();
+    }
+
+    @RequestMapping("/deleteMbr")
+    public ResultInfo deleteMbr(@RequestBody @Validated DeleteMbrParam mbrInfo) {
+        int deleteCnt = mbrService.deleteMbr(mbrInfo.getMbrIdList());
+        String message = String.format("%s 건 삭제 되었습니다.", deleteCnt);
 
         return ResultInfo.builder()
                 .code(SystemStatusCode.LOGIN_SUCCESS.getCode())

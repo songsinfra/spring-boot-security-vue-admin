@@ -19,8 +19,10 @@ public class AuthController {
     private AuthService authService;
 
     @RequestMapping("/selectRoleMstList")
-    public ResultInfo selectRoleMst(@RequestBody @Validated RoleMstParam roleMstParam) {
-        List<AuthInfo> authInfos = authService.selectRoleMstList(roleMstParam.getUseYn());
+    public ResultInfo selectRoleMst(@RequestBody(required = false) @Validated RoleMstParam roleMstParam) {
+        String useYn = roleMstParam != null ? roleMstParam.getUseYn() : null;
+
+        List<AuthInfo> authInfos = authService.selectRoleMstList(useYn);
 
         return ResultInfo.builder()
                 .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
@@ -29,10 +31,10 @@ public class AuthController {
                 ;
     }
 
-    @RequestMapping("/selectRuleMenuList")
-    public ResultInfo selectRuleMenuList(@RequestBody @Validated RoleMstParam roleMstParam) {
+    @RequestMapping("/selectRoleMenuList")
+    public ResultInfo selectRoleMenuList(@RequestBody @Validated RoleMstParam roleMstParam) {
 
-        List<AuthInfo> authInfos = authService.selectRuleMenuList(roleMstParam.getRoleCode(), roleMstParam.getMenuId());
+        List<AuthInfo> authInfos = authService.selectRoleMenuList(roleMstParam.getRoleCode(), roleMstParam.getMenuId());
 
         return ResultInfo.builder()
                 .code(SystemStatusCode.LOGIN_SUCCESS.getCode())

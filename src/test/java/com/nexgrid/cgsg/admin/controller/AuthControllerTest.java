@@ -76,12 +76,12 @@ public class AuthControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void selectRuleMenuList_roleCode로_검색() throws Exception {
+    public void selectRoleMenuList_roleCode로_검색() throws Exception {
         RoleMstParam roleMstParam = RoleMstParam.builder()
                 .roleCode("R-001")
                 .build();
 
-        mvc.perform(post("/auth/selectRuleMenuList")
+        mvc.perform(post("/auth/selectRoleMenuList")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(roleMstParam))
         )
@@ -91,13 +91,13 @@ public class AuthControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void selectRuleMenuList_menuID_추가하여_검색() throws Exception {
+    public void selectRoleMenuList_menuID_추가하여_검색() throws Exception {
         RoleMstParam roleMstParam = RoleMstParam.builder()
                 .roleCode("R-001")
                 .menuId("AA02")
                 .build();
 
-        mvc.perform(post("/auth/selectRuleMenuList")
+        mvc.perform(post("/auth/selectRoleMenuList")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(roleMstParam))
         )
@@ -107,12 +107,12 @@ public class AuthControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void selectRuleMenuList_roleCode_null() throws Exception {
+    public void selectRoleMenuList_roleCode_null() throws Exception {
         RoleMstParam roleMstParam = RoleMstParam.builder()
                 .menuId("AA02")
                 .build();
 
-        mvc.perform(post("/auth/selectRuleMenuList")
+        mvc.perform(post("/auth/selectRoleMenuList")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(roleMstParam))
         )

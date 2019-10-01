@@ -97,8 +97,8 @@ public class MbrServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void updateMemberInfo_등록된_멤버가_없음_오류() {
-        mbrService.updateMemberInfo(MbrInfo.builder()
+    public void updateMbr_등록된_멤버가_없음_오류() {
+        mbrService.updateMbr(MbrInfo.builder()
                 .mbrId("insertMbr1")
                 .mbrNm("홍길동")
                 .newPw("newPassword")
@@ -115,8 +115,8 @@ public class MbrServiceTest {
 
     @Test
     @Transactional
-    public void updateMemberInfo() {
-        int insertCnt = mbrService.updateMemberInfo(MbrInfo.builder()
+    public void updateMbr() {
+        int insertCnt = mbrService.updateMbr(MbrInfo.builder()
                 .mbrId("admin1")
                 .mbrNm("홍길동")
                 .roleCd("R-001")

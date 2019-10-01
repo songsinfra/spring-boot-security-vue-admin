@@ -16,13 +16,13 @@ public class AuthService {
 	AuthMapper authMapper;
 
 	public List<AuthInfo> selectRoleMstList(String useYn) {
-		return authMapper.selectRoleMst(useYn);
+		return authMapper.selectRoleMstList(useYn);
 	}
 
-	public List<AuthInfo> selectRuleMenuList(String roleCode, String menuId) {
+	public List<AuthInfo> selectRoleMenuList(String roleCode, String menuId) {
 		Assert.hasLength(roleCode, "roleCode is null");
 
-		return authMapper.selectRuleMenuList(roleCode, menuId);
+		return authMapper.selectRoleMenuList(roleCode, menuId);
 	}
 
 	@Transactional

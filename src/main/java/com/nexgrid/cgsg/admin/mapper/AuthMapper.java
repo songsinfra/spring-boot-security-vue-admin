@@ -11,12 +11,12 @@ public interface AuthMapper {
 	/**
 	 * 등록된 권한 조회
 	 */
-	List<AuthInfo> selectRoleMst(String useYn);
+	List<AuthInfo> selectRoleMstList(String useYn);
 
 	/**
 	 * 권한에 등록된 메뉴 조회
 	 */
-	List<AuthInfo> selectRuleMenuList(String roleCode, String menuId);
+	List<AuthInfo> selectRoleMenuList(String roleCode, String menuId);
 
 	/**
 	 * 권한에 등록된 메뉴 삭제
