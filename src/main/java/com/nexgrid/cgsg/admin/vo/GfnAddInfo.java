@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Data
@@ -55,7 +57,12 @@ public class GfnAddInfo {
     private String updateId;
     private Date updateDt;
 
-//    @AssertTrue(message = "나이는 0보다 커야 하며 150보다 작아야 합니다.")
+    public String getCreateDt() {
+        LocalDateTime dateTime = this.createDt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay();
+        return dateTime.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+    }
+
+    //    @AssertTrue(message = "나이는 0보다 커야 하며 150보다 작아야 합니다.")
 //    public boolean isValidSvcTermType() {
 //        return AddItemType.GFN.getType().equalsIgnoreCase(this.svcTermType) ?
 //                this.svcTermType == SvcTermType.NONE.getType() :

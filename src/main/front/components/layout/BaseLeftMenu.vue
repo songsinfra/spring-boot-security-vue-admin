@@ -32,7 +32,7 @@
                 <li class=" nav-item" v-for="menu in menuList" :key="menu.menuId" v-on:click="showMenu" v-bind:class="{ open : vMenu }">
                     <a href="#">
                         <i class="ft-home"></i>
-                        <span class="menu-title" data-i18n="">{{menu.menuName}}{{menu.menuId}}</span>
+                        <span class="menu-title" data-i18n="">{{menu.menuName}}</span>
                         <span class="badge badge badge-info badge-pill float-right mr-2">{{menu.subMenu && menu.subMenu.length}}</span>
                     </a>
                     <ul class="menu-content">
