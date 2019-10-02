@@ -217,7 +217,6 @@ public class AuthControllerTest extends BaseControllerTest {
         this.checkParam(URL, this.getAuthInfoParam().roleCode(null).build(), NULL_MSG);
         this.checkParam(URL, this.getAuthInfoParam().roleCode(genStr(11)).build(), OVER_SIZE_MSG);
 
-        this.checkParam(URL, this.getAuthInfoParam().managerYn(null).build(), "null");
         this.checkParam(URL, this.getAuthInfoParam().managerYn(genStr(3)).build(), OVER_SIZE_MSG);
 
         this.checkParam(URL, this.getAuthInfoParam().useYn(null).build(), NULL_MSG);

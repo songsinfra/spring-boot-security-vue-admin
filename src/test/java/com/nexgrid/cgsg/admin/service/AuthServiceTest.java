@@ -97,15 +97,6 @@ public class AuthServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     @Transactional
-    public void insertRoleMenuList_authInfoList_size0() {
-        String roleCode = "R-001";
-        List<String> menuIdList = new ArrayList<>();
-
-        authService.insertRoleMenuList(roleCode, menuIdList);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    @Transactional
     public void insertRoleMenuList_authInfoList_null() {
         String roleCode = "R-001";
         List<String> menuIdList = null;

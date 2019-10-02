@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="card-header p-1">
                         <ul class="list-inline float-right m-0">
-                            <li class="mr-1">
+                            <li class="mr-1 custom-control custom-checkbox">
                                 <b-form-checkbox
                                     v-model="searchUseYn"
                                     value="Y"
@@ -13,8 +13,8 @@
                                     @change="changeChckbox"
                                 >미사용메뉴표시</b-form-checkbox>
                             </li>
-                            <li><b-button @click="createUpMenu">상위메뉴등록</b-button></li>
-                            <li><b-button @click="createMenu">등록</b-button></li>
+                            <li><b-button @click="createUpMenu" class="btn-primary">상위메뉴등록</b-button></li>
+                            <li><b-button @click="createMenu" class="btn-primary">등록</b-button></li>
                         </ul>
                     </div>
                     <div class="card-content collapse show">
@@ -52,8 +52,8 @@
 </template>
 
 <script>
-    import ModalMenu from '~/components/menu/ModalMenu.vue';
-    import ModalUpMenu from '~/components/menu/ModalUpMenu.vue';
+    import ModalMenu from '~/components/pages/menu/ModalMenu.vue';
+    import ModalUpMenu from '~/components/pages/menu/ModalUpMenu.vue';
     import axios from 'axios';
 
     export default {

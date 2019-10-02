@@ -2,6 +2,7 @@ package com.nexgrid.cgsg.admin.service;
 
 import com.nexgrid.cgsg.admin.mapper.AuthMapper;
 import com.nexgrid.cgsg.admin.vo.AuthInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +30,6 @@ public class AuthService {
 	public int insertRoleMenuList(String roleCode, List<String> menuIdList) {
 		Assert.hasLength(roleCode, "roleCode is null");
 		Assert.notNull(menuIdList, "menuIdList is null");
-		Assert.isTrue(menuIdList.size() > 0, "authInfoList size is 0");
 
 		int insertCnt = 0;
 
@@ -48,7 +48,7 @@ public class AuthService {
 	public int insertRoleMst(AuthInfo authInfo) {
 		Assert.notNull(authInfo, "authInfo is null");
 		Assert.hasLength(authInfo.getRoleCode(), "roleCode is null");
-		Assert.hasLength(authInfo.getManagerYn(), "managerYn is null");
+		if(StringUtils.isEmpty(authInfo.getManagerYn())) authInfo.setManagerYn("N");
 
 		return authMapper.insertRoleMst(authInfo);
 	}

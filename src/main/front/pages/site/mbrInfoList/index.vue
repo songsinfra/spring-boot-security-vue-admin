@@ -5,8 +5,8 @@
                 <div class="card">
                     <div class="card-header p-1">
                         <ul class="list-inline float-right m-0">
-                            <li><b-button @click="deleteMbrInfo">삭제</b-button></li>
-                            <li><b-button @click="createMbrInfo">등록</b-button></li>
+                            <li><b-button @click="deleteMbrInfo" class="btn-danger">삭제</b-button></li>
+                            <li><b-button @click="createMbrInfo" class="btn-primary">등록</b-button></li>
                         </ul>
                     </div>
                     <div class="card-content collapse show">
