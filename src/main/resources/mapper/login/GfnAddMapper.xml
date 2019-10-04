@@ -120,16 +120,11 @@
         <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(svcTermType)">
             ,SVC_TERM_TYPE = #{svcTermType}
         </if>
-        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(svcTermUnit)">
-            ,SVC_TERM_UNIT = #{svcTermUnit}
-        </if>
-        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(svcTermNum)">
-            ,SVC_TERM_NUM = #{svcTermNum}
-        </if>
 
-        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(svcTermDate)">
-            ,SVC_TERM_DATE = #{svcTermDate}
-        </if>
+            ,SVC_TERM_UNIT = #{svcTermUnit, jdbcType=VARCHAR}
+            ,SVC_TERM_NUM = #{svcTermNum, jdbcType=NUMERIC}
+            ,SVC_TERM_DATE = #{svcTermDate, jdbcType=DATE}
+
         <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(updateId)">
             ,UPDATE_ID = #{updateId}
         </if>

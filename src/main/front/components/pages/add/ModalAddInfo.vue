@@ -8,12 +8,31 @@
             title="부가서비스정보 수정">
         <b-form>
             <b-form-group
-                    id="addItemType-group-1"
+                    id="addItemNm-group-1"
                     label="상품구분:"
-                    label-for="addItemType-1"
+                    label-for="addItemNm-1"
+                    :class="'mt-1'"
             >
-                <b-form-radio v-model="addInfo.addItemType" name="some-radios" value="U">U-Cube 연동 상품</b-form-radio>
-                <b-form-radio v-model="addInfo.addItemType" name="some-radios" value="G">NVIDIA 직업 연동 상품</b-form-radio>
+                <b-form-radio-group
+                        @change="changeAddItemType"
+                        v-model="addInfo.addItemType"
+                >
+                    <b-row class="my-1">
+                        <b-col sm="5">
+                            <b-form-radio v-if="state === 'CREATE' || state === 'UPDATE' && addInfo.addItemType === 'U'" value="U">U-Cube 연동 상품</b-form-radio>
+                            <b-form-radio v-if="state === 'CREATE' || state === 'UPDATE' && addInfo.addItemType === 'G'" value="G">NVIDIA 직업 연동 상품</b-form-radio>
+                        </b-col>
+                        <b-col sm="7">
+                            <b-form-input
+                                    id="addItemCode-1"
+                                    v-model="addInfo.addItemCode"
+                                    :disabled="disabledAddItemCode"
+                                    required
+                            ></b-form-input>
+                        </b-col>
+                    </b-row>
+
+                </b-form-radio-group>
             </b-form-group>
             <b-form-group
                     id="addItemNm-group-1"
@@ -58,7 +77,7 @@
                         <b-form-input
                                 id="svcSellPrice-1"
                                 v-model="addInfo.svcSellPrice"
-                                type="text"
+                                type="number"
                                 required
                         ></b-form-input>
                     </b-col>
@@ -67,74 +86,103 @@
                         <b-form-input
                                 id="svcBasePrice-2"
                                 v-model="addInfo.svcBasePrice"
-                                type="text"
+                                type="number"
+                                :disabled="disabledSvcBasePrice"
                                 required
                         ></b-form-input>
                     </b-col>
                 </b-row>
             </b-container>
             <b-form-group
+                    id="svcTermType-group-1"
+                    label="이용기간 유무:"
+                    label-for="svcTermType-1"
+            >
+                <b-form-radio-group v-model="addInfo.svcTermType">
+                    <b-form-radio v-if="addInfo.addItemType === 'U'" value="0">없음</b-form-radio>
+                    <b-form-radio v-if="addInfo.addItemType === 'G'" value="1">이용기간</b-form-radio>
+                    <b-form-radio v-if="addInfo.addItemType === 'G'" value="2">기간한정</b-form-radio>
+                </b-form-radio-group>
+            </b-form-group>
+            <b-form-group
                     id="mbrNm-group-1"
-                    label="이용기간:"
+                    label="이용 만료가 정해진 상품이면 체크 후 이용가능 기간을 설정하세요! U-CUBE 연동상품은 U-CUBE 상품정보 등록기간보다 길지 않아야 함."
+                    label-for="mbrNm-1"
+                    v-if="addInfo.svcTermType === '1'"
+            >
+                <b-form-radio-group v-model="addInfo.svcTermUnit" @change="changeSvcTermUnit">
+                    <b-row class="my-1">
+                        <b-col sm="1">
+                            <b-form-radio value="H">시간</b-form-radio>
+                        </b-col>
+                        <b-col sm="3">
+                            <b-form-input
+                                    id="svcTermNum-1"
+                                    v-model="addInfo.svcTermNumHour"
+                                    type="number"
+                                    required
+                                    :disabled="addInfo.svcTermUnit !== 'H'"
+                            ></b-form-input>
+                        </b-col>
+                        <b-col sm="1">
+                            <b-form-radio value="D">일</b-form-radio>
+                        </b-col>
+                        <b-col sm="3">
+                            <b-form-input
+                                    id="svcTermNum-1"
+                                    v-model="addInfo.svcTermNumDay"
+                                    type="number"
+                                    required
+                                    :disabled="addInfo.svcTermUnit !== 'D'"
+                            ></b-form-input>
+                        </b-col>
+                        <b-col sm="1">
+                            <b-form-radio value="M">개월</b-form-radio>
+                        </b-col>
+                        <b-col sm="3">
+                            <b-form-input
+                                    id="svcTermNum-1"
+                                    v-model="addInfo.svcTermNumMonth"
+                                    type="number"
+                                    required
+                                    :disabled="addInfo.svcTermUnit !== 'M'"
+                            ></b-form-input>
+                        </b-col>
+                    </b-row>
+                </b-form-radio-group>
+            </b-form-group>
+            <b-form-group
+                    v-if="addInfo.svcTermType === '2'"
+                    id="mbrNm-group-1"
+                    label="이용종료일시:"
                     label-for="mbrNm-1"
             >
-                <b-form-checkbox
-                        id="checkbox-group-1"
-                        v-model="addInfo.selected"
-                        name="flavour-1"
-                >이용 만료가 정해진 상품이면 체크 후 이용가능 기간을 설정하세요! U-CUBE 연동상품은 U-CUBE 상품정보 등록기간보다 길지 않아야 함.</b-form-checkbox>
-                <b-row class="my-1">
-                    <b-col sm="1">
-                        <b-form-radio class="pr-1" v-model="addInfo.svcTermType" name="some-radios" value="H">시간</b-form-radio>
-                    </b-col>
-                    <b-col sm="3">
-                        <b-form-input
-                                id="svcSellPrice-1"
-                                v-model="addInfo.svcTermUnit"
-                                type="text"
-                                required
-                        ></b-form-input>
-                    </b-col>
-                    <b-col sm="1">
-                        <b-form-radio v-model="addInfo.svcTermType" name="some-radios" value="D">일</b-form-radio>
-                    </b-col>
-                    <b-col sm="3">
-                        <b-form-input
-                                id="svcSellPrice-1"
-                                v-model="addInfo.svcTermUnit"
-                                type="text"
-                                required
-                        ></b-form-input>
-                    </b-col>
-                    <b-col sm="1">
-                        <b-form-radio v-model="addInfo.svcTermType" name="some-radios" value="M">개월</b-form-radio>
-                    </b-col>
-                    <b-col sm="3">
-                        <b-form-input
-                                id="svcSellPrice-1"
-                                v-model="addInfo.svcTermUnit"
-                                type="text"
-                                required
-                        ></b-form-input>
-                    </b-col>
-                </b-row>
+                <datepicker v-model="addInfo.svcTermDate" :language="ko" format="yyyy-MM-dd"></datepicker>
             </b-form-group>
         </b-form>
     </b-modal>
 </template>
 
 <script>
+    import Datepicker from 'vuejs-datepicker';
+    import {ko} from 'vuejs-datepicker/dist/locale';
+
     export default {
         name: "ModalAddInfo",
+        components: {Datepicker},
 
         props: ['selectedAddInfo', 'state'],
 
         data() {
             return {
                 addInfo: {},
-                authList: [],
-                companyList: [],
-                showMbrCompanyText : false
+                addItemOptions :[
+                    {text : 'U-Cube 연동 상품', value: 'U'},
+                    {text : 'NVIDIA 직업 연동 상품', value: 'G'}
+                ],
+                ko,
+                disabledSvcBasePrice: false,
+                disabledAddItemCode: false
             };
         },
 
@@ -147,13 +195,37 @@
                 this.$nextTick(async () => {
                     try {
                         if (this.$props.state === 'CREATE') {
-                            this.addInfo = {};
+                            console.log('this.$props.state', this.$props.state);
+                            console.log('this.addInfo', this.addInfo);
+                            this.disabledAddItemCode = false;
+                            this.addInfo = { addItemType : 'U', svcTermType : '0', svcTermUnit: 'H'};
                             return;
                         }
 
-                        this.addInfo = {...this.$props.selectedAddInfo};
-                    } catch (e) {
+                        const addItemCode = this.$props.selectedAddInfo.addItemCode;
+                        this.disabledAddItemCode = true;
+                        this.addInfo = await this.getAddInfo(addItemCode);
 
+                        console.log('this.addInfo ', this.addInfo );
+                        if(this.addInfo.svcTermType === '1'){
+                            switch (this.addInfo.svcTermUnit) {
+                                case 'M':
+                                    this.$set(this.addInfo, 'svcTermNumMonth',  this.addInfo.svcTermNum);
+                                    break;
+                                case 'D':
+                                    this.$set(this.addInfo, 'svcTermNumDay',  this.addInfo.svcTermNum);
+                                    break;
+                                case 'H':
+                                    this.$set(this.addInfo, 'svcTermNumHour',  this.addInfo.svcTermNum);
+                                    break;
+                            }
+                        }
+
+                    } catch (e) {
+                        console.dir(e);
+                        e = (e.response && e.response.data) || e;
+
+                        await this.$bvModal.msgBoxOk(e.message);
                     }
                 });
             },
@@ -161,10 +233,25 @@
             async ok() {
                 try {
 
-                    const url = this.$props.state === 'CREATE' ? "/api/mbr/insertMbr" : "/api/mbr/updateMbr";
+                    const url = this.$props.state === 'CREATE' ? "/api/add/insertAddItem" : "/api/add/updateAddItem";
                     const addInfo = {...this.addInfo};
 
+                    if(addInfo.svcTermType === '1'){
+                        switch (addInfo.svcTermUnit) {
+                            case 'M':
+                                addInfo.svcTermNum = addInfo.svcTermNumMonth;
+                                break;
+                            case 'D':
+                                addInfo.svcTermNum = addInfo.svcTermNumDay;
+                                break;
+                            case 'H':
+                                addInfo.svcTermNum = addInfo.svcTermNumHour;
+                                break;
+                        }
 
+                        // 기간한정의 날짜 초기화
+                        addInfo.svcTermDate = '';
+                    }
 
                     const response = await this.$axios.$post(url, addInfo);
 
@@ -178,6 +265,42 @@
                     await this.$bvModal.msgBoxOk(e.message);
                 }
 
+            },
+
+            changeAddItemType(addItemType) {
+                console.log('addItemType', addItemType);
+                if (addItemType === 'U') {
+                    this.$set(this.addInfo, 'svcBasePrice', '');
+                    this.$set(this.addInfo, 'svcTermType', '0');
+                    this.disabledSvcBasePrice = false;
+                    if(this.$props.state === 'CREATE')  this.disabledAddItemCode = false;
+                } else {
+                    this.$set(this.addInfo, 'svcBasePrice', '0');
+                    this.$set(this.addInfo, 'svcTermType', '1');
+
+                    this.disabledSvcBasePrice = true;
+                    if(this.$props.state === 'CREATE')  {
+                        this.disabledAddItemCode = true;
+                        this.$set(this.addInfo, 'addItemCode', '');
+                    }
+                }
+            },
+
+            changeSvcTermUnit() {
+                this.$set(this.addInfo, 'svcTermNumHour', '');
+                this.$set(this.addInfo, 'svcTermNumDay', '');
+                this.$set(this.addInfo, 'svcTermNumMonth', '');
+            },
+
+            async getAddInfo(addItemCode) {
+                try {
+                    const {data} = await this.$axios.post('/api/add/selectAddItem', {
+                        addItemCode
+                    });
+                    return data.data;
+                } catch (e) {
+                    await this.$bvModal.msgBoxOk(e.message);
+                }
             },
 
         }

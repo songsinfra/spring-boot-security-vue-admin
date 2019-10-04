@@ -15,6 +15,7 @@ public enum SystemStatusCode {
     INTERNAL_ERROR("44401006"),
     INVALID_PARAMETER("44401007"),
     ACCESS_DENIED("44401008"),
+    DB_ERROR("44401009"),
     ;
 
     private String code;

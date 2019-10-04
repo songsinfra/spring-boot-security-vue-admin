@@ -57,6 +57,8 @@ public class GfnAddService {
             //clear unused Data svcTermData
             gfnAddInfo.setSvcTermUnit(null);
             gfnAddInfo.setSvcTermNum(null);
+        } else if(StringUtils.equalsIgnoreCase(SvcTermType.AVAILABLE_DATE.getType(), gfnAddInfo.getSvcTermType())){
+            gfnAddInfo.setSvcTermDate(null);
         }
 
         gfnAddInfo.setSvcBasePrice(0);
@@ -74,11 +76,11 @@ public class GfnAddService {
 
         if (StringUtils.equalsIgnoreCase(SvcTermType.AVAILABLE_DATE.getType(), gfnAddInfo.getSvcTermType())) {
             Assert.isTrue(StringUtils.equalsIgnoreCase(SvcTermUnit.Month.getCode(), gfnAddInfo.getSvcTermUnit()) ||
-                            StringUtils.equalsIgnoreCase(SvcTermUnit.Month.getCode(), gfnAddInfo.getSvcTermUnit()) ||
-                            StringUtils.equalsIgnoreCase(SvcTermUnit.Month.getCode(), gfnAddInfo.getSvcTermUnit()),
+                            StringUtils.equalsIgnoreCase(SvcTermUnit.Day.getCode(), gfnAddInfo.getSvcTermUnit()) ||
+                            StringUtils.equalsIgnoreCase(SvcTermUnit.Hour.getCode(), gfnAddInfo.getSvcTermUnit()),
                     "SvcTermUnit value is only M,D,H Code");
 
-            Assert.notNull(gfnAddInfo.getSvcTermNum(), "SvcTermUnit is null");
+            Assert.notNull(gfnAddInfo.getSvcTermNum(), "svcTermNum is null");
         }
     }
 

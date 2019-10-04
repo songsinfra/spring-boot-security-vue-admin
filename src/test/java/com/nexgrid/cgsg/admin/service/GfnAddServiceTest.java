@@ -159,13 +159,14 @@ public class GfnAddServiceTest extends BaseServiceTest {
 
     @Test
     @Transactional
-    public void insertAddItemForGfn_부가서비스_등록_gfnAddInfo_SvcTermUnit_Null() {
+    public void insertAddItemForGfn_부가서비스_등록_gfnAddInfo_svcTermNum_Null() {
         GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
                 .svcTermType(SvcTermType.AVAILABLE_DATE.getType())
+                .svcTermUnit(SvcTermUnit.Day.getCode())
                 .svcTermNum(null)
                 .build();
 
-        this.exception_insertAddItemForGfn(gfnAddInfo, IllegalArgumentException.class, "SvcTermUnit is null");
+        this.exception_insertAddItemForGfn(gfnAddInfo, IllegalArgumentException.class, "svcTermNum is null");
     }
 
     @Test
@@ -243,6 +244,93 @@ public class GfnAddServiceTest extends BaseServiceTest {
 
         int updateCnt = gfnAddService.updateAddItemForGfn(gfnAddInfo);
         assertThat(updateCnt).isEqualTo(1);
+    }
+
+    @Test
+    @Transactional
+    public void updateAddItem_gfn_AVAILABLE_DATE_Day() {
+        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+                .addItemCode("TES00001")
+                .svcTermUnit(SvcTermUnit.Day.getCode())
+                .build();
+
+        int updateCnt = gfnAddService.updateAddItemForGfn(gfnAddInfo);
+        assertThat(updateCnt).isEqualTo(1);
+    }
+
+    @Test
+    @Transactional
+    public void updateAddItem_gfn_AVAILABLE_DATE_Hour() {
+        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+                .addItemCode("TES00001")
+                .svcTermUnit(SvcTermUnit.Hour.getCode())
+                .build();
+
+        int updateCnt = gfnAddService.updateAddItemForGfn(gfnAddInfo);
+        assertThat(updateCnt).isEqualTo(1);
+    }
+
+    @Test
+    @Transactional
+    public void updateAddItem_gfn_addItemType_null() {
+        assertException(IllegalArgumentException.class, "addItemType is null");
+
+        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+                .addItemType(null)
+                .build();
+
+        int updateCnt = gfnAddService.updateAddItemForGfn(gfnAddInfo);
+    }
+
+    @Test
+    @Transactional
+    public void updateAddItem_gfn_addItemType_잘못된값() {
+        assertException(IllegalArgumentException.class, "addItemType is invalid");
+
+        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+                .addItemType(AddItemType.UCUBE.getType())
+                .build();
+
+        int updateCnt = gfnAddService.updateAddItemForGfn(gfnAddInfo);
+    }
+
+    @Test
+    @Transactional
+    public void updateAddItem_gfn_SvcTermType_잘못된값() {
+        assertException(IllegalArgumentException.class, "SvcTermType is invalid");
+
+        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+                .svcTermType(SvcTermType.NONE.getType())
+                .build();
+
+        int updateCnt = gfnAddService.updateAddItemForGfn(gfnAddInfo);
+    }
+
+    @Test
+    @Transactional
+    public void updateAddItem_gfn_SvcTermUnit_잘못된값() {
+        assertException(IllegalArgumentException.class, "SvcTermUnit value is only M,D,H Code");
+
+        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+                .svcTermType(SvcTermType.AVAILABLE_DATE.getType())
+                .svcTermUnit("XX")
+                .build();
+
+        int updateCnt = gfnAddService.updateAddItemForGfn(gfnAddInfo);
+    }
+
+    @Test
+    @Transactional
+    public void updateAddItem_gfn_svcTermNum_null() {
+        assertException(IllegalArgumentException.class, "svcTermNum is null");
+
+        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+                .svcTermType(SvcTermType.AVAILABLE_DATE.getType())
+                .svcTermUnit(SvcTermUnit.Day.getCode())
+                .svcTermNum(null)
+                .build();
+
+        int updateCnt = gfnAddService.updateAddItemForGfn(gfnAddInfo);
     }
 
     @Test

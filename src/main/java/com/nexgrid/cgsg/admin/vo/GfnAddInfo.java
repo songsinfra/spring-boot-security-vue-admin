@@ -46,7 +46,7 @@ public class GfnAddInfo {
     @Size(max = 1, message = "svcTermUnit의 크기가 1보다 큽니다")
     private String svcTermUnit;
 
-    @Max(value = 4, message = "svcTermNum의 크기가 4보다 큽니다")
+//    @Max(value = 4, message = "svcTermNum의 크기가 4보다 큽니다")
     private Integer svcTermNum;
 
     private Date svcTermDate;
@@ -59,7 +59,11 @@ public class GfnAddInfo {
 
     public String getCreateDt() {
         LocalDateTime dateTime = this.createDt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay();
-        return dateTime.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+        return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public void setCreateDt(String date) {
+        this.createDt = Date.from(LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).atZone(ZoneId.systemDefault()).toInstant());
     }
 
     //    @AssertTrue(message = "나이는 0보다 커야 하며 150보다 작아야 합니다.")

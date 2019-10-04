@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.sql.SQLDataException;
 import java.util.List;
 
 @ControllerAdvice
@@ -32,6 +33,15 @@ public class ExceptionController {
     public ResponseEntity IllegalArgumentException(IllegalArgumentException exception) {
         ResultInfo resultInfo = new ResultInfo();
         resultInfo.setCode(SystemStatusCode.INVALID_PARAMETER.getCode());
+        resultInfo.setMessage(exception.getMessage());
+
+        return new ResponseEntity(resultInfo, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({SQLDataException.class})
+    public ResponseEntity SQLDataException(SQLDataException exception) {
+        ResultInfo resultInfo = new ResultInfo();
+        resultInfo.setCode(SystemStatusCode.DB_ERROR.getCode());
         resultInfo.setMessage(exception.getMessage());
 
         return new ResponseEntity(resultInfo, HttpStatus.BAD_REQUEST);
