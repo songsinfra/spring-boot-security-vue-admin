@@ -153,23 +153,19 @@
             </b-form-group>
             <b-form-group
                     v-if="addInfo.svcTermType === '2'"
-                    id="mbrNm-group-1"
+                    id="svcTermDate-group-1"
                     label="이용종료일시:"
-                    label-for="mbrNm-1"
+                    label-for="svcTermDate-1"
             >
-                <datepicker v-model="addInfo.svcTermDate" :language="ko" format="yyyy-MM-dd"></datepicker>
+                    <b-form-input id="svcTermDate-1" v-model="addInfo.svcTermDate" type="date"></b-form-input>
             </b-form-group>
         </b-form>
     </b-modal>
 </template>
 
 <script>
-    import Datepicker from 'vuejs-datepicker';
-    import {ko} from 'vuejs-datepicker/dist/locale';
-
     export default {
         name: "ModalAddInfo",
-        components: {Datepicker},
 
         props: ['selectedAddInfo', 'state'],
 
@@ -180,7 +176,6 @@
                     {text : 'U-Cube 연동 상품', value: 'U'},
                     {text : 'NVIDIA 직업 연동 상품', value: 'G'}
                 ],
-                ko,
                 disabledSvcBasePrice: false,
                 disabledAddItemCode: false
             };
@@ -219,6 +214,10 @@
                                     this.$set(this.addInfo, 'svcTermNumHour',  this.addInfo.svcTermNum);
                                     break;
                             }
+                        }
+
+                        if(this.addInfo.svcTermDate){
+                            this.$set(this.addInfo, 'svcTermDate',  this.addInfo.svcTermDate.substring(0,10));
                         }
 
                     } catch (e) {

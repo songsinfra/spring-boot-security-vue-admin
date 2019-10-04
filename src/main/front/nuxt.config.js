@@ -52,7 +52,7 @@ module.exports = {
     plugins: [
         '~/plugins/axios',
         '~/plugins/eventBus',
-        '~/plugins/jsModal'
+        '~/plugins/jsModal',
     ],
     axios: {
         proxyHeaders: true,
