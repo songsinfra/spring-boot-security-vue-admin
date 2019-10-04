@@ -71,11 +71,11 @@ public class GfnEntrController {
                 .build();
     }
 
-    @RequestMapping("/selectAddItemListWithMap")
-    public ResultInfo selectAddItemListWithMap(@RequestBody @Validated GfnMapInfoParam gfnEntrInfoParam) {
+    @RequestMapping("/selectEntrMappingList")
+    public ResultInfo selectEntrMappingList(@RequestBody @Validated GfnMapInfoParam gfnEntrInfoParam) {
         Assert.hasLength(gfnEntrInfoParam.getEntrItemCode(), "entrItemCode 의 값이 없습니다.");
 
-        List<GfnAddInfo> gfnAddInfos = gfnEntrService.selectAddItemListWithMap(gfnEntrInfoParam.getEntrItemCode());
+        List<GfnAddInfo> gfnAddInfos = gfnEntrService.selectEntrMappingList(gfnEntrInfoParam.getEntrItemCode());
 
         return ResultInfo.builder()
                 .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
@@ -83,26 +83,13 @@ public class GfnEntrController {
                 .build();
     }
 
-    @RequestMapping("/insertMapItem")
-    public ResultInfo insertMapItem(@RequestBody @Validated GfnMapInfo gfnMapInfo) {
-        gfnEntrService.insertMapItem(gfnMapInfo);
+    @RequestMapping("/insertMapItemList")
+    public ResultInfo insertMapItemList(@RequestBody @Validated EntrMppingListParam entrMppingListParam) {
+        int insertCnt = gfnEntrService.insertMapItemList(entrMppingListParam.getEntrItemCode(), entrMppingListParam.getAddItemCodeList());
 
         return ResultInfo.builder()
                 .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+                .message(String.format("%s 건 입력되었습니다.", insertCnt))
                 .build();
     }
-
-    @RequestMapping("/deleteMapItem")
-    public ResultInfo deleteMapItem(@RequestBody @Validated GfnMapInfo gfnMapInfo) {
-        gfnEntrService.deleteMapItem(gfnMapInfo.getEntrItemCode(), gfnMapInfo.getAddItemCode());
-
-        return ResultInfo.builder()
-                .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
-                .build();
-    }
-
-
-
-
-
 }

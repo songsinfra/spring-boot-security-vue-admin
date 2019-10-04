@@ -51,24 +51,33 @@ public class GfnEntrService {
         return gfnEntrMapper.deleteEntrItem(entrItemCode, updateId);
     }
 
-    public List<GfnAddInfo> selectAddItemListWithMap(String entrItemCode) {
+    public List<GfnAddInfo> selectEntrMappingList(String entrItemCode) {
         Assert.hasLength(entrItemCode, "entrItemCode is null");
 
-        return gfnEntrMapper.selectAddItemListWithMap(entrItemCode);
+        return gfnEntrMapper.selectEntrMappingList(entrItemCode);
     }
 
-    public int insertMapItem(GfnMapInfo gfnMapInfo) {
-        Assert.notNull(gfnMapInfo, "gfnMapInfo is null");
-        Assert.hasLength(gfnMapInfo.getAddItemCode(), "AddItemCode is null");
-        Assert.hasLength(gfnMapInfo.getEntrItemCode(), "EntrItemCode is null");
-
-        return gfnEntrMapper.insertMapItem(gfnMapInfo);
-    }
-
-    public int deleteMapItem(String entrItemCode, String addItemCode) {
+    public int insertMapItemList(String entrItemCode, List<String> addItemCodeList) {
         Assert.hasLength(entrItemCode, "entrItemCode is null");
-        Assert.hasLength(addItemCode, "addItemCode is null");
+        Assert.notNull(addItemCodeList, "addItemCodeList is null");
 
-        return gfnEntrMapper.deleteMapItem(entrItemCode, addItemCode);
+        int insertCnt = 0;
+        String statusCd = "0";
+        String createId = "";
+
+        //entrItemCode에 해당해는 addItemCode 전체 delete
+        gfnEntrMapper.deleteMapItem(entrItemCode);
+
+        for (String addItemCode: addItemCodeList) {
+            insertCnt += gfnEntrMapper.insertMapItem(entrItemCode, addItemCode, statusCd, createId);
+        }
+
+        return insertCnt;
+    }
+
+    public int deleteMapItem(String entrItemCode) {
+        Assert.hasLength(entrItemCode, "entrItemCode is null");
+
+        return gfnEntrMapper.deleteMapItem(entrItemCode);
     }
 }

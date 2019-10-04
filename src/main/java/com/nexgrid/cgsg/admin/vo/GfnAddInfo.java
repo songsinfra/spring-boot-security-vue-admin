@@ -57,15 +57,6 @@ public class GfnAddInfo {
     private String updateId;
     private Date updateDt;
 
-    public String getCreateDt() {
-        LocalDateTime dateTime = this.createDt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay();
-        return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
-
-    public void setCreateDt(String date) {
-        this.createDt = Date.from(LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).atZone(ZoneId.systemDefault()).toInstant());
-    }
-
     //    @AssertTrue(message = "나이는 0보다 커야 하며 150보다 작아야 합니다.")
 //    public boolean isValidSvcTermType() {
 //        return AddItemType.GFN.getType().equalsIgnoreCase(this.svcTermType) ?

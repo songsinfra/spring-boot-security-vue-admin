@@ -133,14 +133,13 @@
 		WHERE ENTR_ITEM_CODE = #{entrItemCode}
 	</insert>
 
-    <select id="selectAddItemListWithMap" resultMap="gfnAddInfoMap">
+    <select id="selectEntrMappingList" resultMap="gfnAddInfoMap">
         SELECT
-            ad.ADD_ITEM_CODE
-            ,ad.ADD_ITEM_NM
-            ,ad.CREATE_ID
-            ,TO_CHAR(ad.CREATE_DT, 'YYYY-MM-DD HH24:MI:SS') as CREATE_DT
-        FROM TB_GFN_ADD_ITEM ad inner join TB_GFN_ITEM_MAP map on ad.ADD_ITEM_CODE = map.ADD_ITEM_CODE
-        WHERE map.ENTR_ITEM_CODE = #{entrItemCode}
+            ADD_ITEM_CODE
+            ,ENTR_ITEM_CODE
+            ,STATUS_CD
+        FROM TB_GFN_ITEM_MAP
+        WHERE ENTR_ITEM_CODE = #{entrItemCode}
     </select>
 
     <insert id="insertMapItem">
@@ -165,8 +164,7 @@
     <!-- 권한 수정 -->
     <delete id="deleteMapItem">
 		DELETE FROM TB_GFN_ITEM_MAP
-		WHERE ADD_ITEM_CODE = #{addItemCode}
-		    AND ENTR_ITEM_CODE = #{entrItemCode}
+		WHERE ENTR_ITEM_CODE = #{entrItemCode}
 	</delete>
 
 </mapper>

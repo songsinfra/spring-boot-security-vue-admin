@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -154,75 +155,55 @@ public class GfnEntrServiceTest extends BaseServiceTest {
 
 
     @Test
-    public void selectAddItemListWithMap() {
+    public void selectEntrMappingList() {
         String entrItemCode = "ITEM0001";
-        List<GfnAddInfo> gfnAddInfos = gfnEntrService.selectAddItemListWithMap(entrItemCode);
+        List<GfnAddInfo> gfnAddInfos = gfnEntrService.selectEntrMappingList(entrItemCode);
         assertThat(gfnAddInfos).size().isGreaterThan(0);
     }
 
     @Test
-    public void selectAddItemListWithMap_entrItemCode_null() {
+    public void selectEntrMappingList_entrItemCode_null() {
         assertException(IllegalArgumentException.class, "entrItemCode is null");
 
         String entrItemCode = null;
-        List<GfnAddInfo> gfnAddInfos = gfnEntrService.selectAddItemListWithMap(entrItemCode);
+        List<GfnAddInfo> gfnAddInfos = gfnEntrService.selectEntrMappingList(entrItemCode);
     }
 
     @Test
-    public void insertMapItem() {
-        GfnMapInfo build = GfnMapInfo.builder()
-                .addItemCode("TES00999")
-                .entrItemCode("ITEM0001")
-                .statusCd(StatusCode.USE.getCode())
-                .build();
+    public void insertMapItemList() {
+        String entrItemCode = "ITEM0001";
+        List<String> addItemCodeList = Arrays.asList("test1");
 
-        int insertCnt = gfnEntrService.insertMapItem(build);
+        int insertCnt = gfnEntrService.insertMapItemList(entrItemCode, addItemCodeList);
 
         assertThat(insertCnt).isEqualTo(1);
     }
 
     @Test
-    public void insertMapItem_gfnMapInfo_null() {
-        assertException(IllegalArgumentException.class, "gfnMapInfo is null");
+    public void insertMapItemList_entrItemCode_null() {
+        assertException(IllegalArgumentException.class, "entrItemCode is null");
+        String entrItemCode = "";
+        List<String> addItemCodeList = null;
 
-        GfnMapInfo build = null;
-
-        int insertCnt = gfnEntrService.insertMapItem(build);
+        int insertCnt = gfnEntrService.insertMapItemList(entrItemCode, addItemCodeList);
     }
 
     @Test
-    public void insertMapItem_gfnMapInfo_AddItemCode_null() {
-        assertException(IllegalArgumentException.class, "AddItemCode is null");
+    public void insertMapItemList_gfnMapInfo_AddItemCode_null() {
+        assertException(IllegalArgumentException.class, "addItemCodeList is null");
 
-        GfnMapInfo build = GfnMapInfo.builder()
-                .addItemCode(null)
-                .entrItemCode("ITEM0001")
-                .statusCd(StatusCode.USE.getCode())
-                .build();
+        String entrItemCode = "ITEM0001";
+        List<String> addItemCodeList = null;
 
-        gfnEntrService.insertMapItem(build);
-    }
-
-    @Test
-    public void insertMapItem_gfnMapInfo_EntrItemCode_null() {
-        assertException(IllegalArgumentException.class, "EntrItemCode is null");
-
-        GfnMapInfo build = GfnMapInfo.builder()
-                .addItemCode("TES00999")
-                .entrItemCode(null)
-                .statusCd(StatusCode.USE.getCode())
-                .build();
-
-        gfnEntrService.insertMapItem(build);
+        int insertCnt = gfnEntrService.insertMapItemList(entrItemCode, addItemCodeList);
     }
 
     @Test
     public void deleteMapItem() {
         String entrItemCode = "ITEM0001";
-        String addItemCode = "TES00001";
-        int deleteCnt = gfnEntrService.deleteMapItem(entrItemCode, addItemCode);
+        int deleteCnt = gfnEntrService.deleteMapItem(entrItemCode);
 
-        assertThat(deleteCnt).isEqualTo(1);
+        assertThat(deleteCnt).isGreaterThan(0);
     }
 
     @Test
@@ -230,19 +211,7 @@ public class GfnEntrServiceTest extends BaseServiceTest {
         assertException(IllegalArgumentException.class, "entrItemCode is null");
 
         String entrItemCode = null;
-        String addItemCode = "TES00001";
 
-        gfnEntrService.deleteMapItem(entrItemCode, addItemCode);
+        gfnEntrService.deleteMapItem(entrItemCode);
     }
-
-    @Test
-    public void deleteMapItem_addItemCode_null() {
-        assertException(IllegalArgumentException.class, "addItemCode is null");
-
-        String entrItemCode = "ITEM0001";
-        String addItemCode = null;
-        gfnEntrService.deleteMapItem(entrItemCode, addItemCode);
-    }
-
-
 }

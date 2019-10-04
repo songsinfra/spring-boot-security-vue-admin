@@ -4,6 +4,7 @@ import com.nexgrid.cgsg.admin.base.BaseControllerTest;
 import com.nexgrid.cgsg.admin.constants.ProdCode;
 import com.nexgrid.cgsg.admin.constants.SocTypeCode;
 import com.nexgrid.cgsg.admin.constants.StatusCode;
+import com.nexgrid.cgsg.admin.vo.EntrMppingListParam;
 import com.nexgrid.cgsg.admin.vo.GfnEntrInfo;
 import com.nexgrid.cgsg.admin.vo.GfnMapInfo;
 import org.junit.Test;
@@ -13,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -171,10 +174,10 @@ public class GfnEntrControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void selectAddItemListWithMap() throws Exception {
+    public void selectEntrMappingList() throws Exception {
         GfnMapInfo gfnMapInfo = GfnMapInfo.builder().entrItemCode("ITEM0001").build();
 
-        mvc.perform(post("/entr/selectAddItemListWithMap")
+        mvc.perform(post("/entr/selectEntrMappingList")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(gfnMapInfo))
         )
@@ -185,47 +188,35 @@ public class GfnEntrControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void selectAddItemListWithMap_param_체크() throws Exception {
-        this.checkParam("/entr/selectAddItemListWithMap", this.getGfnMapInfo().entrItemCode(null).build(), NULL_MSG);
+    public void selectEntrMappingList_param_체크() throws Exception {
+        this.checkParam("/entr/selectEntrMappingList", this.getGfnMapInfo().entrItemCode(null).build(), NULL_MSG);
     }
 
     @Test
-    public void insertMapItem() throws Exception {
-        GfnMapInfo gfnMapInfo = this.getGfnMapInfo().build();
+    public void insertMapItemList() throws Exception {
+        EntrMppingListParam mppingListParam = this.getEntrMappingParam().build();
 
-        mvc.perform(post("/entr/insertMapItem")
+        mvc.perform(post("/entr/insertMapItemList")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(gfnMapInfo))
+                .content(objectMapper.writeValueAsString(mppingListParam))
         )
                 .andDo(print())
                 .andExpect(status().isOk())
         ;
     }
 
-    @Test
-    public void insertMapItem_param_체크() throws Exception {
-        this.checkParam("/entr/insertMapItem", this.getGfnMapInfo().entrItemCode(null).build(), NULL_MSG);
-        this.checkParam("/entr/insertMapItem", this.getGfnMapInfo().entrItemCode(genStr(11)).build(), OVER_SIZE_MSG);
-
-        this.checkParam("/entr/insertMapItem", this.getGfnMapInfo().addItemCode(null).build(), NULL_MSG);
-        this.checkParam("/entr/insertMapItem", this.getGfnMapInfo().addItemCode(genStr(11)).build(), OVER_SIZE_MSG);
-    }
-
-    @Test
-    public void deleteMapItem() throws Exception {
-        GfnMapInfo gfnMapInfo = GfnMapInfo.builder()
+    private EntrMppingListParam.EntrMppingListParamBuilder getEntrMappingParam() {
+        return EntrMppingListParam.builder()
                 .entrItemCode("ITEM0001")
-                .addItemCode("TES00001")
-                .build();
-
-        mvc.perform(post("/entr/deleteMapItem")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(gfnMapInfo))
-        )
-                .andDo(print())
-                .andExpect(status().isOk())
-        ;
+                .addItemCodeList(Arrays.asList("test1", "test2"));
     }
 
+    @Test
+    public void insertMapItemList_param_체크() throws Exception {
+        this.checkParam("/entr/insertMapItemList", this.getEntrMappingParam().entrItemCode(null).build(), NULL_MSG);
+        this.checkParam("/entr/insertMapItemList", this.getEntrMappingParam().entrItemCode(genStr(11)).build(), OVER_SIZE_MSG);
+
+        this.checkParam("/entr/insertMapItemList", this.getEntrMappingParam().addItemCodeList(null).build(), NULL_MSG);
+    }
 }
 

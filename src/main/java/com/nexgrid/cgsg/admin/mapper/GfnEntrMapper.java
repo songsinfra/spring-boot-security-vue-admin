@@ -20,9 +20,9 @@ public interface GfnEntrMapper {
 
     int deleteEntrItem(String entrItemCode, String updateId);
 
-    List<GfnAddInfo> selectAddItemListWithMap(String entrItemCode);
+    List<GfnAddInfo> selectEntrMappingList(String entrItemCode);
 
-    int insertMapItem(GfnMapInfo gfnMapInfo);
+    int insertMapItem(String entrItemCode, String addItemCode, String statusCd, String createId);
 
-    int deleteMapItem(String entrItemCode, String addItemCode);
+    int deleteMapItem(String entrItemCode);
 }
