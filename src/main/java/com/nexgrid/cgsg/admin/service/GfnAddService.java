@@ -4,6 +4,7 @@ import com.nexgrid.cgsg.admin.constants.AddItemType;
 import com.nexgrid.cgsg.admin.constants.SvcTermType;
 import com.nexgrid.cgsg.admin.constants.SvcTermUnit;
 import com.nexgrid.cgsg.admin.mapper.GfnAddMapper;
+import com.nexgrid.cgsg.admin.utils.StringUtil;
 import com.nexgrid.cgsg.admin.vo.GfnAddInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,10 @@ public class GfnAddService {
     public GfnAddInfo selectAddItem(String addItemCode) {
         Assert.hasLength(addItemCode, "addItemCode is null");
 
-        return gfnAddMapper.selectAddItem(addItemCode);
+        GfnAddInfo gfnAddInfo = gfnAddMapper.selectAddItem(addItemCode);
+        this.convertDdToNewLine(gfnAddInfo);
+
+        return gfnAddInfo;
     }
 
     public List<GfnAddInfo> selectAddItemList(String addItemNm) {
@@ -38,6 +42,7 @@ public class GfnAddService {
 
         // GFN ID 생성
         gfnAddInfo.setAddItemCode(this.generateAddItemCode());
+        this.convertNewLineToDd(gfnAddInfo);
 
         return this.setAddItemForGfn(info -> gfnAddMapper.insertAddItem((GfnAddInfo)info), gfnAddInfo);
     }
@@ -46,6 +51,7 @@ public class GfnAddService {
         this.validateDataForGfn(gfnAddInfo);
         Assert.hasLength(gfnAddInfo.getAddItemCode(), "addItemCode is null");
 
+        this.convertNewLineToDd(gfnAddInfo);
         return this.setAddItemForGfn(info -> gfnAddMapper.updateAddItem((GfnAddInfo)info), gfnAddInfo);
     }
 
@@ -86,12 +92,14 @@ public class GfnAddService {
 
     public int insertAddItemForUcube(GfnAddInfo gfnAddInfo) {
         this.validateDataForUcude(gfnAddInfo);
+        this.convertNewLineToDd(gfnAddInfo);
 
         return gfnAddMapper.insertAddItem(gfnAddInfo);
     }
 
     public int updateAddItemForUcube(GfnAddInfo gfnAddInfo) {
         this.validateDataForUcude(gfnAddInfo);
+        this.convertNewLineToDd(gfnAddInfo);
 
         return gfnAddMapper.updateAddItem(gfnAddInfo);
     }
@@ -125,10 +133,29 @@ public class GfnAddService {
     }
 
     public int deleteAddItem(String addItemCode) {
-        Assert.notNull(addItemCode, "addItemCode is null");
+       Assert.notNull(addItemCode, "addItemCode is null");
 
+       return gfnAddMapper.deleteAddItem(addItemCode);
+    }
 
-        return gfnAddMapper.deleteAddItem(addItemCode);
+    private void convertNewLineToDd(GfnAddInfo gfnAddInfo) {
+        if (!StringUtils.isEmpty(gfnAddInfo.getAddItemDetail())) {
+            gfnAddInfo.setAddItemDetail(StringUtil.convertNewListToDd(gfnAddInfo.getAddItemDetail()));
+        }
+
+        if (!StringUtils.isEmpty(gfnAddInfo.getAddItemNotice())) {
+            gfnAddInfo.setAddItemNotice(StringUtil.convertNewListToDd(gfnAddInfo.getAddItemNotice()));
+        }
+    }
+
+    private void convertDdToNewLine(GfnAddInfo gfnAddInfo) {
+        if (!StringUtils.isEmpty(gfnAddInfo.getAddItemDetail())) {
+            gfnAddInfo.setAddItemDetail(StringUtil.convertDdToNewLine(gfnAddInfo.getAddItemDetail()));
+        }
+
+        if (!StringUtils.isEmpty(gfnAddInfo.getAddItemNotice())) {
+            gfnAddInfo.setAddItemNotice(StringUtil.convertDdToNewLine(gfnAddInfo.getAddItemNotice()));
+        }
     }
 }
 

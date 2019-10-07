@@ -4,7 +4,9 @@ import com.nexgrid.cgsg.admin.base.BaseServiceTest;
 import com.nexgrid.cgsg.admin.constants.AddItemType;
 import com.nexgrid.cgsg.admin.constants.SvcTermType;
 import com.nexgrid.cgsg.admin.constants.SvcTermUnit;
+import com.nexgrid.cgsg.admin.utils.StringUtil;
 import com.nexgrid.cgsg.admin.vo.GfnAddInfo;
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,8 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -351,5 +358,24 @@ public class GfnAddServiceTest extends BaseServiceTest {
         int deleteCnt = gfnAddService.deleteAddItem(addItemCode);
 
         assertThat(deleteCnt).isEqualTo(1);
+    }
+
+    @Test
+    public void convertNewLineToDd() {
+        String dd = "<dd>부가서비스명</dd><dd>다음줄</dd>";
+        String newLine = "부가서비스명\n다음줄";
+
+        String result = StringUtil.convertNewListToDd(newLine);
+
+        assertThat(result).isEqualTo(dd);
+    }
+
+    @Test
+    public void convertDdToNewLine() {
+        String dd = "<dd>부가서비스명</dd><dd>다음줄</dd>";
+        String newLine = "부가서비스명\n다음줄";
+
+        String result = StringUtil.convertDdToNewLine(dd);
+        assertThat(result).isEqualTo(newLine);
     }
 }

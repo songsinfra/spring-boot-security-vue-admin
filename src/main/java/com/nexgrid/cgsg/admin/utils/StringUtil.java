@@ -2,8 +2,12 @@ package com.nexgrid.cgsg.admin.utils;
 
 import java.lang.reflect.Array;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class StringUtil {
 
@@ -153,5 +157,26 @@ public class StringUtil {
 			return val;
 		}
    }
+
+	public static String convertNewListToDd(String newLine) {
+		String[] textList = newLine.split("\n");
+
+		StringBuilder sb = new StringBuilder();
+
+		for (String text : textList) {
+			sb.append(String.format("<dd>%s</dd>", text));
+		}
+
+		return sb.toString();
+	}
+
+	public static String convertDdToNewLine(String dd) {
+		Matcher matcher = Pattern.compile("<dd>(.+?)</dd>").matcher(dd);
+
+		List<String> textList = new ArrayList<>();
+		while (matcher.find()) textList.add(matcher.group(1));
+
+		return textList.stream().collect(Collectors.joining("\n"));
+	}
 
 }

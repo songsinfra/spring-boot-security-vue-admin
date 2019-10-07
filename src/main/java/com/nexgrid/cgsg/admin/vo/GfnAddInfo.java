@@ -1,5 +1,6 @@
 package com.nexgrid.cgsg.admin.vo;
 
+import com.nexgrid.cgsg.admin.utils.StringUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -56,13 +57,4 @@ public class GfnAddInfo {
     private Date createDt;
     private String updateId;
     private Date updateDt;
-
-    //    @AssertTrue(message = "나이는 0보다 커야 하며 150보다 작아야 합니다.")
-//    public boolean isValidSvcTermType() {
-//        return AddItemType.GFN.getType().equalsIgnoreCase(this.svcTermType) ?
-//                this.svcTermType == SvcTermType.NONE.getType() :
-//                this.svcTermType != SvcTermType.NONE.getType();
-//
-//    }
-
 }
