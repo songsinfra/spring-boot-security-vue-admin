@@ -44,6 +44,10 @@ module.exports = {
     modules: [
         '@nuxtjs/axios',
         'bootstrap-vue/nuxt',
+        ['nuxt-validate', {
+            lang: 'ko',
+            fieldsBagName: 'veeFields'
+        }]
     ],
     bootstrapVue: {
         bootstrapCSS: false, // Or `css: false`

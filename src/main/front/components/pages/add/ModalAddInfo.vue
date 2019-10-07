@@ -1,7 +1,7 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <b-modal
             id="modal_addInfo"
-            @ok.prevent="ok"
+            @ok.prevent="submit"
             ref="modal"
             @show="showModal"
             centered
@@ -40,11 +40,19 @@
                     label-for="addItemNm-1"
                     :class="'mt-1'"
             >
-                <b-form-input
-                        id="addItemNm-1"
-                        v-model="addInfo.addItemNm"
-                        required
-                ></b-form-input>
+                    <b-form-input
+                            id="addItemNm-1"
+                            v-model="addInfo.addItemNm"
+                            required
+                            v-validate="'required'"
+                            name="addItemNm"
+                            data-vv-name="부가서비스명"
+                            :state="!errors.has('부가서비스명')"
+                    ></b-form-input>
+                    <b-form-invalid-feedback :state="!errors.has('부가서비스명')">
+                        {{errors.first('부가서비스명')}}
+                    </b-form-invalid-feedback>
+
             </b-form-group>
             <b-form-group
                     id="addItemDetail-group-1"
@@ -77,6 +85,7 @@
                         <b-form-input
                                 id="svcSellPrice-1"
                                 v-model="addInfo.svcSellPrice"
+                                :disabled="disabledSvcSellPrice"
                                 type="number"
                                 required
                         ></b-form-input>
@@ -98,7 +107,7 @@
                     label="이용기간 유무:"
                     label-for="svcTermType-1"
             >
-                <b-form-radio-group v-model="addInfo.svcTermType">
+                <b-form-radio-group v-model="addInfo.svcTermType" @change="changeSvcTermType">
                     <b-form-radio v-if="addInfo.addItemType === 'U'" value="0">없음</b-form-radio>
                     <b-form-radio v-if="addInfo.addItemType === 'G'" value="1">이용기간</b-form-radio>
                     <b-form-radio v-if="addInfo.addItemType === 'G'" value="2">기간한정</b-form-radio>
@@ -177,6 +186,7 @@
                     {text : 'NVIDIA 직업 연동 상품', value: 'G'}
                 ],
                 disabledSvcBasePrice: false,
+                disabledSvcSellPrice: false,
                 disabledAddItemCode: false
             };
         },
@@ -216,6 +226,14 @@
                             }
                         }
 
+                        if (this.addInfo.addItemType === 'G') {
+                            this.disabledSvcSellPrice = true;
+                            this.disabledSvcBasePrice = true;
+                        } else{
+                            this.disabledSvcSellPrice = false;
+                            this.disabledSvcBasePrice = false;
+                        }
+
                         if(this.addInfo.svcTermDate){
                             this.$set(this.addInfo, 'svcTermDate',  this.addInfo.svcTermDate.substring(0,10));
                         }
@@ -227,6 +245,14 @@
                         await this.$bvModal.msgBoxOk(e.message);
                     }
                 });
+            },
+
+            async submit() {
+                if(!await this.$validator.validate()) {
+                    console.dir(this.$validator);
+                    return;
+                }
+                await this.ok();
             },
 
             async ok() {
@@ -271,17 +297,26 @@
                 if (addItemType === 'U') {
                     this.$set(this.addInfo, 'svcBasePrice', '');
                     this.$set(this.addInfo, 'svcTermType', '0');
-                    this.disabledSvcBasePrice = false;
+                    this.disabledSvcBasePrice = false
+                    this.disabledSvcSellPrice = false;
                     if(this.$props.state === 'CREATE')  this.disabledAddItemCode = false;
                 } else {
                     this.$set(this.addInfo, 'svcBasePrice', '0');
+                    this.$set(this.addInfo, 'svcSellPrice', '0');
                     this.$set(this.addInfo, 'svcTermType', '1');
 
+                    this.disabledSvcSellPrice = true;
                     this.disabledSvcBasePrice = true;
                     if(this.$props.state === 'CREATE')  {
                         this.disabledAddItemCode = true;
                         this.$set(this.addInfo, 'addItemCode', '');
                     }
+                }
+            },
+
+            changeSvcTermType() {
+                if (!this.addInfo.svcTermUnit) {
+                    this.addInfo.svcTermUnit = 'H';
                 }
             },
 
