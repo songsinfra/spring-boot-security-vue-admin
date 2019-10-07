@@ -69,7 +69,7 @@
 <script>
     import ModalEntrInfo from '~/components/pages/entr/ModalEntrInfo.vue';
     export default {
-        layout: 'defautl',
+        layout: 'default',
         name: "index",
         components:{ModalEntrInfo},
 

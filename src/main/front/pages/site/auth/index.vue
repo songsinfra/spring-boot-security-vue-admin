@@ -69,7 +69,7 @@
 <script>
     import ModalAuthInfo from '~/components/pages/auth/ModalAuthInfo.vue';
     export default {
-        layout: 'defautl',
+        layout: 'default',
         name: "index",
         components:{ModalAuthInfo},
 

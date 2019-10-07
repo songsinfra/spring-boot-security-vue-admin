@@ -3,9 +3,9 @@ console.log(webpack);
 module.exports = {
     head: {
         script: [
-            { src:'/vendors/js/vendors.min.js'},
-            { src:'/js/core/app-menu.js'},
-            { src:'/js/core/app.js'},
+            // { src:'/vendors/js/vendors.min.js'},
+            // { src:'/js/core/app-menu.js'},
+            // { src:'/js/core/app.js'},
         ],
         link: [
             {rel: 'apple-touch-icon', href: '/images/ico/apple-icon-120.png'},

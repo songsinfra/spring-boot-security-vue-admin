@@ -184,6 +184,7 @@
 </template>
 <script>
     export default {
+        layout: 'default',
         fetch({store, error}) {
         },
         data() {
