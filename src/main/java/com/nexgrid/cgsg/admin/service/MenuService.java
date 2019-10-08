@@ -24,7 +24,12 @@ public class MenuService {
         List<MenuInfo> subMenuList = menuMapper.getSubMenuList(mbrId);
 
         List<MenuInfo> setedMenuList = commonMenuList.stream().map(menuInfo -> {
-            List<MenuInfo> fillteredMenuList = subMenuList.stream().filter(submenu -> submenu.getUpMenuId().equalsIgnoreCase(menuInfo.getMenuId())).collect(Collectors.toList());
+            List<MenuInfo> fillteredMenuList = subMenuList.stream().filter(submenu -> submenu.getUpMenuId().equalsIgnoreCase(menuInfo.getMenuId()))
+                                                                    .map(subMenu->{
+                                                                        subMenu.setUpMenuName(menuInfo.getMenuName());
+                                                                        return subMenu;
+                                                                    })
+                                                                    .collect(Collectors.toList());
             menuInfo.setSubMenu(fillteredMenuList);
             return menuInfo;
         }).collect(Collectors.toList());

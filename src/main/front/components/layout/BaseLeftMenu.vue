@@ -20,7 +20,7 @@
                     </a>
                     <ul class="menu-content">
                         <li class="" v-for="subMenu in menu.subMenu" :key="subMenu.menuId">
-                            <a @click.prevent="goMenu(subMenu, menu.menuName)">{{subMenu.menuName}}</a>
+                            <a @click.prevent="goMenu(subMenu)">{{subMenu.menuName}}</a>
 <!--                            <nuxt-link :to="subMenu.menuURL">{{subMenu.menuName}}</nuxt-link>-->
                         </li>
                     </ul>
@@ -76,7 +76,9 @@
                 this.$store.commit('menu/addMenu', menuList);
 
                 if(!this.$store.state.menu.currentMenu) {
-                    this.$store.commit('SET_CURRENT_MENU', this.initCurrentMenu(menuList));
+                    const urlPath = this.$router.currentRoute.path;
+                    if(urlPath !== '/')
+                        this.$store.commit('SET_CURRENT_MENU', this.initCurrentMenu(menuList, urlPath));
                 }
 
             } catch (e) {
@@ -91,16 +93,13 @@
         },
 
         methods:{
-            goMenu(menu, parantMenuName) {
+            goMenu(menu) {
                 console.log(this);
-
-                menu.parantMenuName = parantMenuName;
                 this.$store.commit("SET_CURRENT_MENU", menu);
                 this.$router.push(menu.menuURL);
             },
 
-            initCurrentMenu(menuList) {
-                const urlPath = this.$router.currentRoute.path;
+            initCurrentMenu(menuList, urlPath) {
                 const subMenu = menuList.map(menu => menu.subMenu).flat()
                                 .find(subMenu=>subMenu.menuURL === urlPath);
 

@@ -10,7 +10,7 @@
                         <h3 class="content-header-title">{{menuName}}</h3>
                     </div>
                     <div class="content-header-right col-md-6 col-12">
-                        <div class="breadcrumbs-top float-md-right">
+                        <div class="breadcrumbs-top float-md-right" v-if="!!menuName">
                             <div class="breadcrumb-wrapper mr-1">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="#">Home</a>
@@ -55,7 +55,7 @@
             },
 
             parantMenuName(){
-                return this.$store.state.currentMenu.parantMenuName;
+                return this.$store.state.currentMenu.upMenuName;
             }
         },
 
