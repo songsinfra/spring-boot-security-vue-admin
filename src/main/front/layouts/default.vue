@@ -6,18 +6,18 @@
             <div class="content-wrapper">
                 <div class="content-wrapper-before"></div>
                 <div class="content-header row">
-                    <div class="content-header-left col-md-4 col-12 mb-2">
-                        <h3 class="content-header-title">Basic Form Elements</h3>
+                    <div class="content-header-left col-md-6 col-12 mb-0">
+                        <h3 class="content-header-title">{{menuName}}</h3>
                     </div>
-                    <div class="content-header-right col-md-8 col-12">
+                    <div class="content-header-right col-md-6 col-12">
                         <div class="breadcrumbs-top float-md-right">
                             <div class="breadcrumb-wrapper mr-1">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.html">Home</a>
+                                    <li class="breadcrumb-item"><a href="#">Home</a>
                                     </li>
-                                    <li class="breadcrumb-item"><a href="#">Form Elements</a>
+                                    <li class="breadcrumb-item"><a href="#">{{parantMenuName}}</a>
                                     </li>
-                                    <li class="breadcrumb-item active">Form Inputs</li>
+                                    <li class="breadcrumb-item active">{{menuName}}</li>
                                 </ol>
                             </div>
                         </div>
@@ -39,12 +39,26 @@
 
     export default {
         name: "default",
-        // middleware: 'auth',
+
         components: {
             BaseTop,
             BaseLeftMenu,
             BaseFooter
         },
+
+        fetch({store}) {
+        },
+
+        computed : {
+            menuName(){
+                return this.$store.state.currentMenu.menuName;
+            },
+
+            parantMenuName(){
+                return this.$store.state.currentMenu.parantMenuName;
+            }
+        },
+
         head() {
             return {
                 // link: [

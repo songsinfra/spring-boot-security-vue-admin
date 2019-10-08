@@ -20,7 +20,8 @@
                     </a>
                     <ul class="menu-content">
                         <li class="" v-for="subMenu in menu.subMenu" :key="subMenu.menuId">
-                            <nuxt-link :to="subMenu.menuURL">{{subMenu.menuName}}</nuxt-link>
+                            <a @click.prevent="goMenu(subMenu, menu.menuName)">{{subMenu.menuName}}</a>
+<!--                            <nuxt-link :to="subMenu.menuURL">{{subMenu.menuName}}</nuxt-link>-->
                         </li>
                     </ul>
                 </li>
@@ -39,7 +40,13 @@
                 vMenu: '',
                 vMenuHover: false,
                 menuIcons: [],
-                menuList : []
+                // menuList : []
+            }
+        },
+
+        computed:{
+            menuList() {
+                return this.$store.state.menu.menuList;
             }
         },
 
@@ -62,13 +69,19 @@
             console.log('process.server :', process.server);
             if(process.server) return;
 
+            console.log('this.$router', this.$router.path);
+
             try {
                 const menuList = await this.$axios.$post('/api/menu/getLayoutMenuList');
-                this.menuList = menuList;
+                this.$store.commit('menu/addMenu', menuList);
+
+                if(!this.$store.state.menu.currentMenu) {
+                    this.$store.commit('SET_CURRENT_MENU', this.initCurrentMenu(menuList));
+                }
+
             } catch (e) {
-                console.log("window 2------> ", e);
+                console.error(e);
                 if (e.response.status === 401|| e.response.status === 504) {
-                    console.log("window ------> ", window);
                     window.location = '/login/login';
                 } else {
                     console.dir( e);
@@ -78,14 +91,22 @@
         },
 
         methods:{
-            goMenu({redirect, store}, menuId) {
+            goMenu(menu, parantMenuName) {
+                console.log(this);
 
-                return redirect(menuId);
+                menu.parantMenuName = parantMenuName;
+                this.$store.commit("SET_CURRENT_MENU", menu);
+                this.$router.push(menu.menuURL);
             },
 
-            showMenu() {
-                this.vMenu = !this.vMenu;
+            initCurrentMenu(menuList) {
+                const urlPath = this.$router.currentRoute.path;
+                const subMenu = menuList.map(menu => menu.subMenu).flat()
+                                .find(subMenu=>subMenu.menuURL === urlPath);
+
+                return subMenu;
             }
+
         },
 
 
