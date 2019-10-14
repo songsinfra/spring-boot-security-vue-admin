@@ -195,6 +195,10 @@
                         return;
                     }
 
+                    if(this.$props.state === 'UPDATE'){
+                        if (mbrInfo.mbrPw && mbrInfo.mbrPw.length > 0) mbrInfo.mbrNewPw = mbrInfo.mbrPw
+                    }
+
                     const response = await this.$axios.$post(url, mbrInfo);
 
                     await this.$bvModal.msgBoxOk("저장이 완료 되었습니다.");
