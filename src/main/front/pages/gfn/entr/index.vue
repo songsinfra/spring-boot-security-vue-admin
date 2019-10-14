@@ -79,11 +79,11 @@
                 modalState: '',
                 entrItems: [],
                 entrFields: [
+                    {key: 'entrItemNm', label: '가입가능요금제명'},
                     {key: 'socTypeCode', label: 'SOC타입코드',
                         formatter:(value)=> value === 'R' ? '요금제' : '부가서비스'},
                     {key: 'prodCd', label: '서비스코드',
                         formatter:(value)=> this.getProdCdName(value)},
-                    {key: 'entrItemNm', label: '상품명'},
                     {key: 'statusCd', label: '상태코드',
                         formatter:(value)=> value === '1' ? '사용' : '미사용'},
                     {key: 'action', label: '수정'},

@@ -5,7 +5,7 @@
             ref="modal"
             @show="showModal"
             centered
-            title="권한정보 수정">
+            :title="title">
         <b-form>
             <b-form-group
                     id="useYn-group-1"
@@ -97,6 +97,7 @@
         data() {
             return {
                 entrInfo: {},
+                title: ''
             };
         },
 
@@ -106,10 +107,12 @@
                     try {
                         if (this.$props.state === 'CREATE') {
                             this.entrInfo = { statusCd : '1'};
+                            this.title = '권한정보 등록';
                             return;
                         }
 
                         console.log('this.$props.selectedEntrInfo', this.$props.selectedEntrInfo);
+                        this.title = '권한정보 수정';
                         this.entrInfo = {...this.$props.selectedEntrInfo};
                     } catch (e) {
 

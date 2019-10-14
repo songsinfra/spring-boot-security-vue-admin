@@ -62,9 +62,9 @@
                 fields: [
                     {key: 'select', label: '선택'},
                     {key: '', label: '번호'},
-                    {key: 'codeNm', label: '구분'},
+                    {key: 'codeNm', label: '구분', tdClass:'pr-1'},
                     {key: 'mbrId', label: 'ID'},
-                    {key: 'mbrNm', label: '이름'},
+                    {key: 'mbrNm', label: '이름' },
                     // {key: 'mbrCompany', label: '회사'},
                     // {key: 'mbrDptmt', label: '부서'},
                     {key: 'tel', label: 'CTN'},

@@ -6,7 +6,7 @@
                 <li class="nav-item mr-auto"><a class="navbar-brand" href="index.html"><img class="brand-logo"
                                                                                             alt="Chameleon admin logo"
                                                                                             src="/images/logo/logo.png"/>
-                    <h3 class="brand-text">Chameleon</h3></a></li>
+                    <h3 class="brand-text">GFN-admin</h3></a></li>
                 <li class="nav-item d-md-none"><a class="nav-link close-navbar"><i class="ft-x"></i></a></li>
             </ul>
         </div>

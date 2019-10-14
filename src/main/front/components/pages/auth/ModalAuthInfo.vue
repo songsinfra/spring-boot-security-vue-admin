@@ -5,7 +5,7 @@
             ref="modal"
             @show="showModal"
             centered
-            title="권한정보 수정">
+            :title="title">
         <b-form>
             <b-form-group
                     id="roleCd-group-1"
@@ -64,7 +64,8 @@
                 authInfo: {},
                 authList: [],
                 companyList: [],
-                showMbrCompanyText : false
+                showMbrCompanyText : false,
+                title: ''
             };
         },
 
@@ -74,9 +75,11 @@
                     try {
                         if (this.$props.state === 'CREATE') {
                             this.authInfo = { useYn : 'Y'};
+                            this.title = '권한정보 등록';
                             return;
                         }
 
+                        this.title = '권한정보 수정';
                         this.authInfo = {...this.$props.selectedAuthInfo};
                     } catch (e) {
 

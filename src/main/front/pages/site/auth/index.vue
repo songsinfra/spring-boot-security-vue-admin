@@ -87,7 +87,7 @@
 
                 menuItems: [],
                 menuFields: [
-                    {key: 'upMenuName', label: '1Depth'},
+                    {key: 'upMenuName', label: '1Depth', tdClass:'pr-0'},
                     {key: 'menuName', label: '2Depth'},
                     {key: 'select', label: '사용여부'},
                 ],

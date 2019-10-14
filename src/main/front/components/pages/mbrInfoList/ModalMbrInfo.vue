@@ -5,7 +5,7 @@
             ref="modal"
             @show="showModal"
             centered
-            title="회원정보 수정">
+            :title="title">
         <b-form>
             <b-form-group
                     id="roleCd-group-1"
@@ -144,7 +144,8 @@
                 mbrInfo: {},
                 authList: [],
                 companyList: [],
-                showMbrCompanyText : false
+                showMbrCompanyText : false,
+                title: ''
             };
         },
 
@@ -162,9 +163,11 @@
                     try {
                         if (this.$props.state === 'CREATE') {
                             this.mbrInfo = {};
+                            this.title = "회원정보 등록"
                             return;
                         }
 
+                        this.title = "회원정보 수정"
                         this.mbrInfo = {...this.$props.selectedMbrInfo};
                     } catch (e) {
 

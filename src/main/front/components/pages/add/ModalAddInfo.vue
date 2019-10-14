@@ -5,7 +5,7 @@
             ref="modal"
             @show="showModal"
             centered
-            title="부가서비스정보 수정">
+            :title="title">
         <b-form>
             <b-form-group
                     id="addItemNm-group-1"
@@ -187,7 +187,8 @@
                 ],
                 disabledSvcBasePrice: false,
                 disabledSvcSellPrice: false,
-                disabledAddItemCode: false
+                disabledAddItemCode: false,
+                title: ''
             };
         },
 
@@ -204,12 +205,14 @@
                             console.log('this.addInfo', this.addInfo);
                             this.disabledAddItemCode = false;
                             this.addInfo = { addItemType : 'U', svcTermType : '0', svcTermUnit: 'H'};
+                            this.title = '부가서비스정보 등록';
                             return;
                         }
 
                         const addItemCode = this.$props.selectedAddInfo.addItemCode;
                         this.disabledAddItemCode = true;
                         this.addInfo = await this.getAddInfo(addItemCode);
+                        this.title = '부가서비스정보 수정';
 
                         console.log('this.addInfo ', this.addInfo );
                         if(this.addInfo.svcTermType === '1'){

@@ -52,9 +52,11 @@
             return {
                 fields: [
                     'index',
-                    {key: 'addItemNm', label: '부가서비스명'},
+                    {key: 'addItemNm', label: '부가서비스명', tdClass:'pr-0'},
                     {key: 'addItemCode', label: '부가서비스코드'},
-                    {key: 'createDt', label: '등록일'},
+                    {key: 'createDt', label: '등록일',
+                        formatter: (value) => value && value.substring(0, 10)
+                    },
                     {key: 'action', label: '수정'},
                 ],
                 items: [],

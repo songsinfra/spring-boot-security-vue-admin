@@ -15,8 +15,11 @@ module.exports = {
                 href: 'https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i%7CComfortaa:300,400,700'
             },
             {
+                rel: 'stylesheet', href: '/fonts/simple-line-icons/style.css'
+            },
+            {
                 rel: 'stylesheet',
-                href: 'https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css'
+                href: '/fonts/line-awesome/1.1/css/line-awesome.min.css'
             },
             {rel: 'stylesheet', href: '/vendors/css/charts/chartist.css'},
             {rel: 'stylesheet', href: '/vendors/css/charts/chartist-plugin-tooltip.css'},

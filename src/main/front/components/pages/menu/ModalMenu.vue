@@ -5,7 +5,7 @@
             ref="modal"
             @show="showModal"
             centered
-            title="메뉴 수정">
+            :title="title">
         <b-form>
             <b-form-group
                     id="upMenuId-group-1"
@@ -86,6 +86,7 @@
             return {
                 menuInfo: {},
                 selectedUpMenuId: null,
+                title: ''
             }
         },
         computed: {
@@ -128,6 +129,7 @@
                     try {
                         if (this.$props.state === 'CREATE') {
                             this.menuInfo = {};
+                            this.title = '메뉴 등록';
                             return;
                         }
 
@@ -136,6 +138,7 @@
                             menuId: menuId
                         });
                         this.menuInfo = response;
+                        this.title = '메뉴 수정';
                     } catch (e) {
                         const status = e.response && e.response.status;
                         console.log('error-------------', status);

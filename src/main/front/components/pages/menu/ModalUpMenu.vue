@@ -5,7 +5,7 @@
             @ok.prevent="handleOk"
             ref="modal"
             @show="showModal"
-            title="메뉴 수정">
+            :title="title">
         <b-form
                 ref="form"
                 @submit.stop.prevent="handleSubmit"
@@ -43,7 +43,8 @@
         name: "modalUpMenu",
         data() {
             return {
-                upMenu: {}
+                upMenu: {},
+                title : ''
             };
         },
         computed: {
@@ -89,9 +90,11 @@
                     this.$nextTick(async () => {
                         if (this.$props.state === 'CREATE') {
                             this.upMenu = {};
+                            this.title = '상위메뉴 등록';
                             return;
                         }
 
+                        this.title = "상위메뉴 수정";
                         this.upMenu = {...this.$props.selectedMenu};
                     });
                 } catch (e) {

@@ -68,8 +68,8 @@
         data(){
             return {
                 fields: [
-                    { key: 'upMenuName', label : '1Depth'},
-                    { key: 'menuName', label : '2Depth'},
+                    { key: 'upMenuName', label : '1Depth', tdClass:'pr-0'},
+                    { key: 'menuName', label : '2Depth', tdClass:'pr-0'},
                     { key: 'useYn', label : '사용여부',
                         formatter:(value)=> value === 'Y' ? '사용' : '미사용'
                     },

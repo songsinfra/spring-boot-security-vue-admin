@@ -13,12 +13,10 @@
                     <ul class="nav navbar-nav float-right">
                         <li class="dropdown dropdown-user nav-item" :class="{show : isShowProfile}"><a class="dropdown-toggle nav-link dropdown-user-link"
                                                                        href="#" @click="isShowProfile = !isShowProfile"> <span
-                                class="avatar avatar-online"><img src="/images/portrait/small/avatar-s-19.png"
-                                                                  alt="avatar"></span></a>
+                                class="avatar mr-1.2"><i class="icon-user"></i></span></a>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <div class="arrow_box_right"><a class="dropdown-item" href="#"><span
-                                        class="avatar avatar-online"><img
-                                        src="/images/portrait/small/avatar-s-19.png" alt="avatar"><span
+                                        class="avatar"><span
                                         class="user-name text-bold-700 ml-1">John Doe</span></span></a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" @click="logout"><i class="ft-power"></i> Logout</a>

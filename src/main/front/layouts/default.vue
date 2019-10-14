@@ -28,7 +28,7 @@
                 </div>
             </div>
         </div>
-        <base-footer/>
+<!--        <base-footer/>-->
     </div>
 </template>
 
