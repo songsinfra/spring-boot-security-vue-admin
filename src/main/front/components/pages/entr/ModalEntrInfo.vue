@@ -107,12 +107,12 @@
                     try {
                         if (this.$props.state === 'CREATE') {
                             this.entrInfo = { statusCd : '1'};
-                            this.title = '권한정보 등록';
+                            this.title = '가입가능 부가서비스 등록';
                             return;
                         }
 
                         console.log('this.$props.selectedEntrInfo', this.$props.selectedEntrInfo);
-                        this.title = '권한정보 수정';
+                        this.title = '가입가능 부가서비스 수정';
                         this.entrInfo = {...this.$props.selectedEntrInfo};
                     } catch (e) {
 
