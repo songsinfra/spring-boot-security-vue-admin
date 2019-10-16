@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <packaging>war</packaging>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -79,6 +80,7 @@
         <dependency>
             <groupId>com.nextgrid</groupId>
             <artifactId>crpyto</artifactId>
+            <version>1.1.1</version>
             <scope>system</scope>
             <systemPath>${basedir}/src/main/resources/libs/nexgrid_SHA512.jar</systemPath>
         </dependency>
@@ -86,6 +88,7 @@
         <dependency>
             <groupId>org.oracle</groupId>
             <artifactId>oracle</artifactId>
+            <version>1.1.1</version>
             <scope>system</scope>
             <systemPath>${basedir}/src/main/resources/libs/ojdbc7.jar</systemPath>
         </dependency>
@@ -95,6 +98,13 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.9</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

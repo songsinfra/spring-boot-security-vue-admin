@@ -72,6 +72,7 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter implement
                     //.anyRequest().authenticated()
                     .antMatchers("/login/**").permitAll()
                     .antMatchers("/menu/**").authenticated()
+                    .antMatchers("/**").permitAll()
                 .and()
                     .formLogin()
                         .successHandler(this.getAuthenticationSuccessHandler())
