@@ -280,7 +280,7 @@
 
             async isDuplicateMember(mbrId) {
                 try {
-                    const {data} = await this.$axios.post('/api/mbr/isDuplicateMember',{mbrId});
+                    const {data} = await this.$axios.post(process.env.contextPath + '/mbr/isDuplicateMember',{mbrId});
                     return data.data;
                 } catch (e) {
                     await this.$bvModal.msgBoxOk(e.message);
@@ -289,7 +289,7 @@
 
            async getAuthList() {
                 try {
-                    const {data} = await this.$axios.post('/api/auth/selectRoleMstList');
+                    const {data} = await this.$axios.post(process.env.contextPath + '/auth/selectRoleMstList');
                     this.authList = data.data;
                 } catch (e) {
                     await this.$bvModal.msgBoxOk(e.message);
@@ -298,7 +298,7 @@
 
             async getCompanyList() {
                 try {
-                    const {data} = await this.$axios.post('/api/mbr/getCompanyList');
+                    const {data} = await this.$axios.post(process.env.contextPath + '/mbr/getCompanyList');
                     this.companyList = data.data;
                 } catch (e) {
                     await this.$bvModal.msgBoxOk(e.message);

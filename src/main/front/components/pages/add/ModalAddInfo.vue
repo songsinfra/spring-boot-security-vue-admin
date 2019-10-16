@@ -367,7 +367,7 @@
 
             async getAddInfo(addItemCode) {
                 try {
-                    const {data} = await this.$axios.post('/api/add/selectAddItem', {
+                    const {data} = await this.$axios.post(process.env.contextPath + '/add/selectAddItem', {
                         addItemCode
                     });
                     return data.data;

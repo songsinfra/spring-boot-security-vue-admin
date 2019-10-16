@@ -134,7 +134,7 @@
                         }
 
                         const menuId = this.$props.selectedMenu.menuId;
-                        const response = await this.$axios.$post('/api/menu/getMenuInfo', {
+                        const response = await this.$axios.$post(process.env.contextPath + '/menu/getMenuInfo', {
                             menuId: menuId
                         });
                         this.menuInfo = response;

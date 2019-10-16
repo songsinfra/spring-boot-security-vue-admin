@@ -123,7 +123,7 @@
                     const isOk = await this.$bvModal.msgBoxConfirm("선택된 회원을 삭제 하시겠습니까?");
                     if (!isOk) return;
 
-                    const {data} = await this.$axios.post('/api/mbr/deleteMbr',{
+                    const {data} = await this.$axios.post(process.env.contextPath + '/mbr/deleteMbr',{
                         mbrIdList : deleteMbrIdList
                     });
 

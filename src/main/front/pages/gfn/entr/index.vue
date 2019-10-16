@@ -125,7 +125,7 @@
             },
             async selectEntrItemList() {
                 try {
-                    const {data} = await this.$axios.post('/api/entr/selectEntrItemList', { useYn: ''});
+                    const {data} = await this.$axios.post(process.env.contextPath + '/entr/selectEntrItemList', { useYn: ''});
                     this.entrItems = data.data;
                 } catch (e) {
                     await this.$bvModal.msgBoxOk(e.message);
@@ -134,7 +134,7 @@
 
             async getAddItemList(entrItemCode) {
                 try {
-                    const {data} = await this.$axios.post('/api/add/selectAddItemList', { entrItemCode});
+                    const {data} = await this.$axios.post(process.env.contextPath + '/add/selectAddItemList', { entrItemCode});
                     this.addInfoItems = data.data;
                 } catch (e) {
                     await this.$bvModal.msgBoxOk(e.message);
@@ -143,7 +143,7 @@
 
             async selectMappingList(entrItemCode) {
                 try {
-                    const {data} = await this.$axios.post('/api/entr/selectEntrMappingList', { entrItemCode });
+                    const {data} = await this.$axios.post(process.env.contextPath + '/entr/selectEntrMappingList', { entrItemCode });
                     return  data.data;
                 } catch (e) {
                     await this.$bvModal.msgBoxOk(e.message);
@@ -152,7 +152,7 @@
 
             async insertMapItemList(entrItemCode, addItemCodeList) {
                 try {
-                    const {data} = await this.$axios.post('/api/entr/insertMapItemList', { entrItemCode, addItemCodeList});
+                    const {data} = await this.$axios.post(process.env.contextPath + '/entr/insertMapItemList', { entrItemCode, addItemCodeList});
                     await this.$bvModal.msgBoxOk(data.message);
 
                 } catch (e) {

@@ -1,5 +1,5 @@
 const webpack = require('webpack');
-console.log(webpack);
+console.log("webpack config :" , process.env.npm_lifecycle_event);
 module.exports = {
     head: {
         script: [
@@ -43,6 +43,9 @@ module.exports = {
                 'jQuery$': 'jquery',
             })
         ]
+    },
+    env: {
+        contextPath: process.env.npm_lifecycle_event === 'dev' ? '/api' : ""
     },
     generate: {
         dir: "../resources/static"

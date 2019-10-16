@@ -194,7 +194,7 @@
         },
         async asyncData({$axios, error, store}) {
             try {
-                const res = await $axios.$post('/api/front/constant', {test: 'test'});
+                const res = await $axios.$post(process.env.contextPath + '/front/constant', {test: 'test'});
                 console.log(`res : ${res}`);
             } catch (e) {
                 error({stateCode: 404, message: e.message});
@@ -205,7 +205,7 @@
         },
         methods:{
             async test() {
-                const res = await this.$axios.$post('/api/test/loginProcessForAuth',{test:'test'});
+                const res = await this.$axios.$post(process.env.contextPath + '/test/loginProcessForAuth',{test:'test'});
                 console.log(res);
             },
         }

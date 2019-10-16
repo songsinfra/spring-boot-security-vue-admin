@@ -76,7 +76,7 @@
         methods:{
             async getAddItemList(addItemNm) {
                 try {
-                    const {data} = await this.$axios.post('/api/add/selectAddItemList', { addItemNm});
+                    const {data} = await this.$axios.post(process.env.contextPath + '/add/selectAddItemList', { addItemNm});
                     this.items = data.data;
                 } catch (e) {
                     await this.$bvModal.msgBoxOk(e.message);

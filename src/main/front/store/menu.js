@@ -20,11 +20,11 @@ export const mutations = {
 
 export const actions = {
     async addMenu({commit}) {
-        const menuList = await this.$axios.$post('/api/menu/getLayoutMenuList');
+        const menuList = await this.$axios.$post(process.env.contextPath + '/menu/getLayoutMenuList');
         commit('addMenu', menuList);
     },
     async addUpMenuList({commit}) {
-        const menuList = await this.$axios.$post('/api/menu/getUpMenuList');
+        const menuList = await this.$axios.$post(process.env.contextPath + '/menu/getUpMenuList');
         commit('addUpMenuList', menuList);
     }
 };

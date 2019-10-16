@@ -108,7 +108,7 @@
         methods:{
             async selectRoleMstList() {
                 try {
-                    const {data} = await this.$axios.post('/api/auth/selectRoleMstList', { useYn: ''});
+                    const {data} = await this.$axios.post(process.env.contextPath + '/auth/selectRoleMstList', { useYn: ''});
                     this.roleItems = data.data;
                 } catch (e) {
                     await this.$bvModal.msgBoxOk(e.message);
@@ -117,7 +117,7 @@
 
             async selectRoleMenuList(roleCode) {
                 try {
-                    const {data} = await this.$axios.post('/api/auth/selectRoleMenuList', { roleCode });
+                    const {data} = await this.$axios.post(process.env.contextPath + '/auth/selectRoleMenuList', { roleCode });
                     return  data.data;
                 } catch (e) {
                     await this.$bvModal.msgBoxOk(e.message);
@@ -126,7 +126,7 @@
 
             async getRoleMenuList() {
                 try {
-                    const {data} = await this.$axios.post('/api/menu/getRoleMenuList', { useYn: ''});
+                    const {data} = await this.$axios.post(process.env.contextPath + '/menu/getRoleMenuList', { useYn: ''});
                     this.menuItems = data.data;
                 } catch (e) {
                     await this.$bvModal.msgBoxOk(e.message);
@@ -135,7 +135,7 @@
 
             async insertRoleMenuList(roleCode, menuIdList) {
                 try {
-                    const {data} = await this.$axios.post('/api/auth/insertRoleMenuList', { roleCode, menuIdList});
+                    const {data} = await this.$axios.post(process.env.contextPath + '/auth/insertRoleMenuList', { roleCode, menuIdList});
                     await this.$bvModal.msgBoxOk(data.message);
 
                 } catch (e) {

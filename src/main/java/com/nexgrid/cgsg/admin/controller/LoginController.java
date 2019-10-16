@@ -42,10 +42,10 @@ public class LoginController {
         return loginInfoList.get(0);
     }
 
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public LoginInfo login(@RequestBody LoginInfo loginInfo) {
-		return loginService.login(loginInfo);
-	}
+//	@RequestMapping(value = "/login", method = RequestMethod.POST)
+//	public LoginInfo login(@RequestBody LoginInfo loginInfo) {
+//		return loginService.login(loginInfo);
+//	}
 
 	/**
 	 * @Date : 2015. 9. 7.
