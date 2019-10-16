@@ -73,6 +73,8 @@
             showModal() {
                 this.$nextTick(async () => {
                     try {
+                        this.errors.clear();
+
                         if (this.$props.state === 'CREATE') {
                             this.authInfo = { useYn : 'Y'};
                             this.title = '권한정보 등록';

@@ -1,7 +1,7 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <b-modal
             id="modal_mbrInfo"
-            @ok.prevent="ok"
+            @ok.prevent="submit"
             ref="modal"
             @show="showModal"
             centered
@@ -19,6 +19,8 @@
                         :text-field="'codeNm'"
                         :disabled="state !=='CREATE'"
                         :class="'form-control'"
+                        v-validate="'required'"
+                        data-vv-name="권한"
                 >
                     <template v-slot:first>
                         <option
@@ -27,6 +29,9 @@
                         >-- 선택하세요 --</option>
                     </template>
                 </b-form-select>
+                <b-form-invalid-feedback :state="!errors.has('권한')">
+                    {{errors.first('권한')}}
+                </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group
                     id="mbrId-group-1"
@@ -37,8 +42,12 @@
                 <b-form-input
                         id="mbrId-1"
                         v-model="mbrInfo.mbrId"
-                        required
+                        v-validate="'required'"
+                        data-vv-name="아이디"
                 ></b-form-input>
+                <b-form-invalid-feedback :state="!errors.has('아이디')">
+                    {{errors.first('아이디')}}
+                </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group
                     id="mbrPw-group-1"
@@ -49,8 +58,14 @@
                         id="mbrPw-1"
                         v-model="mbrInfo.mbrPw"
                         type="password"
-                        required
+                        v-validate="'required'"
+                        data-vv-name="비밀번호"
+                        ref="password"
+                        @change="changePassword"
                 ></b-form-input>
+                <b-form-invalid-feedback :state="!errors.has('비밀번호')">
+                    {{errors.first('비밀번호')}}
+                </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group
                     id="mbrPwRe-group-1"
@@ -61,8 +76,13 @@
                         id="mbrPwRe-1"
                         v-model="mbrInfo.mbrPwRe"
                         type="password"
-                        required
+                        v-validate="'required|confirmed:password'"
+                        data-vv-name="비밀번호확인"
+                        @change="changePassword"
                 ></b-form-input>
+                <b-form-invalid-feedback :state="!errors.has('비밀번호확인')">
+                    {{errors.first('비밀번호확인')}}
+                </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group
                     id="mbrNm-group-1"
@@ -72,8 +92,12 @@
                 <b-form-input
                         id="mbrNm-1"
                         v-model="mbrInfo.mbrNm"
-                        required
+                        v-validate="'required'"
+                        data-vv-name="이름"
                 ></b-form-input>
+                <b-form-invalid-feedback :state="!errors.has('이름')">
+                    {{errors.first('이름')}}
+                </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group
                     id="input-group-1"
@@ -115,8 +139,12 @@
                 <b-form-input
                         id="tel-1"
                         v-model="mbrInfo.tel"
-                        required
+                        v-validate="'required'"
+                        data-vv-name="휴대폰"
                 ></b-form-input>
+                <b-form-invalid-feedback :state="!errors.has('휴대폰')">
+                    {{errors.first('휴대폰')}}
+                </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group
                     id="email-group-1"
@@ -126,8 +154,12 @@
                 <b-form-input
                         id="email-1"
                         v-model="mbrInfo.email"
-                        required
+                        v-validate="'required|email'"
+                        data-vv-name="이메일"
                 ></b-form-input>
+                <b-form-invalid-feedback :state="!errors.has('이메일')">
+                    {{errors.first('이메일')}}
+                </b-form-invalid-feedback>
             </b-form-group>
         </b-form>
     </b-modal>
@@ -145,7 +177,14 @@
                 authList: [],
                 companyList: [],
                 showMbrCompanyText : false,
-                title: ''
+                title: '',
+                errorBag:{
+                    role: '권한',
+                    id: '아이디',
+                    name: '이름',
+                    tel: '휴대폰',
+                    email: '이메일'
+                }
             };
         },
 
@@ -158,7 +197,6 @@
 
         methods:{
             showModal() {
-
                 this.$nextTick(async () => {
                     try {
                         if (this.$props.state === 'CREATE') {
@@ -169,10 +207,37 @@
 
                         this.title = "회원정보 수정"
                         this.mbrInfo = {...this.$props.selectedMbrInfo};
+
                     } catch (e) {
 
                     }
                 });
+            },
+
+            async submit() {
+                this.errors.clear();
+
+                if (this.$props.state === 'CREATE') {
+                    if(!await this.$validator.validate()) return;
+                } else {
+                    let checkElements = Object.values(this.errorBag);
+
+                    if (this.mbrInfo.mbrPw || this.mbrInfo.mbrPwRe) {
+                        checkElements.push(...['비밀번호', '비밀번호확인']);
+                    }
+
+                    if(await this.isInValidform(checkElements)) return;
+                }
+
+
+                 await this.ok();
+            },
+
+            async isInValidform(forms) {
+                const results = await Promise.all(forms.map(e=>this.$validator.validate(e)));
+                if(!results.every(e => e)) return true;
+
+                return false;
             },
 
             async ok() {
@@ -239,6 +304,12 @@
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },
+
+            changePassword() {
+                if (this.$props.state === 'UPDATE' && !this.mbrInfo.mbrPw && !this.mbrInfo.mbrPwRe) {
+                    this.errors.clear();
+                }
+            }
 
         }
 

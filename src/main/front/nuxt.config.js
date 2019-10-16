@@ -19,7 +19,7 @@ module.exports = {
             },
             {
                 rel: 'stylesheet',
-                href: '/fonts/line-awesome/1.1/css/line-awesome.min.css'
+                href: '/fonts/line-awesome/css/line-awesome.css'
             },
             {rel: 'stylesheet', href: '/vendors/css/charts/chartist.css'},
             {rel: 'stylesheet', href: '/vendors/css/charts/chartist-plugin-tooltip.css'},
@@ -43,6 +43,9 @@ module.exports = {
                 'jQuery$': 'jquery',
             })
         ]
+    },
+    generate: {
+        dir: "../resources/static"
     },
     modules: [
         '@nuxtjs/axios',

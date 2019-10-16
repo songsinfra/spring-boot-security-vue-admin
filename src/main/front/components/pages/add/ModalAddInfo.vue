@@ -27,8 +27,12 @@
                                     id="addItemCode-1"
                                     v-model="addInfo.addItemCode"
                                     :disabled="disabledAddItemCode"
-                                    required
+                                    v-validate="'required'"
+                                    data-vv-name="부가서비스코드"
                             ></b-form-input>
+                            <b-form-invalid-feedback :state="!errors.has('부가서비스코드')">
+                                {{errors.first('부가서비스코드')}}
+                            </b-form-invalid-feedback>
                         </b-col>
                     </b-row>
 
@@ -44,10 +48,9 @@
                             id="addItemNm-1"
                             v-model="addInfo.addItemNm"
                             required
-                            v-validate="'required'"
                             name="addItemNm"
+                            v-validate="'required'"
                             data-vv-name="부가서비스명"
-                            :state="!errors.has('부가서비스명')"
                     ></b-form-input>
                     <b-form-invalid-feedback :state="!errors.has('부가서비스명')">
                         {{errors.first('부가서비스명')}}
@@ -87,8 +90,12 @@
                                 v-model="addInfo.svcSellPrice"
                                 :disabled="disabledSvcSellPrice"
                                 type="number"
-                                required
+                                v-validate="'required'"
+                                data-vv-name="판매가"
                         ></b-form-input>
+                        <b-form-invalid-feedback :state="!errors.has('판매가')">
+                            {{errors.first('판매가')}}
+                        </b-form-invalid-feedback>
                     </b-col>
                     <b-col sm="6">
                         <label class="mb-2 mr-sm-2 mb-sm-0" for="svcBasePrice-2">기본가격</label>
@@ -97,8 +104,12 @@
                                 v-model="addInfo.svcBasePrice"
                                 type="number"
                                 :disabled="disabledSvcBasePrice"
-                                required
+                                v-validate="'required'"
+                                data-vv-name="기본가격"
                         ></b-form-input>
+                        <b-form-invalid-feedback :state="!errors.has('기본가격')">
+                            {{errors.first('기본가격')}}
+                        </b-form-invalid-feedback>
                     </b-col>
                 </b-row>
             </b-container>
@@ -129,9 +140,13 @@
                                     id="svcTermNum-1"
                                     v-model="addInfo.svcTermNumHour"
                                     type="number"
-                                    required
                                     :disabled="addInfo.svcTermUnit !== 'H'"
+                                    v-validate="'required'"
+                                    data-vv-name="시간"
                             ></b-form-input>
+                            <b-form-invalid-feedback :state="!errors.has('시간')">
+                                {{errors.first('시간')}}
+                            </b-form-invalid-feedback>
                         </b-col>
                         <b-col sm="1">
                             <b-form-radio value="D">일</b-form-radio>
@@ -141,9 +156,13 @@
                                     id="svcTermNum-1"
                                     v-model="addInfo.svcTermNumDay"
                                     type="number"
-                                    required
                                     :disabled="addInfo.svcTermUnit !== 'D'"
+                                    v-validate="'required'"
+                                    data-vv-name="일"
                             ></b-form-input>
+                            <b-form-invalid-feedback :state="!errors.has('일')">
+                                {{errors.first('일')}}
+                            </b-form-invalid-feedback>
                         </b-col>
                         <b-col sm="1">
                             <b-form-radio value="M">개월</b-form-radio>
@@ -153,9 +172,13 @@
                                     id="svcTermNum-1"
                                     v-model="addInfo.svcTermNumMonth"
                                     type="number"
-                                    required
                                     :disabled="addInfo.svcTermUnit !== 'M'"
+                                    v-validate="'required'"
+                                    data-vv-name="개월"
                             ></b-form-input>
+                            <b-form-invalid-feedback :state="!errors.has('개월')">
+                                {{errors.first('개월')}}
+                            </b-form-invalid-feedback>
                         </b-col>
                     </b-row>
                 </b-form-radio-group>
@@ -166,7 +189,15 @@
                     label="이용종료일시:"
                     label-for="svcTermDate-1"
             >
-                    <b-form-input id="svcTermDate-1" v-model="addInfo.svcTermDate" type="date"></b-form-input>
+                    <b-form-input id="svcTermDate-1"
+                                  v-model="addInfo.svcTermDate"
+                                  type="date"
+                                  v-validate="'required'"
+                                  data-vv-name="이용종료일시"
+                    ></b-form-input>
+                <b-form-invalid-feedback :state="!errors.has('이용종료일시')">
+                    {{errors.first('이용종료일시')}}
+                </b-form-invalid-feedback>
             </b-form-group>
         </b-form>
     </b-modal>
@@ -200,6 +231,8 @@
 
                 this.$nextTick(async () => {
                     try {
+                        this.errors.clear();
+
                         if (this.$props.state === 'CREATE') {
                             console.log('this.$props.state', this.$props.state);
                             console.log('this.addInfo', this.addInfo);
@@ -297,8 +330,11 @@
 
             changeAddItemType(addItemType) {
                 console.log('addItemType', addItemType);
+                this.errors.clear();
+
                 if (addItemType === 'U') {
-                    this.$set(this.addInfo, 'svcBasePrice', '');
+                    this.$set(this.addInfo, 'svcBasePrice', '0');
+                    this.$set(this.addInfo, 'svcSellPrice', '0');
                     this.$set(this.addInfo, 'svcTermType', '0');
                     this.disabledSvcBasePrice = false
                     this.disabledSvcSellPrice = false;
