@@ -84,7 +84,8 @@
             } catch (e) {
                 console.error(e);
                 if (e.response.status === 401|| e.response.status === 504) {
-                    window.location = '/login/login';
+                    this.$router.push('login/login');
+                    // window.location = '/login/login';
                 } else {
                     console.dir( e);
                     await this.$bvModal.msgBoxOk(e.message);

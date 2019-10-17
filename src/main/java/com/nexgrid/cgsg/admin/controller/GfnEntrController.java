@@ -89,7 +89,7 @@ public class GfnEntrController {
 
         return ResultInfo.builder()
                 .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
-                .message(String.format("%s 건 입력되었습니다.", insertCnt))
+                .message(String.format("%s 건 매핑되었습니다.", insertCnt))
                 .build();
     }
 }

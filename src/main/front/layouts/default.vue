@@ -51,11 +51,11 @@
 
         computed : {
             menuName(){
-                return this.$store.state.currentMenu.menuName;
+                return this.$store.state.currentMenu ? this.$store.state.currentMenu.menuName : "";
             },
 
             parantMenuName(){
-                return this.$store.state.currentMenu.upMenuName;
+                return this.$store.state.currentMenu ? this.$store.state.currentMenu.upMenuName : "";
             }
         },
 

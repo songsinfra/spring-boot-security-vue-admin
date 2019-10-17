@@ -294,7 +294,7 @@
             async ok() {
                 try {
 
-                    const url = this.$props.state === 'CREATE' ? "/api/add/insertAddItem" : "/api/add/updateAddItem";
+                    const url = this.$props.state === 'CREATE' ? "/add/insertAddItem" : "/add/updateAddItem";
                     const addInfo = {...this.addInfo};
 
                     if(addInfo.svcTermType === '1'){
@@ -314,7 +314,7 @@
                         addInfo.svcTermDate = '';
                     }
 
-                    const response = await this.$axios.$post(url, addInfo);
+                    const response = await this.$axios.$post(process.env.contextPath + url, addInfo);
 
                     await this.$bvModal.msgBoxOk("저장이 완료 되었습니다.");
                     this.$eventBus.$emit('refreshAddList')

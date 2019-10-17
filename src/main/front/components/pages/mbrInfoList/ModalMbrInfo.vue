@@ -243,7 +243,7 @@
             async ok() {
                 try {
 
-                    const url = this.$props.state === 'CREATE' ? "/api/mbr/insertMbr" : "/api/mbr/updateMbr";
+                    const url = this.$props.state === 'CREATE' ? "/mbr/insertMbr" : "/mbr/updateMbr";
                     const mbrInfo = {...this.mbrInfo};
 
                     if (mbrInfo.mbrCompany === 'new') {
@@ -264,7 +264,7 @@
                         if (mbrInfo.mbrPw && mbrInfo.mbrPw.length > 0) mbrInfo.mbrNewPw = mbrInfo.mbrPw
                     }
 
-                    const response = await this.$axios.$post(url, mbrInfo);
+                    const response = await this.$axios.$post(process.env.contextPath + url, mbrInfo);
 
                     await this.$bvModal.msgBoxOk("저장이 완료 되었습니다.");
                     this.$eventBus.$emit('refreshMbrList')

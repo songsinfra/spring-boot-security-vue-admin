@@ -52,18 +52,6 @@
 
                                         </form>
                                     </div>
-                                    <p class="card-subtitle line-on-side text-muted text-center font-small-3 mx-2 my-2 ">
-                                        <span>OR Sign Up Using</span></p>
-                                    <div class="text-center">
-                                        <a href="#" class="btn btn-social-icon round mr-1 mb-1 btn-facebook"><span
-                                                class="ft-facebook"></span></a>
-                                        <a href="#" class="btn btn-social-icon round mr-1 mb-1 btn-twitter"><span
-                                                class="ft-twitter"></span></a>
-                                        <a href="#" class="btn btn-social-icon round mr-1 mb-1 btn-instagram"><span
-                                                class="ft-instagram"></span></a>
-                                    </div>
-                                    <p class="card-subtitle text-muted text-right font-small-3 mx-2 my-1"><span>Don't have an account ? <a
-                                            href="register.html" class="card-link">Sign Up</a></span></p>
                                 </div>
                             </div>
                         </div>
@@ -91,6 +79,7 @@
             async login(){
                 try {
                     await this.$store.dispatch('login/setUser', {id: this.user.username, password: this.user.password});
+                    // this.$router.push("/");
                     window.location = '/';
                 } catch (e) {
                     const msg = e.response.data.message || e.response.data;

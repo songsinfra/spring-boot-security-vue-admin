@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    jndi-name: jdbc/gfnDB
+#    driver-class-name: oracle.jdbc.OracleDriver
+#    url: jdbc:oracle:thin:@nexgrid2.iptime.org:11522:ADCBDBO
+#    username: gfn
+#    password: gfn
+  http:
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true
+
+#debug: true
+logging:
+  level:
+    com.nexgrid.cgsg.admin.mapper : trace
+
+mybatis:
+  type-aliases-package: com.nexgrid.cgsg.admin.vo
+  mapper-locations: classpath:mapper/**/*.xml
+
+server:
+  servlet:
+    context-path: /api
+
+--- ## 개발
+

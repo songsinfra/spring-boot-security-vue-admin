@@ -124,7 +124,7 @@
 
             async refreshGrid() {
                 try {
-                    const response = await axios.post('/api/menu/getMenuList', { searchUseYn: this.searchUseYn});
+                    const response = await this.$axios.post(process.env.contextPath + '/menu/getMenuList', { searchUseYn: this.searchUseYn});
 
                     console.log(response.data);
                     this.items = response.data.data;

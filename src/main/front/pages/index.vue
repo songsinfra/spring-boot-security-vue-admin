@@ -187,22 +187,24 @@
         layout: 'default',
         fetch({store, error}) {
         },
+
         data() {
             return {
                 project: "default"
             }
         },
-        async asyncData({$axios, error, store}) {
-            try {
-                const res = await $axios.$post(process.env.contextPath + '/front/constant', {test: 'test'});
-                console.log(`res : ${res}`);
-            } catch (e) {
-                error({stateCode: 404, message: e.message});
-            }
-            return {
-                name: "kim"
-            }
-        },
+
+        // async asyncData({$axios, error, store}) {
+        //     try {
+        //         const res = await $axios.$post(process.env.contextPath + '/front/constant', {test: 'test'});
+        //         console.log(`res : ${res}`);
+        //     } catch (e) {
+        //         error({stateCode: 404, message: e.message});
+        //     }
+        //     return {
+        //         name: "kim"
+        //     }
+        // },
         methods:{
             async test() {
                 const res = await this.$axios.$post(process.env.contextPath + '/test/loginProcessForAuth',{test:'test'});

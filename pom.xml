@@ -116,6 +116,34 @@
                     <includeSystemScope>true</includeSystemScope>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.7.6</version>
+                <configuration>
+                    <workingDirectory>src/main/front</workingDirectory>
+                    <installDirectory>D:\programs</installDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+
+                        <!-- optional: default phase is "generate-resources" -->
+                        <phase>clean</phase>
+
+                        <configuration>
+                            <!-- optional: The default argument is actually
+                            "install", so unless you need to run some other npm command,
+                            you can remove this whole <configuration> section.
+                            -->
+                            <arguments>run generate</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 

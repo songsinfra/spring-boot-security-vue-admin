@@ -5,7 +5,8 @@ module.exports = {
         script: [
             // { src:'/vendors/js/vendors.min.js'},
             // { src:'/js/core/app-menu.js'},
-            // { src:'/js/core/app.js'},
+             {src: '/js/core/libraries/jquery.min.js'}
+
         ],
         link: [
             {rel: 'apple-touch-icon', href: '/images/ico/apple-icon-120.png'},
@@ -48,7 +49,9 @@ module.exports = {
         contextPath: process.env.npm_lifecycle_event === 'dev' ? '/api' : ""
     },
     generate: {
-        dir: "../resources/static"
+        dir: "../resources/static",
+        // subFolders : false
+        devtools: true,
     },
     modules: [
         '@nuxtjs/axios',
@@ -79,6 +82,7 @@ module.exports = {
         }    // proxy url
     },
     router:{
-        middleware: 'auth'
+        middleware: 'auth',
+        mode: 'hash'
     }
 }

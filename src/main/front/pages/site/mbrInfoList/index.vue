@@ -92,7 +92,7 @@
         methods:{
             async getMbrList() {
                 try {
-                    const {data} = await axios.post('/api/mbr/getMemberList', { searchUseYn: this.searchUseYn});
+                    const {data} = await this.$axios.post(process.env.contextPath + '/mbr/getMemberList', { searchUseYn: this.searchUseYn});
                     this.items = data.data;
                 } catch (e) {
                     await this.$bvModal.msgBoxOk(e.message);

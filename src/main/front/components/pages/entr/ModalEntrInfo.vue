@@ -150,10 +150,10 @@
             async ok() {
                 try {
 
-                    const url = this.$props.state === 'CREATE' ? "/api/entr/insertEntrItem" : "/api/entr/updateEntrItem";
+                    const url = this.$props.state === 'CREATE' ? "/entr/insertEntrItem" : "/entr/updateEntrItem";
                     const entrInfo = {...this.entrInfo};
 
-                    const response = await this.$axios.$post(url, entrInfo);
+                    const response = await this.$axios.$post( process.env.contextPath + url, entrInfo);
 
                     await this.$bvModal.msgBoxOk("저장이 완료 되었습니다.");
                     this.$eventBus.$emit('refreshEntrList')

@@ -92,10 +92,10 @@
             async ok() {
                 try {
 
-                    const url = this.$props.state === 'CREATE' ? "/api/auth/insertRoleMst" : "/api/auth/updateRoleMst";
+                    const url = this.$props.state === 'CREATE' ? "/auth/insertRoleMst" : "/auth/updateRoleMst";
                     const authInfo = {...this.authInfo};
 
-                    const response = await this.$axios.$post(url, authInfo);
+                    const response = await this.$axios.$post(process.env.contextPath + url, authInfo);
 
                     await this.$bvModal.msgBoxOk("저장이 완료 되었습니다.");
                     this.$eventBus.$emit('refreshAuthList')

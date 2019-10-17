@@ -103,9 +103,9 @@
                 try {
                     bvModalEvt.preventDefault();
 
-                    const url = this.$props.state === 'CREATE' ? "/api/menu/setMenuAdd" : "/api/menu/setMenuUpdate";
+                    const url = this.$props.state === 'CREATE' ? "/menu/setMenuAdd" : "/menu/setMenuUpdate";
 
-                    const response = await this.$axios.$post(url, {
+                    const response = await this.$axios.$post(process.env.contextPath + url, {
                         upMenuId: this.menuInfo.upMenuId,
                         menuId: this.menuInfo.menuId,
                         menuName: this.menuInfo.menuName,
