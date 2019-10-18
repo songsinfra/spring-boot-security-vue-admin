@@ -17,7 +17,7 @@
                             <div class="dropdown-menu dropdown-menu-right">
                                 <div class="arrow_box_right"><a class="dropdown-item" href="#"><span
                                         class="avatar"><span
-                                        class="user-name text-bold-700 ml-1">John Doe</span></span></a>
+                                        class="user-name text-bold-700 ml-1">{{user.mbrNm}}</span></span></a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" @click="logout"><i class="ft-power"></i> Logout</a>
                                 </div>
@@ -33,15 +33,23 @@
 <script>
     export default {
         name: "Top",
+        data() {
+            return {
+                isShowProfile: false
+            }
+        },
+
+        computed:{
+            user() {
+                return this.$store.state.login.authUser;
+            }
+
+        },
+
         methods:{
             logout() {
                 this.$store.dispatch('login/logout');
                 this.$router.push("/login/login");
-            }
-        },
-        data() {
-            return {
-                isShowProfile: false
             }
         }
 

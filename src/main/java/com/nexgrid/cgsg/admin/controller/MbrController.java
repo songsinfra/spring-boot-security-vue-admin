@@ -3,6 +3,7 @@ package com.nexgrid.cgsg.admin.controller;
 import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
 import com.nexgrid.cgsg.admin.exception.AdminException;
 import com.nexgrid.cgsg.admin.security.AdminUser;
+import com.nexgrid.cgsg.admin.service.LoginService;
 import com.nexgrid.cgsg.admin.service.MbrService;
 import com.nexgrid.cgsg.admin.vo.*;
 import org.slf4j.Logger;
@@ -24,6 +25,18 @@ public class MbrController {
 
     @Autowired
     private MbrService mbrService;
+
+    @Autowired
+    private LoginService loginService;
+
+    @RequestMapping("/whois")
+    public ResultInfo whois(Principal principal) {
+        List<LoginInfo> loginInfoList = loginService.getLoginInfo2(LoginInfo.builder().mbrId(principal.getName()).build());
+        return ResultInfo.builder()
+                .data(loginInfoList.get(0))
+                .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+                .build();
+    }
 
     @RequestMapping("/getMemberList")
     public ResultInfo getMemberList(Principal principal) {

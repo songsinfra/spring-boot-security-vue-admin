@@ -1,11 +1,13 @@
 package com.nexgrid.cgsg.admin.controller;
 
+import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
 import com.nexgrid.cgsg.admin.service.LoginService;
 import com.nexgrid.cgsg.admin.utils.CommonUtil;
 import com.nexgrid.cgsg.admin.utils.SessionUtil;
 import com.nexgrid.cgsg.admin.vo.LoginInfo;
 import com.nexgrid.cgsg.admin.vo.MbrInfo;
 import com.nexgrid.cgsg.admin.vo.MenuInfo;
+import com.nexgrid.cgsg.admin.vo.ResultInfo;
 import nexgrid_SHA512.Nexgrid_SHA512;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,17 +37,6 @@ public class LoginController {
 
 	@Autowired
 	private LoginService loginService;
-
-    @RequestMapping("/whois")
-	public LoginInfo whois(Principal principal) {
-        List<LoginInfo> loginInfoList = loginService.getLoginInfo2(LoginInfo.builder().mbrId(principal.getName()).build());
-        return loginInfoList.get(0);
-    }
-
-//	@RequestMapping(value = "/login", method = RequestMethod.POST)
-//	public LoginInfo login(@RequestBody LoginInfo loginInfo) {
-//		return loginService.login(loginInfo);
-//	}
 
 	/**
 	 * @Date : 2015. 9. 7.

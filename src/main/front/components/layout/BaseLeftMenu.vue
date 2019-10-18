@@ -3,7 +3,7 @@
          data-img="/images/backgrounds/02.jpg">
         <div class="navbar-header">
             <ul class="nav navbar-nav flex-row">
-                <li class="nav-item mr-auto"><a class="navbar-brand" href="index.html"><img class="brand-logo"
+                <li class="nav-item mr-auto"><a href="/"  class="navbar-brand"><img class="brand-logo"
                                                                                             alt="Chameleon admin logo"
                                                                                             src="/images/logo/logo.png"/>
                     <h3 class="brand-text">GFN-admin</h3></a></li>

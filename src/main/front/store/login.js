@@ -63,6 +63,20 @@ export const actions = {
         }
     },
 
+    async getUser({commit}) {
+        try {
+            const response = await this.$axios.$post(process.env.contextPath + '/mbr/whois');
+
+            const user = Object.assign({}, response.data);
+            user.authenticated = true;
+
+            commit('setUser', user);
+        }catch (e) {
+            console.dir(e);
+            throw e;
+        }
+    },
+
     async logout({commit, state}) {
         try {
             await this.$axios.$post(process.env.contextPath + '/logout')
