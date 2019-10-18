@@ -261,7 +261,7 @@
                     }
 
                     if(this.$props.state === 'UPDATE'){
-                        if (mbrInfo.mbrPw && mbrInfo.mbrPw.length > 0) mbrInfo.mbrNewPw = mbrInfo.mbrPw
+                        if (mbrInfo.mbrPw && mbrInfo.mbrPw.length > 0) mbrInfo.newPw = mbrInfo.mbrPw
                     }
 
                     const response = await this.$axios.$post(process.env.contextPath + url, mbrInfo);

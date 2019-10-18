@@ -4,14 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
 import com.nexgrid.cgsg.admin.exception.AdminException;
 import com.nexgrid.cgsg.admin.service.LoginService;
+import com.nexgrid.cgsg.admin.utils.CommonUtil;
 import com.nexgrid.cgsg.admin.vo.LoginInfo;
 import com.nexgrid.cgsg.admin.vo.ResultInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -124,6 +127,9 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter implement
             } else if (exception instanceof BadCredentialsException) {
                 resultInfo.setCode(SystemStatusCode.FAIL_LOGIN.getCode());
                 resultInfo.setMessage(exception.getMessage());
+            } else if (exception instanceof InternalAuthenticationServiceException) {
+                resultInfo.setCode(SystemStatusCode.NOT_FOUND_USER_ID.getCode());
+                resultInfo.setMessage(exception.getMessage());
             }
 
             response.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -153,20 +159,23 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter implement
         @Autowired
         private LoginService loginService;
 
+
+
         @Override
         protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
-            LoginInfo loginInfo = null;
             try {
-                loginInfo = ((AdminUser) userDetails).getLoginInfo();
-                super.additionalAuthenticationChecks(userDetails, authentication);
+                LoginInfo loginInfo = ((AdminUser) userDetails).getLoginInfo();
+
+                String presentedPassword = authentication.getCredentials().toString();
+
+                if (!StringUtils.equals(CommonUtil.convertEncryptPassword(presentedPassword), userDetails.getPassword())) {
+                    loginService.failLogin(loginInfo);
+                }
 
                 loginService.successLogin(loginInfo);
-            } catch (AuthenticationException e) {
-                if (e instanceof BadCredentialsException) {
-                    loginService.failLogin(loginInfo);
-                } else {
-                    throw e;
-                }
+
+            } catch (AdminException e) {
+                throw e;
             } catch (Exception e) {
                 throw new AdminException(SystemStatusCode.INTERNAL_ERROR, e.getMessage());
             }

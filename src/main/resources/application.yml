@@ -1,6 +1,6 @@
 spring:
   datasource:
-    jndi-name: jdbc/gfnDB
+#    jndi-name: jdbc/gfnDB
 #    driver-class-name: oracle.jdbc.OracleDriver
 #    url: jdbc:oracle:thin:@nexgrid2.iptime.org:11522:ADCBDBO
 #    username: gfn
@@ -11,7 +11,7 @@ spring:
       enabled: true
       force: true
 
-#debug: true
+debug: true
 logging:
   level:
     com.nexgrid.cgsg.admin.mapper : trace
@@ -25,4 +25,16 @@ server:
     context-path: /api
 
 --- ## 개발
+spring:
+  profiles: local
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@nexgrid2.iptime.org:11522:ADCBDBO
+    username: gfn
+    password: gfn
 
+--- ## 개발
+spring:
+  profiles: dev
+  datasource:
+    jndi-name: jdbc/gfnDB

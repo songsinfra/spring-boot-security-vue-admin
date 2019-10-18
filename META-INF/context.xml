@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/">
+    <Resource name="jdbc/gfnDB" auth="Container"
+              type="javax.sql.DataSource" driverClassName="oracle.jdbc.OracleDriver"
+              factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+              url="jdbc:oracle:thin:@nexgrid2.iptime.org:11522:ADCBDBO"
+              username="gfn" password="gfn" maxTotal="20" maxIdle="10"
+              maxWaitMillis="-1"/>
+</Context>

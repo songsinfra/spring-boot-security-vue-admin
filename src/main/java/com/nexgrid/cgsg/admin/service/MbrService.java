@@ -1,6 +1,7 @@
 package com.nexgrid.cgsg.admin.service;
 
 import com.nexgrid.cgsg.admin.mapper.MbrMapper;
+import com.nexgrid.cgsg.admin.utils.CommonUtil;
 import com.nexgrid.cgsg.admin.utils.StringUtil;
 import com.nexgrid.cgsg.admin.vo.MbrInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class MbrService {
         Assert.notNull(mbrInfo.getMbrPw(), "mbrPw is null");
         Assert.notNull(mbrInfo.getMbrNm(), "mbrNm is null");
 
+        mbrInfo.setMbrPw(CommonUtil.convertEncryptPassword(mbrInfo.getMbrPw()));
+
         return mbrMapper.insertMbr(mbrInfo);
     }
 
@@ -47,6 +50,7 @@ public class MbrService {
         Assert.hasLength(mbrInfo.getMbrId(), "mbrId is null");
 
         if (!StringUtil.empty(mbrInfo.getNewPw())) {
+            mbrInfo.setNewPw(CommonUtil.convertEncryptPassword(mbrInfo.getNewPw()));
             this.setPwdHistoryTo(mbrInfo);
         }
 

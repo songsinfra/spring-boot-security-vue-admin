@@ -36,6 +36,10 @@ public class CommonUtil {
 			return Integer.parseInt(checkString);
 		}
 	}
+
+	public static String convertEncryptPassword(String password) {
+		return Nexgrid_SHA512.encrypt(password);
+	}
 	
 	/**
 	 * 시간의 시 목록 설정
