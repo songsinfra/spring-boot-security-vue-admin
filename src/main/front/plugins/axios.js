@@ -13,7 +13,7 @@ export default function ({ $axios, redirect, store, $bvModal }) {
 
     $axios.onError(error => {
         console.log('$axios.onError : error.response.status', error.response);
-        if(error.response.status === 401) {
+        if(!!error.response && error.response.status === 401) {
             console.log('$axios.onError : error.response.status', error.response.status);
             redirect('/login/login');
         }

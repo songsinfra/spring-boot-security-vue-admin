@@ -35,14 +35,7 @@
                                                     <i class="ft-lock"></i>
                                                 </div>
                                             </fieldset>
-                                            <div class="form-group row">
-                                                <div class="col-md-6 col-12 text-center text-sm-left">
 
-                                                </div>
-                                                <div class="col-md-6 col-12 float-sm-left text-center text-sm-right"><a
-                                                        href="recover-password.html" class="card-link">Forgot
-                                                    Password?</a></div>
-                                            </div>
                                             <div class="form-group text-center">
                                                 <button type="submit"
                                                         class="btn round btn-block btn-glow btn-bg-gradient-x-purple-blue col-12 mr-1 mb-1">
@@ -70,8 +63,8 @@
         data: ()=>{
             return {
                 user: {
-                    username: 'admin',
-                    password: 'test11',
+                    username: '',
+                    password: '',
                 }
             }
         },

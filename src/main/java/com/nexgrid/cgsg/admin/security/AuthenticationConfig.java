@@ -72,9 +72,15 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter implement
 //                .and()
                 .disable()
                 .authorizeRequests()
-                    //.anyRequest().authenticated()
+                    .antMatchers("/",
+                            "/_nuxt/**",
+                            "/css/**",
+                            "/data/**",
+                            "/fonts/**",
+                            "/images/**",
+                            "/js/**",
+                            "/vendors/**").permitAll()
                     .antMatchers("/login/**").permitAll()
-//                    .antMatchers("/menu/**").authenticated()
                     .antMatchers("/**").authenticated()
                 .and()
                     .formLogin()

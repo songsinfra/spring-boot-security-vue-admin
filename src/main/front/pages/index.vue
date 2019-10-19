@@ -6,7 +6,6 @@
                     <div class="card-content collapse show">
                         <div style="text-align: center;" class="card-body card-dashboard">
                             <p class="card-text" id="tete">GFN 관리자 환영합니다.</p>
-                            <button @click.prevent="test">테스트</button>
                         </div>
                     </div>
                 </div>
@@ -40,14 +39,6 @@
         //     }
         // },
         methods: {
-            async test() {
-                const res = await this.$axios.$post(process.env.contextPath + '/menu/getLayoutMenuList', {test: 'test'});
-                console.log(res);
-            },
-
-            async getMemberInfo() {
-
-            }
         }
     }
 
