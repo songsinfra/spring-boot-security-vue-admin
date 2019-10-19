@@ -99,10 +99,8 @@
         },
 
         async beforeMount() {
-            await Promise.all([
-                this.selectEntrItemList(),
-                this.getAddItemList()
-            ]);
+            this.selectEntrItemList();
+            this.getAddItemList();
         },
 
         async created() {

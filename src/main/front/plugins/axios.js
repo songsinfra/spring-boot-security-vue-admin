@@ -11,11 +11,15 @@ export default function ({ $axios, redirect, store, $bvModal }) {
         return response;
     });
 
-    // $axios.onError(error => {
-    //     if(error.message === 'Network Error') redirect('/login/login');
-    //
-    //     return error;
-    // });
+    $axios.onError(error => {
+        console.log('$axios.onError : error.response.status', error.response);
+        if(error.response.status === 401) {
+            console.log('$axios.onError : error.response.status', error.response.status);
+            redirect('/login/login');
+        }
+
+        return Promise.reject(error);
+    });
 
     function saveCsrfFromResponse(response) {
         const cookies = response.headers['set-cookie'];

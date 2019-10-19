@@ -58,7 +58,7 @@ export const actions = {
 
             commit('setUser', user);
         }catch (e) {
-            console.dir(e);
+            console.log("setUser", e);
             throw e;
         }
     },
@@ -72,7 +72,7 @@ export const actions = {
 
             commit('setUser', user);
         }catch (e) {
-            console.dir(e);
+            console.log("getUser", e);
             throw e;
         }
     },
@@ -85,7 +85,8 @@ export const actions = {
             Cookie.remove('auth');
             //Cookie.remove('menuList');
         }catch (e) {
-            console.log(e);
+            console.log("logout", e);
+            throw e;
         }
     }
 };

@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +34,23 @@ public class MbrController {
     public ResultInfo whois(Principal principal) {
         List<LoginInfo> loginInfoList = loginService.getLoginInfo2(LoginInfo.builder().mbrId(principal.getName()).build());
         return ResultInfo.builder()
-                .data(loginInfoList.get(0))
+                .data(extractLoginInfoForFront(loginInfoList.get(0)))
                 .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+                .build();
+    }
+
+    private LoginInfo extractLoginInfoForFront(LoginInfo loginInfo) {
+        Assert.notNull(loginInfo, "loginInfo is null");
+
+        return LoginInfo.builder()
+                .mbrId(loginInfo.getMbrId())
+                .mbrNm(loginInfo.getMbrNm())
+                .loginFailCnt(loginInfo.getLoginFailCnt())
+                .loginEndDt(loginInfo.getLoginEndDt())
+                .email(loginInfo.getEmail())
+                .managerYn(loginInfo.getManagerYn())
+                .roleCd(loginInfo.getRoleCd())
+                .tel(loginInfo.getTel())
                 .build();
     }
 

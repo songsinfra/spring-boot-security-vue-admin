@@ -10,7 +10,7 @@
                                     v-model="searchUseYn"
                                     value="Y"
                                     unchecked-value=""
-                                    @change="changeChckbox"
+                                    @change="changeCheckbox"
                                 >미사용메뉴표시</b-form-checkbox>
                             </li>
                             <li><b-button @click="createUpMenu" class="btn-primary">상위메뉴등록</b-button></li>
@@ -116,7 +116,7 @@
                 this.$bvModal.show('modal_update_menu');
             },
 
-            changeChckbox() {
+            changeCheckbox() {
                 this.$nextTick(_=>{
                     this.refreshGrid();
                 })
@@ -125,8 +125,6 @@
             async refreshGrid() {
                 try {
                     const response = await this.$axios.post(process.env.contextPath + '/menu/getMenuList', { searchUseYn: this.searchUseYn});
-
-                    console.log(response.data);
                     this.items = response.data.data;
                 } catch (e) {
                    await this.$bvModal.msgBoxOk(e.message);

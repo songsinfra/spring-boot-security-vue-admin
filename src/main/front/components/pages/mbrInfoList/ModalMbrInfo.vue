@@ -189,10 +189,8 @@
         },
 
         async beforeMount() {
-            await Promise.all([
-                this.getAuthList(),
-                this.getCompanyList()]
-            );
+            this.getAuthList();
+            this.getCompanyList();
         },
 
         methods:{

@@ -71,7 +71,7 @@
             return {
                 user: {
                     username: 'admin',
-                    password: 'test',
+                    password: 'test11',
                 }
             }
         },

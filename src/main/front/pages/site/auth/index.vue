@@ -95,10 +95,8 @@
         },
 
         async beforeMount() {
-            await Promise.all([
-                this.selectRoleMstList(),
-                this.getRoleMenuList()
-            ]);
+            this.selectRoleMstList();
+            this.getRoleMenuList();
         },
 
         async created() {
