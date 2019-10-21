@@ -2,14 +2,11 @@
     <b-modal
             id="modal_update_up_menu"
             centered
-            @ok.prevent="handleOk"
+            @ok.prevent="submit"
             ref="modal"
             @show="showModal"
             :title="title">
-        <b-form
-                ref="form"
-                @submit.stop.prevent="handleSubmit"
-        >
+        <b-form>
             <b-form-group
                     id="upMenuName-group-1"
                     label="상위메뉴명:"
@@ -18,8 +15,12 @@
                 <b-form-input
                         id="upMenuName-1"
                         v-model="upMenu.upMenuName"
-                        required
+                        v-validate="'required'"
+                        data-vv-name="상위메뉴명"
                 ></b-form-input>
+                <b-form-invalid-feedback :state="!errors.has('상위메뉴명')">
+                    {{errors.first('상위메뉴명')}}
+                </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group
                     id="useYn-group-1"
@@ -31,7 +32,12 @@
                         :required="true"
                         v-model="upMenu.useYn"
                         :options="useYnOption"
+                        v-validate="'required'"
+                        data-vv-name="사용여부"
                 ></b-form-select>
+                <b-form-invalid-feedback :state="!errors.has('사용여부')">
+                    {{errors.first('사용여부')}}
+                </b-form-invalid-feedback>
             </b-form-group>
         </b-form>
     </b-modal>
@@ -54,17 +60,15 @@
         },
 
         methods:{
-           async handleOk() {
-               console.dir(this.$refs.form);
-               const result = this.$refs.form.checkValidity();
-               if(!result) {
-                   await this.$bvModal.msgBoxOk("form 값이 유효하지 않습니다.");
-                   return;
-               }
-
-               this.handleSubmit();
+            async submit() {
+                if(!await this.$validator.validate()) {
+                    console.dir(this.$validator);
+                    return;
+                }
+                await this.ok();
             },
-            async handleSubmit() {
+
+            async ok() {
                 try {
                     const url = this.$props.state === 'CREATE' ? "/api/menu/setUpMenuAdd" : "/api/menu/setMenuUpdate";
                     const response = await this.$axios.$post(url, {
@@ -87,6 +91,7 @@
             },
             async showModal() {
                 try {
+                    this.errors.clear();
                     this.$nextTick(async () => {
                         if (this.$props.state === 'CREATE') {
                             this.upMenu = {};

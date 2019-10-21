@@ -161,12 +161,17 @@
             async updateEntrInfo(item) {
                 this.modalState = "UPDATE";
                 this.selectedEntrInfo = item;
-                this.$bvModal.show('modal_entrInfo');
+                this.$nextTick(async () => {
+                    this.$bvModal.show('modal_entrInfo');
+                });
             },
 
             async createEntrInfo() {
                 this.modalState = "CREATE";
-                this.$bvModal.show('modal_entrInfo');
+                this.$nextTick(async () => {
+                    this.$bvModal.show('modal_entrInfo');
+                });
+
             },
 
             async saveMenuMappingInfo() {

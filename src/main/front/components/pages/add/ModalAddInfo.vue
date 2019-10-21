@@ -330,8 +330,6 @@
 
             changeAddItemType(addItemType) {
                 console.log('addItemType', addItemType);
-                this.errors.clear();
-
                 if (addItemType === 'U') {
                     this.$set(this.addInfo, 'svcBasePrice', '0');
                     this.$set(this.addInfo, 'svcSellPrice', '0');
@@ -342,7 +340,7 @@
                 } else {
                     this.$set(this.addInfo, 'svcBasePrice', '0');
                     this.$set(this.addInfo, 'svcSellPrice', '0');
-                    this.$set(this.addInfo, 'svcTermType', '1');
+                    this.$set(this.addInfo, 'svcTermType', '2');
 
                     this.disabledSvcSellPrice = true;
                     this.disabledSvcBasePrice = true;
@@ -351,6 +349,8 @@
                         this.$set(this.addInfo, 'addItemCode', '');
                     }
                 }
+
+                this.errors.clear();
             },
 
             changeSvcTermType() {

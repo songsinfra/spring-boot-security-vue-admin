@@ -101,13 +101,17 @@
 
             async createMbrInfo() {
                 this.modalState = "CREATE";
-                this.$bvModal.show('modal_mbrInfo');
+                this.$nextTick(async () => {
+                    this.$bvModal.show('modal_mbrInfo');
+                });
             },
 
             async updateMbrInfo(item) {
                 this.modalState = "UPDATE";
                 this.selectedMbrInfo = item;
-                this.$bvModal.show('modal_mbrInfo');
+                this.$nextTick(async () => {
+                    this.$bvModal.show('modal_mbrInfo');
+                });
             },
 
             async deleteMbrInfo() {

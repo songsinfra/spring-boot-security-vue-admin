@@ -96,24 +96,32 @@
         methods: {
             createUpMenu() {
                 this.modalState = "CREATE";
-                this.$bvModal.show('modal_update_up_menu');
+                this.$nextTick(async () => {
+                    this.$bvModal.show('modal_update_up_menu');
+                });
             },
 
             updateUpMenu(item) {
                 this.selectedMenu = item;
                 this.modalState = "UPDATE";
+                this.$nextTick(async () => {
                 this.$bvModal.show('modal_update_up_menu');
+                });
             },
 
             createMenu() {
                 this.modalState = "CREATE";
-                this.$bvModal.show('modal_update_menu');
+                this.$nextTick(async () => {
+                    this.$bvModal.show('modal_update_menu');
+                });
             },
 
             updateMenu(item) {
                 this.selectedMenu = item;
                 this.modalState = "UPDATE";
-                this.$bvModal.show('modal_update_menu');
+                this.$nextTick(async () => {
+                    this.$bvModal.show('modal_update_menu');
+                });
             },
 
             changeCheckbox() {

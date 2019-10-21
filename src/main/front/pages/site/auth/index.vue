@@ -144,12 +144,18 @@
             async updateRoleInfo(item) {
                 this.modalState = "UPDATE";
                 this.selectedAuthInfo = item;
-                this.$bvModal.show('modal_authInfo');
+                this.$nextTick(async () => {
+                    this.$bvModal.show('modal_authInfo');
+                });
+
             },
 
             async createRoleInfo() {
                 this.modalState = "CREATE";
-                this.$bvModal.show('modal_authInfo');
+                this.$nextTick(async () => {
+                    this.$bvModal.show('modal_authInfo');
+                });
+
             },
 
             async saveMenuMappingInfo() {

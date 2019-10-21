@@ -85,13 +85,19 @@
 
             async createAddInfo() {
                 this.modalState = "CREATE";
-                this.$bvModal.show('modal_addInfo');
+                this.errors.clear();
+                this.$nextTick(async () => {
+                    this.$bvModal.show('modal_addInfo');
+                });
             },
 
             async updateAddInfo(item) {
                 this.modalState = "UPDATE";
                 this.selectedAddInfo = item;
-                this.$bvModal.show('modal_addInfo');
+                this.errors.clear();
+                this.$nextTick(async () => {
+                    this.$bvModal.show('modal_addInfo');
+                });
             },
         }
 

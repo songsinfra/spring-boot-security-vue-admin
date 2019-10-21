@@ -1,7 +1,7 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <b-modal
             id="modal_authInfo"
-            @ok.prevent="ok"
+            @ok.prevent="submit"
             ref="modal"
             @show="showModal"
             centered
@@ -16,8 +16,12 @@
                         id="roleCd-1"
                         v-model="authInfo.roleCode"
                         :disabled="state !=='CREATE'"
-                        required
+                        v-validate="'required'"
+                        data-vv-name="권한코드"
                 ></b-form-input>
+                <b-form-invalid-feedback :state="!errors.has('권한코드')">
+                    {{errors.first('권한코드')}}
+                </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group
                     id="codeNm-group-1"
@@ -28,8 +32,12 @@
                 <b-form-input
                         id="codeNm-1"
                         v-model="authInfo.codeNm"
-                        required
+                        v-validate="'required'"
+                        data-vv-name="권한명"
                 ></b-form-input>
+                <b-form-invalid-feedback :state="!errors.has('권한명')">
+                    {{errors.first('권한명')}}
+                </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group
                     id="useYn-group-1"
@@ -41,7 +49,12 @@
                         :required="true"
                         v-model="authInfo.useYn"
                         :options="useYnOption"
+                        v-validate="'required'"
+                        data-vv-name="사용여부"
                 ></b-form-select>
+                <b-form-invalid-feedback :state="!errors.has('사용여부')">
+                    {{errors.first('사용여부')}}
+                </b-form-invalid-feedback>
             </b-form-group>
         </b-form>
     </b-modal>
@@ -71,9 +84,9 @@
 
         methods:{
             showModal() {
+                this.errors.clear();
                 this.$nextTick(async () => {
                     try {
-                        this.errors.clear();
 
                         if (this.$props.state === 'CREATE') {
                             this.authInfo = { useYn : 'Y'};
@@ -87,6 +100,14 @@
 
                     }
                 });
+            },
+
+            async submit() {
+                if(!await this.$validator.validate()) {
+                    console.dir(this.$validator);
+                    return;
+                }
+                await this.ok();
             },
 
             async ok() {
