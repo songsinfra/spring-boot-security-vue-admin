@@ -206,10 +206,9 @@
 
             async onRowSelected(items) {
                 const selectedItem = items && items.length && items[0];
-                if(!selectedItem.entrItemCode) return;
-
-                if(selectedItem.statusCd !== '1') {
+                if(!selectedItem.entrItemCode || selectedItem.statusCd !== '1') {
                     this.$refs.entrTable.clearSelected();
+                    return;
                 }
 
                 const entrMappingList = await this.selectMappingList(selectedItem.entrItemCode);
