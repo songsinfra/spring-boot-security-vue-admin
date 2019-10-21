@@ -26,5 +26,7 @@ public class GfnMapInfo {
     private String entrItemCode;
     private String createId;
     private Date createDt;
+    private String deleteId;
+    private Date deleteDt;
     private String statusCd;
 }

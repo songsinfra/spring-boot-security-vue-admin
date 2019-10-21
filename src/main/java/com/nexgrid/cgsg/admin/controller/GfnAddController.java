@@ -26,8 +26,8 @@ public class GfnAddController {
 
     @RequestMapping("/selectAddItemList")
     public ResultInfo selectAddItemList(@RequestBody @Validated GfnAddInfoParam gfnAddInfoParam) {
-        String addItemNm = gfnAddInfoParam.getAddItemNm();
-        List<GfnAddInfo> gfnAddInfos = gfnAddService.selectAddItemList(addItemNm);
+        String statusCd = gfnAddInfoParam.getStatusCd();
+        List<GfnAddInfo> gfnAddInfos = gfnAddService.selectAddItemList(statusCd);
 
         return ResultInfo.builder()
                 .code(SystemStatusCode.LOGIN_SUCCESS.getCode())

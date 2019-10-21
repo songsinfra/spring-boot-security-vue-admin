@@ -25,4 +25,8 @@ public interface GfnEntrMapper {
     int insertMapItem(String entrItemCode, String addItemCode, String statusCd, String createId);
 
     int deleteMapItem(String entrItemCode);
+
+    int disableMapItemForAdd(GfnMapInfo gfnMapInfo);
+
+    int disableMapItemForEntr(GfnMapInfo gfnMapInfo);
 }

@@ -1,16 +1,19 @@
 package com.nexgrid.cgsg.admin.service;
 
+import com.nexgrid.cgsg.admin.constants.StatusCode;
 import com.nexgrid.cgsg.admin.mapper.GfnEntrMapper;
 import com.nexgrid.cgsg.admin.vo.GfnAddInfo;
 import com.nexgrid.cgsg.admin.vo.GfnEntrInfo;
 import com.nexgrid.cgsg.admin.vo.GfnMapInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class GfnEntrService {
 
     @Autowired
@@ -42,6 +45,11 @@ public class GfnEntrService {
         Assert.notNull(gfnEntrInfo, "gfnEntrInfo is null");
         Assert.hasLength(gfnEntrInfo.getEntrItemCode(), "EntrItemCode is null");
 
+        gfnEntrMapper.disableMapItemForEntr(GfnMapInfo.builder()
+                .statusCd(gfnEntrInfo.getStatusCd())
+                .entrItemCode(gfnEntrInfo.getEntrItemCode())
+                .build());
+
         return gfnEntrMapper.updateEntrItem(gfnEntrInfo);
     }
 
@@ -62,7 +70,7 @@ public class GfnEntrService {
         Assert.notNull(addItemCodeList, "addItemCodeList is null");
 
         int insertCnt = 0;
-        String statusCd = "0";
+        String statusCd = StatusCode.USED.getCode();
         String createId = "";
 
         //entrItemCode에 해당해는 addItemCode 전체 delete

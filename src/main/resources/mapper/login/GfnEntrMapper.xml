@@ -39,6 +39,7 @@
         <result property="createDt" 		column="CREATE_DT"/>
         <result property="updateId" 		column="UPDATE_ID"/>
         <result property="updateDt" 		column="UPDATE_DT"/>
+        <result property="statusCd" 		column="STATUS_CD"/>
     </resultMap>
 
     <select id="selectEntrItem" resultMap="gfnEntrInfoMap">
@@ -73,6 +74,7 @@
         <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(entrItemNm)">
             WHERE ENTR_ITEM_NM like '%' || #{entrItemNm} ||  '%'
         </if>
+        ORDER BY ENTR_ITEM_NM
     </select>
 
     <insert id="insertEntrItem">
@@ -137,9 +139,10 @@
         SELECT
             ADD_ITEM_CODE
             ,ENTR_ITEM_CODE
-            ,STATUS_CD
+            , STATUS_CD
         FROM TB_GFN_ITEM_MAP
-        WHERE ENTR_ITEM_CODE = #{entrItemCode}
+        WHERE STATUS_CD = '1'
+        AND ENTR_ITEM_CODE = #{entrItemCode}
     </select>
 
     <insert id="insertMapItem">
@@ -161,7 +164,24 @@
 		)
 	</insert>
 
-    <!-- 권한 수정 -->
+    <update id="disableMapItemForEntr">
+		UPDATE TB_GFN_ITEM_MAP SET
+		STATUS_CD = #{statusCd}
+		,DELETE_ID = #{deleteId, jdbcType=VARCHAR}
+        ,DELETE_DT = #{deleteDt, jdbcType=VARCHAR}
+		WHERE
+            ENTR_ITEM_CODE = #{entrItemCode}
+	</update>
+
+    <update id="disableMapItemForAdd">
+        UPDATE TB_GFN_ITEM_MAP SET
+        STATUS_CD = #{statusCd}
+        ,DELETE_ID = #{deleteId, jdbcType=VARCHAR}
+        ,DELETE_DT = #{deleteDt, jdbcType=VARCHAR}
+        WHERE
+            ADD_ITEM_CODE = #{addItemCode}
+    </update>
+
     <delete id="deleteMapItem">
 		DELETE FROM TB_GFN_ITEM_MAP
 		WHERE ENTR_ITEM_CODE = #{entrItemCode}

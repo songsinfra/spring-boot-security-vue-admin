@@ -6,7 +6,7 @@
                     <div class="col-sm-6">
                         <div class="card">
                             <div class="card-header pb-0">
-                                <h3>등록된 가입가능요금제</h3>
+                                <h3>등록된 가입가능서비스</h3>
                                 <ul class="list-inline float-right m-0">
                                     <li><b-button @click="createEntrInfo" class="btn-primary">등록</b-button></li>
                                 </ul>

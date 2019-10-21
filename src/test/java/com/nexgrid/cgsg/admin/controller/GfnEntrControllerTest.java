@@ -34,7 +34,7 @@ public class GfnEntrControllerTest extends BaseControllerTest {
                 .socTypeCode(SocTypeCode.PROD.getCode())
                 .prodCd(ProdCode.MOBILE.getCode())
                 .entrItemNm("상품명")
-                .statusCd(StatusCode.USE.getCode())
+                .statusCd(StatusCode.USED.getCode())
                 .memo("메모");
     }
 
@@ -169,7 +169,7 @@ public class GfnEntrControllerTest extends BaseControllerTest {
         return GfnMapInfo.builder()
                 .addItemCode("TES00999")
                 .entrItemCode("ITEM0001")
-                .statusCd(StatusCode.USE.getCode())
+                .statusCd(StatusCode.USED.getCode())
                 ;
     }
 

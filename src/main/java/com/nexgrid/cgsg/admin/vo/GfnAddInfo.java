@@ -52,6 +52,8 @@ public class GfnAddInfo {
 
     private Date svcTermDate;
 
+    @Size(max = 1, message = "statusCd 의 크기가 1보다 큽니다")
+    private String statusCd;
 
     private String createId;
     private Date createDt;

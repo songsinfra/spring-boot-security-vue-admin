@@ -2,23 +2,42 @@ package com.nexgrid.cgsg.admin.exception;
 
 import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
 import com.nexgrid.cgsg.admin.vo.ResultInfo;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.sql.SQLDataException;
 import java.util.List;
 
 @ControllerAdvice
 @RestController
-public class ExceptionController {
+public class ExceptionController implements ErrorController {
+
+    private static final String PATH = "/error"; // configure 에서 Redirect 될 path
+
+    @RequestMapping(value = PATH)
+    public String error(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+
+        if (String.valueOf(status).equalsIgnoreCase(String.valueOf(HttpStatus.NOT_FOUND.value()))) {
+            response.sendRedirect("/");
+            return "errors/404"; // /WEB-INF/errors/404.jsp
+        }
+        return "error";
+    }
+
+    @Override
+    public String getErrorPath() {
+        return PATH;
+    }
 
     @ExceptionHandler(AdminException.class)
     public ResponseEntity adminException(AdminException exception) {
@@ -61,5 +80,4 @@ public class ExceptionController {
 
         return new ResponseEntity(resultInfo, HttpStatus.BAD_REQUEST);
     }
-
 }

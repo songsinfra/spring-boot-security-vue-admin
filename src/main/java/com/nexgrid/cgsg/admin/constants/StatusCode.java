@@ -1,8 +1,8 @@
 package com.nexgrid.cgsg.admin.constants;
 
 public enum StatusCode {
-    USE("0"),
-    UNUSED("1");
+    UNUSED("0"),
+    USED("1");
 
     private String code;
 

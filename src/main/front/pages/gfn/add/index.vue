@@ -5,6 +5,13 @@
                 <div class="card">
                     <div class="card-header p-1">
                         <ul class="list-inline float-right m-0">
+                            <li><b-form-checkbox
+                                    v-model="searchUseYn"
+                                    value="1"
+                                    unchecked-value=""
+                                    @change="changeCheckbox"
+                            >미사용서비스표시</b-form-checkbox>
+                            </li>
                             <li><b-button @click="createAddInfo" class="btn-primary">등록</b-button></li>
                         </ul>
                     </div>
@@ -61,7 +68,8 @@
                 ],
                 items: [],
                 selectedAddInfo: {},
-                modalState: ''
+                modalState: '',
+                searchUseYn: ''
             }
         },
 
@@ -74,13 +82,19 @@
         },
 
         methods:{
-            async getAddItemList(addItemNm) {
+            async getAddItemList() {
                 try {
-                    const {data} = await this.$axios.post(process.env.contextPath + '/add/selectAddItemList', { addItemNm});
+                    const {data} = await this.$axios.post(process.env.contextPath + '/add/selectAddItemList', { statusCd : this.searchUseYn});
                     this.items = data.data;
                 } catch (e) {
                     await this.$bvModal.msgBoxOk(e.message);
                 }
+            },
+
+            changeCheckbox() {
+                this.$nextTick(_=>{
+                    this.getAddItemList();
+                })
             },
 
             async createAddInfo() {

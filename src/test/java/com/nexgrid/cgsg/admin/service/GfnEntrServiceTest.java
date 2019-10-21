@@ -64,7 +64,7 @@ public class GfnEntrServiceTest extends BaseServiceTest {
                 .socTypeCode(SocTypeCode.PROD.getCode())
                 .prodCd(ProdCode.MOBILE.getCode())
                 .entrItemNm("상품명")
-                .statusCd(StatusCode.USE.getCode())
+                .statusCd(StatusCode.USED.getCode())
                 .memo("메모");
     }
 

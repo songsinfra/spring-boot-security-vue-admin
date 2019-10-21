@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
@@ -42,6 +44,9 @@ public class GfnAddInfoParam {
     private Integer svcTermNum;
 
     private Date svcTermDate;
+
+    @Size(max = 1, message = "statusCd 의 크기가 1보다 큽니다")
+    private String statusCd;
 
     private String createId;
     private Date createDt;

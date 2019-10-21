@@ -18,6 +18,7 @@
         <result property="createDt" 		column="CREATE_DT"/>
         <result property="updateId" 		column="UPDATE_ID"/>
         <result property="updateDt" 		column="UPDATE_DT"/>
+        <result property="statusCd" 		column="STATUS_CD"/>
     </resultMap>
 
     <select id="selectAddItem" resultMap="gfnAddInfoMap">
@@ -37,6 +38,7 @@
             ,TO_CHAR(CREATE_DT, 'YYYY-MM-DD HH24:MI:SS') as CREATE_DT
             ,UPDATE_ID
             ,TO_CHAR(UPDATE_DT, 'YYYY-MM-DD HH24:MI:SS') as UPDATE_DT
+            ,STATUS_CD
         FROM TB_GFN_ADD_ITEM
         WHERE ADD_ITEM_CODE = #{addItemCode}
     </select>
@@ -54,9 +56,12 @@
             ,CREATE_ID
             ,TO_CHAR(CREATE_DT, 'YYYY-MM-DD HH24:MI:SS') as CREATE_DT
         FROM TB_GFN_ADD_ITEM
-        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(addItemNm)">
-            WHERE ADD_ITEM_NM like '%' || #{addItemNm} || '%'
+
+        <if test='statusCd != "1"'>
+            WHERE STATUS_CD = '1'
         </if>
+
+        ORDER BY CREATE_DT DESC
     </select>
 
     <insert id="insertAddItem">
@@ -75,6 +80,7 @@
             ,SVC_TERM_DATE
             ,CREATE_ID
             ,CREATE_DT
+            ,STATUS_CD
 		)
 		VALUES
 		(
@@ -91,6 +97,7 @@
 			,#{svcTermDate, jdbcType=VARCHAR}
 			,#{createId, jdbcType=VARCHAR}
 			,sysdate
+			,#{statusCd}
 		)
 	</insert>
 
@@ -127,6 +134,9 @@
 
         <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(updateId)">
             ,UPDATE_ID = #{updateId}
+        </if>
+        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(statusCd)">
+            ,STATUS_CD = #{statusCd}
         </if>
 		WHERE ADD_ITEM_CODE = #{addItemCode}
 	</insert>

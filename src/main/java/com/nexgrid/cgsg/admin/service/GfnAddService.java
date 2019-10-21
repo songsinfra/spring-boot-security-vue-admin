@@ -4,11 +4,14 @@ import com.nexgrid.cgsg.admin.constants.AddItemType;
 import com.nexgrid.cgsg.admin.constants.SvcTermType;
 import com.nexgrid.cgsg.admin.constants.SvcTermUnit;
 import com.nexgrid.cgsg.admin.mapper.GfnAddMapper;
+import com.nexgrid.cgsg.admin.mapper.GfnEntrMapper;
 import com.nexgrid.cgsg.admin.utils.StringUtil;
 import com.nexgrid.cgsg.admin.vo.GfnAddInfo;
+import com.nexgrid.cgsg.admin.vo.GfnMapInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
@@ -19,22 +22,27 @@ import java.util.List;
 import java.util.function.Function;
 
 @Service
+@Transactional
 public class GfnAddService {
 
     @Autowired
     private GfnAddMapper gfnAddMapper;
 
+    @Autowired
+    private GfnEntrMapper gfnEntrMapper;
+
     public GfnAddInfo selectAddItem(String addItemCode) {
         Assert.hasLength(addItemCode, "addItemCode is null");
 
         GfnAddInfo gfnAddInfo = gfnAddMapper.selectAddItem(addItemCode);
-        this.convertDdToNewLine(gfnAddInfo);
+        Assert.notNull(gfnAddInfo, "not found gfnAddInfo");
 
+        this.convertDdToNewLine(gfnAddInfo);
         return gfnAddInfo;
     }
 
-    public List<GfnAddInfo> selectAddItemList(String addItemNm) {
-        return gfnAddMapper.selectAddItemList(addItemNm);
+    public List<GfnAddInfo> selectAddItemList(String statusCd) {
+        return gfnAddMapper.selectAddItemList(statusCd);
     }
 
     public int insertAddItemForGfn(GfnAddInfo gfnAddInfo) {
@@ -52,6 +60,7 @@ public class GfnAddService {
         Assert.hasLength(gfnAddInfo.getAddItemCode(), "addItemCode is null");
 
         this.convertNewLineToDd(gfnAddInfo);
+        this.disableMapItem(gfnAddInfo);
         return this.setAddItemForGfn(info -> gfnAddMapper.updateAddItem((GfnAddInfo)info), gfnAddInfo);
     }
 
@@ -100,6 +109,7 @@ public class GfnAddService {
     public int updateAddItemForUcube(GfnAddInfo gfnAddInfo) {
         this.validateDataForUcude(gfnAddInfo);
         this.convertNewLineToDd(gfnAddInfo);
+        this.disableMapItem(gfnAddInfo);
 
         return gfnAddMapper.updateAddItem(gfnAddInfo);
     }
@@ -115,6 +125,13 @@ public class GfnAddService {
                 "SvcTermType is invalid");
 
         Assert.hasLength(gfnAddInfo.getAddItemCode(), "addItemCode is null");
+    }
+
+    private void disableMapItem(GfnAddInfo gfnAddInfo) {
+        gfnEntrMapper.disableMapItemForAdd(GfnMapInfo.builder()
+                .addItemCode(gfnAddInfo.getAddItemCode())
+                .statusCd(gfnAddInfo.getStatusCd())
+                .build());
     }
 
 

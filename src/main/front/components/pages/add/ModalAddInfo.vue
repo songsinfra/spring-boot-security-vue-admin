@@ -199,6 +199,25 @@
                     {{errors.first('이용종료일시')}}
                 </b-form-invalid-feedback>
             </b-form-group>
+            <b-form-group
+                    id="useYn-group-1"
+                    label="사용여부:"
+                    label-for="useYn-1"
+            >
+                <b-form-select
+                        id="statusCd-1"
+                        :required="true"
+                        v-model="addInfo.statusCd"
+                        v-validate="'required'"
+                        data-vv-name="사용여부"
+                >
+                    <option value="0">미사용</option>
+                    <option value="1">사용</option>
+                </b-form-select>
+                <b-form-invalid-feedback :state="!errors.has('사용여부')">
+                    {{errors.first('사용여부')}}
+                </b-form-invalid-feedback>
+            </b-form-group>
         </b-form>
     </b-modal>
 </template>
