@@ -8,6 +8,13 @@
                             <div class="card-header pb-0">
                                 <h3>등록된 가입가능서비스</h3>
                                 <ul class="list-inline float-right m-0">
+                                    <li><b-form-checkbox
+                                            v-model="searchUseYn"
+                                            value="1"
+                                            unchecked-value=""
+                                            @change="changeCheckbox"
+                                    >미사용서비스표시</b-form-checkbox>
+                                    </li>
                                     <li><b-button @click="createEntrInfo" class="btn-primary">등록</b-button></li>
                                 </ul>
                             </div>
@@ -95,6 +102,7 @@
                     {key: 'addItemCode', label: '부가서비스코드'},
                     {key: 'select', label: '사용여부'},
                 ],
+                searchUseYn: ''
             };
         },
 
@@ -123,11 +131,18 @@
             },
             async selectEntrItemList() {
                 try {
-                    const {data} = await this.$axios.post(process.env.contextPath + '/entr/selectEntrItemList', { useYn: ''});
+                    const {data} = await this.$axios.post(process.env.contextPath + '/entr/selectEntrItemList', { statusCd : this.searchUseYn});
                     this.entrItems = data.data;
                 } catch (e) {
                     await this.$bvModal.msgBoxOk(e.message);
                 }
+            },
+
+            changeCheckbox() {
+                this.$nextTick(_=>{
+                    this.getAddItemList();
+                    this.selectEntrItemList();
+                })
             },
 
             async getAddItemList(entrItemCode) {
@@ -190,15 +205,21 @@
             },
 
             async onRowSelected(items) {
-                const entrItemCode = items && items.length && items[0].entrItemCode;
-                if(!entrItemCode) return;
+                const selectedItem = items && items.length && items[0];
+                if(!selectedItem.entrItemCode) return;
 
-                const entrMappingList = await this.selectMappingList(entrItemCode);
+                if(selectedItem.statusCd !== '1') {
+                    this.$refs.entrTable.clearSelected();
+                }
+
+                const entrMappingList = await this.selectMappingList(selectedItem.entrItemCode);
                 console.log('entrMappingList', entrMappingList);
                 this.addInfoItems.forEach(item => this.$set(item, 'checked', 'N'));
 
                 entrMappingList.forEach(mapping=>{
                     const item = this.addInfoItems.find(item => item.addItemCode === mapping.addItemCode);
+                    if(!item) return;
+
                     this.$set(item, 'checked', 'Y');
                 })
             }

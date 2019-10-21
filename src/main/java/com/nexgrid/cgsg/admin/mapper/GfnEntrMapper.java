@@ -12,7 +12,7 @@ public interface GfnEntrMapper {
 
     GfnEntrInfo selectEntrItem(String entrItemCode);
 
-    List<GfnEntrInfo> selectEntrItemList(String entrItemNm);
+    List<GfnEntrInfo> selectEntrItemList(String statusCd);
 
     int insertEntrItem(GfnEntrInfo gfnEntrInfo);
 
@@ -27,6 +27,8 @@ public interface GfnEntrMapper {
     int deleteMapItem(String entrItemCode);
 
     int disableMapItemForAdd(GfnMapInfo gfnMapInfo);
+    int enableMapItemForAdd(GfnMapInfo gfnMapInfo);
 
     int disableMapItemForEntr(GfnMapInfo gfnMapInfo);
+    int enableMapItemForEntr(GfnMapInfo gfnMapInfo);
 }

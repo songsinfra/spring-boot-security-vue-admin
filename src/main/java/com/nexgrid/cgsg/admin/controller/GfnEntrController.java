@@ -34,7 +34,7 @@ public class GfnEntrController {
 
     @RequestMapping("/selectEntrItemList")
     public ResultInfo selectEntrItemList(@RequestBody @Validated GfnEntrInfoParam entrInfoParam) {
-        List<GfnEntrInfo> gfnEntrInfoList = gfnEntrService.selectEntrItemList(entrInfoParam.getEntrItemNm());
+        List<GfnEntrInfo> gfnEntrInfoList = gfnEntrService.selectEntrItemList(entrInfoParam.getStatusCd());
 
         return ResultInfo.builder()
                 .code(SystemStatusCode.LOGIN_SUCCESS.getCode())

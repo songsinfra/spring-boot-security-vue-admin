@@ -1,6 +1,7 @@
 package com.nexgrid.cgsg.admin.service;
 
 import com.nexgrid.cgsg.admin.constants.AddItemType;
+import com.nexgrid.cgsg.admin.constants.StatusCode;
 import com.nexgrid.cgsg.admin.constants.SvcTermType;
 import com.nexgrid.cgsg.admin.constants.SvcTermUnit;
 import com.nexgrid.cgsg.admin.mapper.GfnAddMapper;
@@ -60,7 +61,8 @@ public class GfnAddService {
         Assert.hasLength(gfnAddInfo.getAddItemCode(), "addItemCode is null");
 
         this.convertNewLineToDd(gfnAddInfo);
-        this.disableMapItem(gfnAddInfo);
+        this.processStatusCd(gfnAddInfo);
+
         return this.setAddItemForGfn(info -> gfnAddMapper.updateAddItem((GfnAddInfo)info), gfnAddInfo);
     }
 
@@ -109,7 +111,7 @@ public class GfnAddService {
     public int updateAddItemForUcube(GfnAddInfo gfnAddInfo) {
         this.validateDataForUcude(gfnAddInfo);
         this.convertNewLineToDd(gfnAddInfo);
-        this.disableMapItem(gfnAddInfo);
+        this.processStatusCd(gfnAddInfo);
 
         return gfnAddMapper.updateAddItem(gfnAddInfo);
     }
@@ -127,13 +129,19 @@ public class GfnAddService {
         Assert.hasLength(gfnAddInfo.getAddItemCode(), "addItemCode is null");
     }
 
-    private void disableMapItem(GfnAddInfo gfnAddInfo) {
-        gfnEntrMapper.disableMapItemForAdd(GfnMapInfo.builder()
-                .addItemCode(gfnAddInfo.getAddItemCode())
-                .statusCd(gfnAddInfo.getStatusCd())
-                .build());
+    private void processStatusCd(GfnAddInfo gfnAddInfo) {
+        if (gfnAddInfo.getStatusCd().equalsIgnoreCase(StatusCode.UNUSED.getCode())) {
+            gfnEntrMapper.disableMapItemForAdd(GfnMapInfo.builder()
+                    .addItemCode(gfnAddInfo.getAddItemCode())
+                    .deleteId(gfnAddInfo.getUpdateId())
+                    .build());
+        } else if (gfnAddInfo.getStatusCd().equalsIgnoreCase(StatusCode.USED.getCode())) {
+            gfnEntrMapper.enableMapItemForAdd(GfnMapInfo.builder()
+                    .addItemCode(gfnAddInfo.getAddItemCode())
+                    .deleteId(gfnAddInfo.getUpdateId())
+                    .build());
+        }
     }
-
 
     public String generateAddItemCode() {
         int count = gfnAddMapper.selectAddItemCount();

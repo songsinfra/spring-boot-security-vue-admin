@@ -71,9 +71,11 @@
                 UPDATE_ID,
                 TO_CHAR(UPDATE_DT, 'YYYY-MM-DD HH24:MI:SS') as UPDATE_DT
         FROM TB_GFN_ENTR_ITEM
-        <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(entrItemNm)">
-            WHERE ENTR_ITEM_NM like '%' || #{entrItemNm} ||  '%'
+
+        <if test='statusCd != "1"'>
+            WHERE STATUS_CD = '1'
         </if>
+
         ORDER BY ENTR_ITEM_NM
     </select>
 
@@ -166,20 +168,54 @@
 
     <update id="disableMapItemForEntr">
 		UPDATE TB_GFN_ITEM_MAP SET
-		STATUS_CD = #{statusCd}
+		STATUS_CD = '0'
 		,DELETE_ID = #{deleteId, jdbcType=VARCHAR}
-        ,DELETE_DT = #{deleteDt, jdbcType=VARCHAR}
+        ,DELETE_DT = sysdate
 		WHERE
             ENTR_ITEM_CODE = #{entrItemCode}
 	</update>
 
+    <update id="enableMapItemForEntr">
+        update TB_GFN_ITEM_MAP m set
+            (m.status_cd, m.delete_id, m.delete_dt) = (
+                    select '1', #{deleteId, jdbcType=VARCHAR}, sysdate
+                    from TB_GFN_ADD_ITEM a
+                    where a.ADD_ITEM_CODE = m.ADD_ITEM_CODE
+                        and m.entr_item_code = #{entrItemCode}
+                )
+        where exists (
+            select a.ADD_ITEM_CODE
+            from TB_GFN_ADD_ITEM a
+            where a.ADD_ITEM_CODE = m.ADD_ITEM_CODE
+            and m.entr_item_code = #{entrItemCode}
+            and a.status_cd = '1'
+        )
+	</update>
+
     <update id="disableMapItemForAdd">
         UPDATE TB_GFN_ITEM_MAP SET
-        STATUS_CD = #{statusCd}
+        STATUS_CD = '0'
         ,DELETE_ID = #{deleteId, jdbcType=VARCHAR}
-        ,DELETE_DT = #{deleteDt, jdbcType=VARCHAR}
+        ,DELETE_DT = sysdate
         WHERE
             ADD_ITEM_CODE = #{addItemCode}
+    </update>
+
+    <update id="enableMapItemForAdd">
+        update TB_GFN_ITEM_MAP m set
+            (m.status_cd, m.delete_id, m.delete_dt) = (
+                select '1', #{deleteId, jdbcType=VARCHAR}, sysdate
+                from TB_GFN_ENTR_ITEM e
+                where e.entr_item_code= m.entr_item_code
+                    and m.ADD_ITEM_CODE = #{addItemCode}
+                )
+        where exists (
+            select e.entr_item_code
+            from TB_GFN_ENTR_ITEM e
+            where e.entr_item_code = m.entr_item_code
+                and m.ADD_ITEM_CODE = #{addItemCode}
+                and e.status_cd = '1'
+        )
     </update>
 
     <delete id="deleteMapItem">

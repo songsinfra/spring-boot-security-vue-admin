@@ -26,8 +26,8 @@ public class GfnEntrService {
         return gfnEntrMapper.selectEntrItem(entrItemCode);
     }
 
-    public List<GfnEntrInfo> selectEntrItemList(String entrItemNm) {
-        return gfnEntrMapper.selectEntrItemList(entrItemNm);
+    public List<GfnEntrInfo> selectEntrItemList(String statusCd) {
+        return gfnEntrMapper.selectEntrItemList(statusCd);
     }
 
     public int insertEntrItem(GfnEntrInfo gfnEntrInfo) {
@@ -45,12 +45,23 @@ public class GfnEntrService {
         Assert.notNull(gfnEntrInfo, "gfnEntrInfo is null");
         Assert.hasLength(gfnEntrInfo.getEntrItemCode(), "EntrItemCode is null");
 
-        gfnEntrMapper.disableMapItemForEntr(GfnMapInfo.builder()
-                .statusCd(gfnEntrInfo.getStatusCd())
-                .entrItemCode(gfnEntrInfo.getEntrItemCode())
-                .build());
-
+        this.processStatusCd(gfnEntrInfo);
         return gfnEntrMapper.updateEntrItem(gfnEntrInfo);
+    }
+
+    public void processStatusCd(GfnEntrInfo gfnEntrInfo) {
+        if (gfnEntrInfo.getStatusCd().equalsIgnoreCase(StatusCode.UNUSED.getCode())) {
+            gfnEntrMapper.disableMapItemForEntr(GfnMapInfo.builder()
+                    .entrItemCode(gfnEntrInfo.getEntrItemCode())
+                    .deleteId(gfnEntrInfo.getUpdateId())
+                    .build());
+        } else if (gfnEntrInfo.getStatusCd().equalsIgnoreCase(StatusCode.USED.getCode())) {
+            gfnEntrMapper.enableMapItemForEntr(GfnMapInfo.builder()
+                    .statusCd(gfnEntrInfo.getStatusCd())
+                    .entrItemCode(gfnEntrInfo.getEntrItemCode())
+                    .deleteId(gfnEntrInfo.getUpdateId())
+                    .build());
+        }
     }
 
     public int deleteEntrItem(String entrItemCode, String updateId) {
