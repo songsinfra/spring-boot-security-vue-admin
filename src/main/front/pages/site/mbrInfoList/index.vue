@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-12 col-xl-12">
                 <div class="card">
-                    <div class="card-header p-1">
+                    <div class="card-header pb-0">
                         <ul class="list-inline float-right m-0">
                             <li><b-button @click="deleteMbrInfo" class="btn-danger">삭제</b-button></li>
                             <li><b-button @click="createMbrInfo" class="btn-primary">등록</b-button></li>

@@ -8,7 +8,7 @@
                             <div class="card-header pb-0">
                                 <h3>등록된 가입가능서비스</h3>
                                 <ul class="list-inline float-right m-0">
-                                    <li><b-form-checkbox
+                                    <li class="mr-1 custom-control custom-checkbox"><b-form-checkbox
                                             v-model="searchUseYn"
                                             value="1"
                                             unchecked-value=""
@@ -112,7 +112,7 @@
         },
 
         async created() {
-            this.$eventBus.$on('refreshEntrList', this.selectEntrItemList);
+            this.$eventBus.$on('refreshEntrList', this.refreshList);
         },
 
         methods:{
@@ -140,9 +140,13 @@
 
             changeCheckbox() {
                 this.$nextTick(_=>{
-                    this.getAddItemList();
-                    this.selectEntrItemList();
+                    this.refreshList();
                 })
+            },
+
+            refreshList() {
+                this.getAddItemList();
+                this.selectEntrItemList();
             },
 
             async getAddItemList(entrItemCode) {

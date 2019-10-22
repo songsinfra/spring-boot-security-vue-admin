@@ -3,9 +3,9 @@
         <div class="row">
             <div class="col-lg-12 col-xl-12">
                 <div class="card">
-                    <div class="card-header p-1">
+                    <div class="card-header pb-0">
                         <ul class="list-inline float-right m-0">
-                            <li><b-form-checkbox
+                            <li class="mr-1 custom-control custom-checkbox"><b-form-checkbox
                                     v-model="searchUseYn"
                                     value="1"
                                     unchecked-value=""
@@ -49,11 +49,12 @@
 
 <script>
     import ModalAddInfo from '~/components/pages/add/ModalAddInfo.vue';
+    import JsonExcel from 'vue-json-excel'
 
     export default {
         name: "index",
         layout: 'default',
-        components: {ModalAddInfo},
+        components: {ModalAddInfo, downloadExcel: JsonExcel},
 
         data() {
             return {
@@ -64,12 +65,14 @@
                     {key: 'createDt', label: '등록일',
                         formatter: (value) => value && value.substring(0, 10)
                     },
+                    {key: 'statusCd', label: '상태코드',
+                        formatter:(value)=> value === '1' ? '사용' : '미사용'},
                     {key: 'action', label: '수정'},
                 ],
                 items: [],
                 selectedAddInfo: {},
                 modalState: '',
-                searchUseYn: ''
+                searchUseYn: '',
             }
         },
 
@@ -113,6 +116,10 @@
                     this.$bvModal.show('modal_addInfo');
                 });
             },
+
+            downloadExcel() {
+
+            }
         }
 
     }

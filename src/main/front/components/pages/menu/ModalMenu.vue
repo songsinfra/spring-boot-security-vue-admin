@@ -58,6 +58,7 @@
                         id="ordNo-1"
                         v-model="menuInfo.ordNo"
                         v-validate="'required'"
+                        type="number"
                         data-vv-name="정렬값"
                 ></b-form-input>
                 <b-form-invalid-feedback :state="!errors.has('정렬값')">
@@ -128,10 +129,8 @@
                 await this.ok();
             },
 
-            async ok(bvModalEvt) {
+            async ok() {
                 try {
-                    bvModalEvt.preventDefault();
-
                     const url = this.$props.state === 'CREATE' ? "/menu/setMenuAdd" : "/menu/setMenuUpdate";
 
                     const response = await this.$axios.$post(process.env.contextPath + url, {
