@@ -22,15 +22,34 @@
                                     <div class="card-body">
                                         <form class="form-horizontal" action="index.html" novalidate @submit.prevent="login">
                                             <fieldset class="form-group position-relative has-icon-left">
-                                                <input type="text" class="form-control round" id="user-name"
-                                                       placeholder="Your Username" v-model="user.username" required >
+                                                <input type="text"
+                                                       class="form-control round"
+                                                       id="user-name"
+                                                       placeholder="Your Username"
+                                                       v-model="user.username"
+                                                       v-validate="'required'"
+                                                       data-vv-name="아이디"
+                                                >
+                                                <b-form-invalid-feedback :state="!errors.has('아이디')">
+                                                    {{errors.first('아이디')}}
+                                                </b-form-invalid-feedback>
                                                 <div class="form-control-position">
                                                     <i class="ft-user"></i>
                                                 </div>
                                             </fieldset>
                                             <fieldset class="form-group position-relative has-icon-left">
-                                                <input type="password" class="form-control round" id="user-password"
-                                                       placeholder="Enter Password" required v-model="user.password" >
+                                                <input
+                                                        type="password"
+                                                        class="form-control round"
+                                                        id="user-password"
+                                                        placeholder="Enter Password"
+                                                        v-model="user.password"
+                                                        v-validate="'required'"
+                                                        data-vv-name="비밀번호"
+                                                >
+                                                <b-form-invalid-feedback :state="!errors.has('비밀번호')">
+                                                    {{errors.first('비밀번호')}}
+                                                </b-form-invalid-feedback>
                                                 <div class="form-control-position">
                                                     <i class="ft-lock"></i>
                                                 </div>
@@ -71,6 +90,11 @@
         methods : {
             async login(){
                 try {
+                    if(!await this.$validator.validate()) {
+                        console.dir(this.$validator);
+                        return;
+                    }
+
                     await this.$store.dispatch('login/setUser', {id: this.user.username, password: this.user.password});
                     // this.$router.push("/");
                     window.location = '/';
