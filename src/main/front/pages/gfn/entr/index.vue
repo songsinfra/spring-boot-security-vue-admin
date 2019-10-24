@@ -204,6 +204,8 @@
                     return;
                 }
 
+                if(!await this.$bvModal.msgBoxConfirm('운영 중인 시스템에 영향이 있습니다. 변경하시겠습니까?')) return;
+
                 const message = await this.insertMapItemList(selectedEntrInfo.entrItemCode, addItemCodeList);
                 await this.$bvModal.msgBoxOk(message);
             },
