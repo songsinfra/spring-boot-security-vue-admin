@@ -1,5 +1,6 @@
 package com.nexgrid.cgsg.admin.service;
 
+import com.nexgrid.cgsg.admin.base.BaseServiceTest;
 import com.nexgrid.cgsg.admin.vo.MbrInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class MbrServiceTest {
+public class MbrServiceTest extends BaseServiceTest {
 
     @Autowired
     private MbrService mbrService;

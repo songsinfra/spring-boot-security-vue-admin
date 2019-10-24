@@ -2,6 +2,7 @@ package com.nexgrid.cgsg.admin.service;
 
 import com.nexgrid.cgsg.admin.base.BaseServiceTest;
 import com.nexgrid.cgsg.admin.constants.AddItemType;
+import com.nexgrid.cgsg.admin.constants.StatusCode;
 import com.nexgrid.cgsg.admin.constants.SvcTermType;
 import com.nexgrid.cgsg.admin.vo.GfnAddInfo;
 import org.hamcrest.CoreMatchers;
@@ -32,6 +33,7 @@ public class GfnAddServiceUcubeTest extends BaseServiceTest {
                 .addItemDetail("디테일1")
                 .addItemNotice("notice1")
                 .svcTermType(SvcTermType.NONE.getType())
+                .statusCd(StatusCode.USED.getCode())
                 ;
     }
 

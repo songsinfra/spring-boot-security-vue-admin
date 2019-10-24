@@ -174,7 +174,7 @@ public class GfnEntrServiceTest extends BaseServiceTest {
         String entrItemCode = "ITEM0001";
         List<String> addItemCodeList = Arrays.asList("test1");
 
-        int insertCnt = gfnEntrService.insertMapItemList(entrItemCode, addItemCodeList);
+        int insertCnt = gfnEntrService.insertMapItemList("creatId", entrItemCode, addItemCodeList);
 
         assertThat(insertCnt).isEqualTo(1);
     }
@@ -185,7 +185,7 @@ public class GfnEntrServiceTest extends BaseServiceTest {
         String entrItemCode = "";
         List<String> addItemCodeList = null;
 
-        int insertCnt = gfnEntrService.insertMapItemList(entrItemCode, addItemCodeList);
+        int insertCnt = gfnEntrService.insertMapItemList("creatId", entrItemCode, addItemCodeList);
     }
 
     @Test
@@ -195,7 +195,7 @@ public class GfnEntrServiceTest extends BaseServiceTest {
         String entrItemCode = "ITEM0001";
         List<String> addItemCodeList = null;
 
-        int insertCnt = gfnEntrService.insertMapItemList(entrItemCode, addItemCodeList);
+        int insertCnt = gfnEntrService.insertMapItemList("creatId", entrItemCode, addItemCodeList);
     }
 
     @Test

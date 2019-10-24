@@ -2,6 +2,7 @@ package com.nexgrid.cgsg.admin.controller;
 
 import com.nexgrid.cgsg.admin.base.BaseControllerTest;
 import com.nexgrid.cgsg.admin.constants.AddItemType;
+import com.nexgrid.cgsg.admin.constants.StatusCode;
 import com.nexgrid.cgsg.admin.constants.SvcTermType;
 import com.nexgrid.cgsg.admin.constants.SvcTermUnit;
 import com.nexgrid.cgsg.admin.vo.GfnAddInfo;
@@ -73,6 +74,7 @@ public class GfnAddControllerTest extends BaseControllerTest {
                 .addItemNotice("notice1")
                 .svcTermType(SvcTermType.AVAILABLE_DATE.getType())
                 .svcTermUnit(SvcTermUnit.Month.getCode())
+                .statusCd(StatusCode.USED.getCode())
                 .svcTermNum(1);
     }
 
@@ -86,6 +88,7 @@ public class GfnAddControllerTest extends BaseControllerTest {
                 .addItemDetail("디테일1")
                 .addItemNotice("notice1")
                 .svcTermType(SvcTermType.NONE.getType())
+                .statusCd(StatusCode.USED.getCode())
                 ;
     }
 

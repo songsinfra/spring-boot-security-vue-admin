@@ -1,6 +1,7 @@
 package com.nexgrid.cgsg.admin.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexgrid.cgsg.admin.base.BaseControllerTest;
 import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
 import com.nexgrid.cgsg.admin.vo.DeleteMbrParam;
 import com.nexgrid.cgsg.admin.vo.MbrInfo;
@@ -11,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class MbrControllerTest {
+public class MbrControllerTest extends BaseControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -56,11 +58,12 @@ public class MbrControllerTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void getMemberList_로그인_안함() throws Exception {
         mvc.perform(post("/mbr/getMemberList"))
                 .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("require Login"));
+                .andExpect(status().isUnauthorized())
+              ;
     }
 
     @Test

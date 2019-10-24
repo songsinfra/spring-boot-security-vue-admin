@@ -1,5 +1,6 @@
 package com.nexgrid.cgsg.admin.service;
 
+import com.nexgrid.cgsg.admin.base.BaseServiceTest;
 import com.nexgrid.cgsg.admin.mapper.MenuMapper;
 import com.nexgrid.cgsg.admin.vo.MenuInfo;
 import org.junit.Test;
@@ -21,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class MenuServiceTest {
+public class MenuServiceTest extends BaseServiceTest {
 
     @Autowired
     private MenuService menuService;

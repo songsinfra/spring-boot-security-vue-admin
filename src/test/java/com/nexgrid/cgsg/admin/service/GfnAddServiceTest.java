@@ -2,6 +2,7 @@ package com.nexgrid.cgsg.admin.service;
 
 import com.nexgrid.cgsg.admin.base.BaseServiceTest;
 import com.nexgrid.cgsg.admin.constants.AddItemType;
+import com.nexgrid.cgsg.admin.constants.StatusCode;
 import com.nexgrid.cgsg.admin.constants.SvcTermType;
 import com.nexgrid.cgsg.admin.constants.SvcTermUnit;
 import com.nexgrid.cgsg.admin.utils.StringUtil;
@@ -105,6 +106,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
                 .svcTermType(SvcTermType.AVAILABLE_DATE.getType())
                 .svcTermUnit(SvcTermUnit.Month.getCode())
                 .svcTermNum(1)
+                .statusCd(StatusCode.USED.getCode())
                 .build();
 
         int insertCnt = gfnAddService.insertAddItemForGfn(gfnAddInfo);
@@ -129,7 +131,19 @@ public class GfnAddServiceTest extends BaseServiceTest {
                 .addItemNotice("notice1")
                 .svcTermType(SvcTermType.AVAILABLE_DATE.getType())
                 .svcTermUnit(SvcTermUnit.Month.getCode())
-                .svcTermNum(1);
+                .svcTermNum(1)
+                .statusCd(StatusCode.USED.getCode())
+                ;
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @Transactional
+    public void insertAddItemForGfn_부가서비스_등록_gfnAddInfo_statusCd_null() {
+        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+                .addItemType(null)
+                .build();
+
+        int insertCnt = gfnAddService.insertAddItemForGfn(gfnAddInfo);
     }
 
     @Test(expected = IllegalArgumentException.class)
