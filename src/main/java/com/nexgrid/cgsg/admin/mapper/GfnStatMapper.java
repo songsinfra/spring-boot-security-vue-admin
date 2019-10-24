@@ -10,6 +10,6 @@ import java.util.List;
 
 @Mapper
 public interface GfnStatMapper {
-    List<GfnMasterInfo> selectUserStat(GfnMasterInfoParam gfnMasterInfo);
+    List<GfnMasterInfo> selectUserDetailStat(GfnMasterInfoParam gfnMasterInfo);
     List<GfnJoinStatInfo> selectJoinUserStat(GfnJoinStatInfoParam joinStatInfo);
 }

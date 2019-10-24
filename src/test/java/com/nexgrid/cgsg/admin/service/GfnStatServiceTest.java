@@ -2,21 +2,13 @@ package com.nexgrid.cgsg.admin.service;
 
 import com.nexgrid.cgsg.admin.base.BaseServiceTest;
 import com.nexgrid.cgsg.admin.vo.*;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.scheduling.config.IntervalTask;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
-
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,7 +33,7 @@ public class GfnStatServiceTest extends BaseServiceTest {
                 .ctn("ctn")
                 .build();
 
-        List<GfnMasterInfo> gfnMasterInfos = gfnStatService.selectUserStat(gfnMasterInfo);
+        List<GfnMasterInfo> gfnMasterInfos = gfnStatService.selectUserDetailStat(gfnMasterInfo);
         assertThat(gfnMasterInfos).size().isGreaterThan(0);
     }
 
@@ -50,14 +42,14 @@ public class GfnStatServiceTest extends BaseServiceTest {
         GfnMasterInfoParam gfnMasterInfo = GfnMasterInfoParam.builder()
                 .build();
 
-        List<GfnMasterInfo> gfnMasterInfos = gfnStatService.selectUserStat(gfnMasterInfo);
+        List<GfnMasterInfo> gfnMasterInfos = gfnStatService.selectUserDetailStat(gfnMasterInfo);
         assertThat(gfnMasterInfos).size().isGreaterThan(0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void selectUserStat_null() {
         GfnMasterInfoParam gfnMasterInfo = null;
-        gfnStatService.selectUserStat(gfnMasterInfo);
+        gfnStatService.selectUserDetailStat(gfnMasterInfo);
     }
 
     @Test

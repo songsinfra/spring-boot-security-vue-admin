@@ -33,7 +33,7 @@ public class GfnStatControllerTest extends BaseControllerTest {
                 .ctn("ctn")
                 .build();
 
-        mvc.perform(post("/stat/selectUserStat")
+        mvc.perform(post("/stat/selectUserDetailStat")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(gfnMasterInfo))
         )

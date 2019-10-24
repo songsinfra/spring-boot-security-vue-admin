@@ -23,7 +23,7 @@
         <result property="totalSum" 		column="TOTAL_SUM"/>
     </resultMap>
 
-    <select id="selectUserStat" resultMap="gfnMasterMap">
+    <select id="selectUserDetailStat" resultMap="gfnMasterMap">
         SELECT
               M.GFN_ID
             , M.CTN

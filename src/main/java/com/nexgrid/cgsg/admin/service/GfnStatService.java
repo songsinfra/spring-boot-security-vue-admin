@@ -15,9 +15,9 @@ public class GfnStatService {
     @Autowired
     private GfnStatMapper gfnStatMapper;
 
-    public List<GfnMasterInfo> selectUserStat(GfnMasterInfoParam gfnMasterInfo) {
+    public List<GfnMasterInfo> selectUserDetailStat(GfnMasterInfoParam gfnMasterInfo) {
         Assert.notNull(gfnMasterInfo, "gfnMasterInfo is null");
-        return gfnStatMapper.selectUserStat(gfnMasterInfo);
+        return gfnStatMapper.selectUserDetailStat(gfnMasterInfo);
     }
 
     public List<GfnJoinStatMonthInfo> selectJoinUserStat(GfnJoinStatInfoParam joinStatInfo) {

@@ -19,10 +19,10 @@ public class GfnStatController {
     @Autowired
     private GfnStatService gfnStatService;
 
-    @RequestMapping("/selectUserStat")
+    @RequestMapping("/selectUserDetailStat")
     public ResultInfo selectUserStat(@RequestBody @Validated GfnMasterInfoParam gfnMasterInfo) {
 
-        List<GfnMasterInfo> gfnMasterInfos = gfnStatService.selectUserStat(gfnMasterInfo);
+        List<GfnMasterInfo> gfnMasterInfos = gfnStatService.selectUserDetailStat(gfnMasterInfo);
 
         return ResultInfo.builder()
                 .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
