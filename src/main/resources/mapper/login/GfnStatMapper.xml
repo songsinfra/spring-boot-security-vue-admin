@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nexgrid.cgsg.admin.mapper.GfnStatMapper">
+    <resultMap id="gfnMasterMap" type="com.nexgrid.cgsg.admin.vo.GfnMasterInfo">
+        <result property="gfnId" 		    column="GFN_ID"/>
+        <result property="ctn" 		        column="CTN"/>
+        <result property="subNo" 		    column="SUB_NO"/>
+        <result property="prodCd" 		    column="PROD_CD"/>
+        <result property="entrItemCode" 		    column="ENTR_ITEM_CODE"/>
+        <result property="entrItemNm" 		column="ENTR_ITEM_NM"/>
+        <result property="addItemCode" 		column="ADD_ITEM_CODE"/>
+        <result property="addItemNm" 		    column="ADD_ITEM_NM"/>
+        <result property="ctnStusCode" 		column="CTN_STUS_CODE"/>
+        <result property="createDt" 		column="CREATE_DT"/>
+        <result property="lastLoginDt" 		column="LAST_LOGIN_DT"/>
+    </resultMap>
+
+    <resultMap id="gfnJoinStatMap" type="com.nexgrid.cgsg.admin.vo.GfnJoinStatInfo">
+        <result property="month" 		    column="MONTH"/>
+        <result property="freeSum" 		    column="FREE_SUM"/>
+        <result property="paidSum" 		    column="PAID_SUM"/>
+        <result property="totalSum" 		column="TOTAL_SUM"/>
+    </resultMap>
+
+    <select id="selectUserStat" resultMap="gfnMasterMap">
+        SELECT
+              M.GFN_ID
+            , M.CTN
+            , M.SUB_NO
+            , M.PROD_CD
+            , E.ENTR_ITEM_CODE
+            , E.ENTR_ITEM_NM
+            , A.ADD_ITEM_CODE
+            , A.ADD_ITEM_NM
+            , M.CTN_STUS_CODE
+            , M.CREATE_DT
+            , M.LAST_LOGIN_DT
+        FROM TB_GFN_MASTER M
+        LEFT OUTER JOIN TB_GFN_ADD_ITEM A ON M.ADD_ITEM_CODE = A.ADD_ITEM_CODE
+        LEFT OUTER JOIN TB_GFN_ENTR_ITEM E ON M.PROD_CD = E.PROD_CD
+        <where>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(entrItemCode)">
+                AND E.ENTR_ITEM_CODE = #{entrItemCode}
+            </if>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(addItemCode)">
+                AND M.ADD_ITEM_CODE = #{addItemCode}
+            </if>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(createStartDt)">
+                AND M.CREATE_DT >= #{createStartDt}
+            </if>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(createEndDt)">
+                AND M.CREATE_DT <![CDATA[<]]>= #{createEndDt}
+            </if>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(subNo)">
+                AND M.SUB_NO = #{subNo}
+            </if>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(ctn)">
+                AND M.CTN = #{ctn}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectJoinUserStat" resultMap="gfnJoinStatMap">
+        SELECT
+            TO_CHAR(TRUNC(SIGNUP_DATE, 'MONTH'), 'YYYYMM')  AS MONTH
+            ,SUM(FREE_USER_CNT)                             AS FREE_SUM
+            ,SUM( PAID_USER_CNT)                            AS PAID_SUM
+            , SUM(FREE_USER_CNT +  PAID_USER_CNT)           AS TOTAL_SUM
+        FROM TB_SIGNUP_STAT
+        WHERE  TRUNC(SIGNUP_DATE) BETWEEN #{currentStartDt} AND #{currentEndDt}
+            OR TRUNC(SIGNUP_DATE) BETWEEN #{lastYearStartDt} AND #{lastYearEndDt}
+        GROUP BY TRUNC(SIGNUP_DATE, 'MONTH')
+        ORDER BY TRUNC(SIGNUP_DATE, 'MONTH')
+    </select>
+
+
+</mapper>

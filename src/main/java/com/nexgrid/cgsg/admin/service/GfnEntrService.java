@@ -19,7 +19,6 @@ public class GfnEntrService {
     @Autowired
     private GfnEntrMapper gfnEntrMapper;
 
-
     public GfnEntrInfo selectEntrItem(String entrItemCode) {
         Assert.hasLength(entrItemCode, "entrItemCode is null");
 
@@ -76,13 +75,12 @@ public class GfnEntrService {
         return gfnEntrMapper.selectEntrMappingList(entrItemCode);
     }
 
-    public int insertMapItemList(String entrItemCode, List<String> addItemCodeList) {
+    public int insertMapItemList(String createId, String entrItemCode, List<String> addItemCodeList) {
         Assert.hasLength(entrItemCode, "entrItemCode is null");
         Assert.notNull(addItemCodeList, "addItemCodeList is null");
 
         int insertCnt = 0;
         String statusCd = StatusCode.USED.getCode();
-        String createId = "";
 
         //entrItemCode에 해당해는 addItemCode 전체 delete
         gfnEntrMapper.deleteMapItem(entrItemCode);

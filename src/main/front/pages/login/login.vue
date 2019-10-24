@@ -20,7 +20,7 @@
                                 <div class="card-content">
 
                                     <div class="card-body">
-                                        <form class="form-horizontal" action="index.html" novalidate @submit.prevent="login">
+                                        <form class="form-horizontal" novalidate @submit.prevent="login">
                                             <fieldset class="form-group position-relative has-icon-left">
                                                 <input type="text"
                                                        class="form-control round"

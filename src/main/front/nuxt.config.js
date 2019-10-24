@@ -83,6 +83,6 @@ module.exports = {
     },
     router:{
         middleware: 'auth',
-        mode: 'hash'
+        // mode: 'hash'
     }
 }

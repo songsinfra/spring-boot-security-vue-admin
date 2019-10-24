@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
 
 @RequestMapping("/add")
@@ -47,7 +48,9 @@ public class GfnAddController {
     }
 
     @RequestMapping("/insertAddItem")
-    public ResultInfo insertAddItem(@RequestBody @Validated GfnAddInfo gfnAddInfo) {
+    public ResultInfo insertAddItem(@RequestBody @Validated GfnAddInfo gfnAddInfo, Principal principal) {
+        gfnAddInfo.setCreateId(principal.getName());
+
         if (isAddItemType(gfnAddInfo, AddItemType.GFN)) {
             gfnAddService.insertAddItemForGfn(gfnAddInfo);
         } else if (isAddItemType(gfnAddInfo, AddItemType.UCUBE)) {
@@ -62,8 +65,9 @@ public class GfnAddController {
     }
 
     @RequestMapping("/updateAddItem")
-    public ResultInfo updateAddItem(@RequestBody @Validated GfnAddInfo gfnAddInfo) {
+    public ResultInfo updateAddItem(@RequestBody @Validated GfnAddInfo gfnAddInfo, Principal principal) {
         Assert.hasLength(gfnAddInfo.getAddItemCode(), "addItemCode의 값이 없습니다.");
+        gfnAddInfo.setUpdateId(principal.getName());
 
         if (isAddItemType(gfnAddInfo, AddItemType.GFN)) {
             gfnAddService.updateAddItemForGfn(gfnAddInfo);

@@ -33,6 +33,15 @@ spring:
     username: gfn
     password: gfn
 
+--- ## 테스트
+spring:
+  profiles: test
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@nexgrid2.iptime.org:11522:ADCBDBO
+    username: gfn
+    password: gfn
+
 --- ## 개발
 spring:
   profiles: dev

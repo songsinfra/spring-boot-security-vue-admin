@@ -43,7 +43,9 @@ public class GfnEntrController {
     }
 
     @RequestMapping("/insertEntrItem")
-    public ResultInfo insertEntrItem(@RequestBody @Validated GfnEntrInfo gfnEntrInfo) {
+    public ResultInfo insertEntrItem(@RequestBody @Validated GfnEntrInfo gfnEntrInfo, Principal principal) {
+        gfnEntrInfo.setCreateId(principal.getName());
+
         gfnEntrService.insertEntrItem(gfnEntrInfo);
 
         return ResultInfo.builder()
@@ -52,7 +54,9 @@ public class GfnEntrController {
     }
 
     @RequestMapping("/updateEntrItem")
-    public ResultInfo updateEntrItem(@RequestBody @Validated GfnEntrInfo gfnEntrInfo) {
+    public ResultInfo updateEntrItem(@RequestBody @Validated GfnEntrInfo gfnEntrInfo, Principal principal) {
+        gfnEntrInfo.setUpdateId(principal.getName());
+
         gfnEntrService.updateEntrItem(gfnEntrInfo);
 
         return ResultInfo.builder()
@@ -84,8 +88,9 @@ public class GfnEntrController {
     }
 
     @RequestMapping("/insertMapItemList")
-    public ResultInfo insertMapItemList(@RequestBody @Validated EntrMppingListParam entrMppingListParam) {
-        int insertCnt = gfnEntrService.insertMapItemList(entrMppingListParam.getEntrItemCode(), entrMppingListParam.getAddItemCodeList());
+    public ResultInfo insertMapItemList(@RequestBody @Validated EntrMppingListParam entrMppingListParam, Principal principal) {
+
+        int insertCnt = gfnEntrService.insertMapItemList(principal.getName(), entrMppingListParam.getEntrItemCode(), entrMppingListParam.getAddItemCodeList());
 
         return ResultInfo.builder()
                 .code(SystemStatusCode.LOGIN_SUCCESS.getCode())

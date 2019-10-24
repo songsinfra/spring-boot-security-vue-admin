@@ -85,6 +85,7 @@ public class GfnAddService {
 
     private void validateDataForGfn(GfnAddInfo gfnAddInfo) {
         Assert.notNull(gfnAddInfo, "gfnAddInfo is null");
+        Assert.notNull(gfnAddInfo.getStatusCd(), "statusCd is null");
         Assert.hasLength(gfnAddInfo.getAddItemType(),"addItemType is null");
         Assert.isTrue(StringUtils.equalsIgnoreCase(AddItemType.GFN.getType(), gfnAddInfo.getAddItemType()),
                 "addItemType is invalid");
@@ -130,6 +131,8 @@ public class GfnAddService {
     }
 
     private void processStatusCd(GfnAddInfo gfnAddInfo) {
+        Assert.hasLength(gfnAddInfo.getStatusCd(), "statusCd is null");
+
         if (gfnAddInfo.getStatusCd().equalsIgnoreCase(StatusCode.UNUSED.getCode())) {
             gfnEntrMapper.disableMapItemForAdd(GfnMapInfo.builder()
                     .addItemCode(gfnAddInfo.getAddItemCode())
