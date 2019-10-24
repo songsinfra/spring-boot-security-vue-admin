@@ -34,6 +34,7 @@ public class GfnStatService {
 
     public List<GfnJoinStatMonthInfo> analyzeRate(List<GfnJoinStatInfo> gfnJoinStatInfos) {
         List<GfnJoinStatMonthInfo> list = new ArrayList<>();
+        if(gfnJoinStatInfos.size() == 0) return list;
 
         list.add(create(o -> o.getTotalSum(), "가입자", gfnJoinStatInfos));
         list.add(create(o -> o.getFreeSum(), "무료가입자", gfnJoinStatInfos));
@@ -45,10 +46,10 @@ public class GfnStatService {
     private GfnJoinStatMonthInfo create(Function<GfnJoinStatInfo, Integer> f, String joinType, List<GfnJoinStatInfo> infos) {
         GfnJoinStatMonthInfo build = GfnJoinStatMonthInfo.builder()
                 .joinType(joinType)
-                .lastYearData(f.apply(infos.get(0)))
-                .prevMonthData(f.apply(infos.get(1)))
-                .lastMonthData(f.apply(infos.get(2)))
-                .currentMonthData(f.apply(infos.get(3)))
+                .lastYearData(infos.size() > 0 ? f.apply(infos.get(0)) : 0)
+                .prevMonthData(infos.size() > 1 ? f.apply(infos.get(1)) : 0)
+                .lastMonthData(infos.size() > 2 ? f.apply(infos.get(2)) : 0)
+                .currentMonthData(infos.size() > 3 ? f.apply(infos.get(3)) : 0)
                 .build();
         build.doChangeRate();
         return build;

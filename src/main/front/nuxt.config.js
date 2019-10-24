@@ -56,6 +56,7 @@ module.exports = {
     modules: [
         '@nuxtjs/axios',
         'bootstrap-vue/nuxt',
+        '@nuxtjs/moment',
         ['nuxt-validate', {
             lang: 'ko',
             fieldsBagName: 'veeFields'
@@ -84,5 +85,5 @@ module.exports = {
     router:{
         middleware: 'auth',
         // mode: 'hash'
-    }
+    },
 }
