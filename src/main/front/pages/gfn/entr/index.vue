@@ -129,14 +129,6 @@
                         break;
                 }
             },
-            async selectEntrItemList() {
-                try {
-                    const {data} = await this.$axios.post(process.env.contextPath + '/entr/selectEntrItemList', { statusCd : this.searchUseYn});
-                    this.entrItems = data.data;
-                } catch (e) {
-                    await this.$bvModal.msgBoxOk(e.message);
-                }
-            },
 
             changeCheckbox() {
                 this.$nextTick(_=>{
@@ -147,6 +139,15 @@
             refreshList() {
                 this.getAddItemList();
                 this.selectEntrItemList();
+            },
+
+            async selectEntrItemList() {
+                try {
+                    const {data} = await this.$axios.post(process.env.contextPath + '/entr/selectEntrItemList', { statusCd : this.searchUseYn});
+                    this.entrItems = data.data;
+                } catch (e) {
+                    await this.$bvModal.msgBoxOk(e.message);
+                }
             },
 
             async getAddItemList(entrItemCode) {
