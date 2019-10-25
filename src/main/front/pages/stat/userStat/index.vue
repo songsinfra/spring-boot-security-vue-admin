@@ -2,31 +2,78 @@
     <section id="collapsible">
         <div class="row">
             <div class="col-lg-12 col-xl-12">
-                <div class="card table-responsive">
-                    <b-table
-                            :select-mode="'single'"
-                            :items="items"
-                            :fields="fields"
-                            :bordered="true"
-                    >
-                        <template v-slot:thead-top="data">
-                            <b-tr>
-                                <b-th colspan="1"><span class="sr-only">Name and ID</span></b-th>
-                                <b-th class="text-center">전전월</b-th>
-                                <b-th class="text-center" colspan="2">전월</b-th>
-                                <b-th class="text-center" colspan="3">금월</b-th>
-                            </b-tr>
-                        </template>
-                    </b-table>
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <ul class="list-inline float-right m-0">
+                            <li>
+                                검색날짜
+                            </li>
+                            <li>
+                                <b-form-input
+                                        v-model="today"
+                                        :size="'sm'"
+                                        type="date"
+                                ></b-form-input>
+                            </li>
+                            <li>
+                                <b-button @click="selectJoinUserStat" class="btn-primary">검색</b-button>
+                            </li>
+                            <li>
+                                <download-excel
+                                        :class="'btn btn-primary btn-secondary'"
+                                        :name    = "'가입자통계.xls'"
+                                        :fields="excelFields"
+                                        :data='items'>
+                                    엑셀
+                                </download-excel>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-content collapse show">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <b-table
+                                        @head-clicked="clickHeaderOfTable"
+                                        :items="items"
+                                        :fields="fields"
+                                        :bordered="true"
+                                >
+                                    <template v-slot:thead-top="data">
+                                        <b-tr>
+                                            <b-th colspan="1"><span class="sr-only">Name and ID</span></b-th>
+                                            <b-th class="text-center">전전월</b-th>
+                                            <b-th class="text-center" colspan="2">전월</b-th>
+                                            <b-th class="text-center" colspan="3">금월</b-th>
+                                        </b-tr>
+                                    </template>
+                                    <template v-slot:head(prevMonthData)="data">
+                                        <span class="text-info">11{{ data.label.toUpperCase() }}</span>
+                                    </template>
+                                </b-table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <modal-stat-month-list
+                :date="detailDate"
+                :date-type="detailDateType"
+        />
     </section>
 </template>
 
 <script>
+    import ModalStatMonthList from '~/components/pages/stat/userStat/ModalStatMonthList.vue';
+    import JsonExcel from 'vue-json-excel';
+
     export default {
         name: "index",
+
+        components: {
+            downloadExcel : JsonExcel,
+            ModalStatMonthList
+        },
 
         beforeMount() {
             this.selectJoinUserStat();
@@ -36,22 +83,23 @@
             return {
                 fields: [],
                 items:[],
+                today: '',
+                excelFields:{},
+                detailDate:'',
+                detailDateType:'',
             };
-        },
-
-        computed:{
-            date(){
-                return this.$moment().format('YYYYMMDD');
-            }
         },
 
         methods:{
             async selectJoinUserStat() {
                 try {
-                    const {data} = await this.$axios.post(process.env.contextPath + '/stat/selectJoinUserStat', { date: this.date});
+                    if(!this.today) this.today =  this.$moment().subtract(1, 'days').format('YYYY-MM-DD');
+
+                    const date = this.today.replace(/-/g, '');
+                    const {data} = await this.$axios.post(process.env.contextPath + '/stat/selectJoinUserStat', { date});
                     this.items = data.data;
 
-                    this.initStatData(this.date);
+                    this.initStatData(date);
                 } catch (e) {
                     await this.$bvModal.msgBoxOk(e.message);
                 }
@@ -77,7 +125,40 @@
                     {key: 'currentMonthData', label: currentMonthData},
                     {key: 'lastYearRate', label: '전년대비'},
                 ];
+
+                this.excelFields = {
+                    '기간': 'joinType',
+                    [prevMonthData]: 'prevMonthData',
+                    [lastMonthData]: 'lastMonthData',
+                    '전월대비': 'lastMonthRate',
+                    [lastYearData]: 'lastYearData',
+                    [currentMonthData]: 'currentMonthData',
+                    '전년대비': 'lastYearRate',
+                };
             },
+
+            popupDetail(date, dateType) {
+                this.detailDate = date;
+                this.detailDateType = dateType
+
+                this.$nextTick(async () => {
+                    this.$bvModal.show('modal_join_stat_detail');
+                });
+            },
+
+            clickHeaderOfTable(arg, {key, label}) {
+                debugger;
+                if (key === 'prevMonthData' || key === 'lastMonthData') {
+                    const date = label.replace(/\./g, '');
+                    this.popupDetail(date, 'MONTH');
+                } else if (key === 'lastYearData' || key === 'currentMonthData') {
+                    const date = label.replace('01 ~ ', '').replace(/\./g, '');
+                    this.popupDetail(date, 'DAY');
+                }
+
+                console.log(arg);
+            }
+
         },
     }
 </script>

@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class GfnJoinStatInfo {
-    private String month;
-    private int freeSum;
-    private int paidSum;
-    private int totalSum;
+    private String joinType;
+    private String lastYearData;
+    private String prevMonthData;
+    private String lastMonthData;
+    private String currentMonthData;
 }

@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 @Service
 public class GfnStatService {
@@ -27,34 +25,17 @@ public class GfnStatService {
         // 입력 날짜를 기준으로 통계날짜 세팅
         joinStatInfo.initDate();
 
-        List<GfnJoinStatInfo> gfnJoinStatInfos = gfnStatMapper.selectJoinUserStat(joinStatInfo);
+        List<GfnJoinStatMonthInfo> gfnJoinStatInfos = gfnStatMapper.selectJoinUserStat(joinStatInfo);
+        gfnJoinStatInfos.stream().forEach(i->i.doChangeRate());
 
-        return this.analyzeRate(gfnJoinStatInfos);
+        return gfnJoinStatInfos;
     }
 
-    public List<GfnJoinStatMonthInfo> analyzeRate(List<GfnJoinStatInfo> gfnJoinStatInfos) {
-        List<GfnJoinStatMonthInfo> list = new ArrayList<>();
-        if(gfnJoinStatInfos.size() == 0) return list;
-
-        list.add(create(o -> o.getTotalSum(), "가입자", gfnJoinStatInfos));
-        list.add(create(o -> o.getFreeSum(), "무료가입자", gfnJoinStatInfos));
-        list.add(create(o -> o.getPaidSum(), "유료가입자", gfnJoinStatInfos));
-
-        return list;
+    public List<GfnJoinStatDetailInfo> selectJoinStatDetailList(GfnJoinStatDetailInfoParam joinStatDetailInfo) {
+        Assert.notNull(joinStatDetailInfo, "joinStatDetailInfo is null");
+        Assert.hasLength(joinStatDetailInfo.getStartDt(), "startDt is null");
+        Assert.hasLength(joinStatDetailInfo.getEndDt(), "endDt is null");
+        
+        return gfnStatMapper.selectJoinStatDetailList(joinStatDetailInfo);
     }
-
-    private GfnJoinStatMonthInfo create(Function<GfnJoinStatInfo, Integer> f, String joinType, List<GfnJoinStatInfo> infos) {
-        GfnJoinStatMonthInfo build = GfnJoinStatMonthInfo.builder()
-                .joinType(joinType)
-                .lastYearData(infos.size() > 0 ? f.apply(infos.get(0)) : 0)
-                .prevMonthData(infos.size() > 1 ? f.apply(infos.get(1)) : 0)
-                .lastMonthData(infos.size() > 2 ? f.apply(infos.get(2)) : 0)
-                .currentMonthData(infos.size() > 3 ? f.apply(infos.get(3)) : 0)
-                .build();
-        build.doChangeRate();
-        return build;
-    }
-
-
-
 }

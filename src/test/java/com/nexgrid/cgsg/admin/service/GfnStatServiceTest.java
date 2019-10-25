@@ -69,4 +69,28 @@ public class GfnStatServiceTest extends BaseServiceTest {
         GfnJoinStatInfoParam joinStatInfo = null;
         gfnStatService.selectJoinUserStat(joinStatInfo);
     }
+
+
+    @Test
+    public void selectJoinStatDetailList() {
+        GfnJoinStatDetailInfoParam joinStatDetailInfo = GfnJoinStatDetailInfoParam.builder()
+                .startDt("20191001")
+                .endDt("20191030")
+                .build();
+        List<GfnJoinStatDetailInfo> gfnJoinStatDetailInfos = gfnStatService.selectJoinStatDetailList(joinStatDetailInfo);
+
+        assertThat(gfnJoinStatDetailInfos).size().isGreaterThan(0);
+    }
+
+    @Test()
+    public void selectJoinStatDetailList_startDt_null() {
+        assertException(IllegalArgumentException.class, "startDt is null");
+
+        GfnJoinStatDetailInfoParam joinStatDetailInfo = GfnJoinStatDetailInfoParam.builder()
+                .startDt("")
+                .endDt("20191030")
+                .build();
+
+        gfnStatService.selectJoinStatDetailList(joinStatDetailInfo);
+    }
 }

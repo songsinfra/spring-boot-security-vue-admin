@@ -2,6 +2,7 @@ package com.nexgrid.cgsg.admin.controller;
 
 import com.nexgrid.cgsg.admin.base.BaseControllerTest;
 import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
+import com.nexgrid.cgsg.admin.vo.GfnJoinStatDetailInfoParam;
 import com.nexgrid.cgsg.admin.vo.GfnMasterInfoParam;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,4 +58,39 @@ public class GfnStatControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("$.code").value(SystemStatusCode.INTERNAL_ERROR.getCode()))
         ;
     }
+
+    @Test
+    public void selectJoinStatDetailList() throws Exception {
+        GfnJoinStatDetailInfoParam joinStatDetailInfoParam = GfnJoinStatDetailInfoParam.builder()
+                .startDt("20191001")
+                .endDt("20191030")
+                .build();
+
+        mvc.perform(post("/stat/selectJoinStatDetailList")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(joinStatDetailInfoParam))
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isArray())
+        ;
+    }
+
+    @Test
+    public void selectJoinStatDetailList_statDt_null() throws Exception {
+        GfnJoinStatDetailInfoParam joinStatDetailInfoParam = GfnJoinStatDetailInfoParam.builder()
+                .startDt("")
+                .endDt("20191030")
+                .build();
+
+        mvc.perform(post("/stat/selectJoinStatDetailList")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(joinStatDetailInfoParam))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(SystemStatusCode.INVALID_PARAMETER.getCode()))
+        ;
+    }
+
 }

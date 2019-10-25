@@ -16,11 +16,19 @@
         <result property="lastLoginDt" 		column="LAST_LOGIN_DT"/>
     </resultMap>
 
-    <resultMap id="gfnJoinStatMap" type="com.nexgrid.cgsg.admin.vo.GfnJoinStatInfo">
-        <result property="month" 		    column="MONTH"/>
-        <result property="freeSum" 		    column="FREE_SUM"/>
-        <result property="paidSum" 		    column="PAID_SUM"/>
-        <result property="totalSum" 		column="TOTAL_SUM"/>
+    <resultMap id="gfnJoinStatMap" type="com.nexgrid.cgsg.admin.vo.GfnJoinStatMonthInfo">
+        <result property="joinType" 		    column="JOIN_TYPE"/>
+        <result property="lastYearData" 		    column="LAST_YEAR_DATA"/>
+        <result property="prevMonthData" 		    column="PREV_MONTH_DATA"/>
+        <result property="lastMonthData" 		column="LAST_MONTH_DATA"/>
+        <result property="currentMonthData" 		column="CURRENT_MONTH_DATA"/>
+    </resultMap>
+
+    <resultMap id="gfnJoinStatDetailMap" type="com.nexgrid.cgsg.admin.vo.GfnJoinStatDetailInfo">
+            <result property="signupDate" 		    column="SIGNUP_DATE"/>
+            <result property="freeUserCnt" 		    column="FREE_USER_CNT"/>
+            <result property="paidUserCnt" 		    column="PAID_USER_CNT"/>
+            <result property="totUserCnt" 		    column="TOT_USER_CNT"/>
     </resultMap>
 
     <select id="selectUserDetailStat" resultMap="gfnMasterMap">
@@ -63,16 +71,71 @@
 
 
     <select id="selectJoinUserStat" resultMap="gfnJoinStatMap">
-        SELECT
-            TO_CHAR(TRUNC(SIGNUP_DATE, 'MONTH'), 'YYYYMM')  AS MONTH
-            ,SUM(FREE_USER_CNT)                             AS FREE_SUM
-            ,SUM( PAID_USER_CNT)                            AS PAID_SUM
-            , SUM(FREE_USER_CNT +  PAID_USER_CNT)           AS TOTAL_SUM
+        select JOIN_TYPE, LAST_YEAR_DATA, PREV_MONTH_DATA, LAST_MONTH_DATA, CURRENT_MONTH_DATA from ( WITH TEMP AS (
+               select to_char(trunc(signup_date, 'month'), 'YYYYMM') as d_month
+                ,'가입자' as join_type
+                , sum(tot_user_cnt) as total_sum
+                from TB_SIGNUP_STAT
+                WHERE  SIGNUP_DATE BETWEEN #{currentStartDt} AND #{currentEndDt}
+                    OR SIGNUP_DATE BETWEEN #{lastYearStartDt} AND #{lastYearEndDt}
+                group by trunc(signup_date, 'month')
+                order by trunc(signup_date, 'month')
+            )
+            SELECT JOIN_TYPE, LAST_YEAR_DATA, PREV_MONTH_DATA, LAST_MONTH_DATA, CURRENT_MONTH_DATA FROM TEMP
+            pivot(
+                sum(total_sum)
+                for d_month
+                in( ${lastYearField} as LAST_YEAR_DATA, ${prevMonthField} as PREV_MONTH_DATA, ${lastMonthField} as LAST_MONTH_DATA, ${currentMonthField} as CURRENT_MONTH_DATA)
+            )
+        )
+        union all
+        select JOIN_TYPE, LAST_YEAR_DATA, PREV_MONTH_DATA, LAST_MONTH_DATA, CURRENT_MONTH_DATA from (
+            WITH TEMP AS (
+               select to_char(trunc(signup_date, 'month'), 'YYYYMM') as d_month
+                ,'무료가입자' as join_type
+                , sum(free_user_cnt) as free_sum
+                from TB_SIGNUP_STAT
+                WHERE  SIGNUP_DATE BETWEEN #{currentStartDt} AND #{currentEndDt}
+                    OR SIGNUP_DATE BETWEEN #{lastYearStartDt} AND #{lastYearEndDt}
+                group by trunc(signup_date, 'month')
+                order by trunc(signup_date, 'month')
+            )
+            SELECT JOIN_TYPE, LAST_YEAR_DATA, PREV_MONTH_DATA, LAST_MONTH_DATA, CURRENT_MONTH_DATA FROM TEMP
+            pivot(
+                sum(free_sum)
+                for d_month
+                in( ${lastYearField} as LAST_YEAR_DATA, ${prevMonthField} as PREV_MONTH_DATA, ${lastMonthField} as LAST_MONTH_DATA, ${currentMonthField} as CURRENT_MONTH_DATA)
+            )
+        )
+        union all
+        select JOIN_TYPE, LAST_YEAR_DATA, PREV_MONTH_DATA, LAST_MONTH_DATA, CURRENT_MONTH_DATA from ( WITH TEMP AS (
+               select to_char(trunc(signup_date, 'month'), 'YYYYMM') as d_month
+                ,'유료가입자' as join_type
+                , sum( paid_user_cnt) as paid_sum
+                from TB_SIGNUP_STAT
+                WHERE  SIGNUP_DATE BETWEEN #{currentStartDt} AND #{currentEndDt}
+                    OR SIGNUP_DATE BETWEEN #{lastYearStartDt} AND #{lastYearEndDt}
+                group by trunc(signup_date, 'month')
+                order by trunc(signup_date, 'month')
+            )
+            SELECT JOIN_TYPE, LAST_YEAR_DATA, PREV_MONTH_DATA, LAST_MONTH_DATA, CURRENT_MONTH_DATA FROM TEMP
+            pivot(
+                sum(paid_sum)
+                for d_month
+                in( ${lastYearField} as LAST_YEAR_DATA, ${prevMonthField} as PREV_MONTH_DATA, ${lastMonthField} as LAST_MONTH_DATA, ${currentMonthField} as CURRENT_MONTH_DATA)
+            )
+        )
+
+    </select>
+
+    <select id="selectJoinStatDetailList" resultMap="gfnJoinStatDetailMap">
+        SELECT TO_CHAR(SIGNUP_DATE, 'yyyy.MM.dd'),
+         FREE_USER_CNT,
+         PAID_USER_CNT,
+         TOT_USER_CNT
         FROM TB_SIGNUP_STAT
-        WHERE  TRUNC(SIGNUP_DATE) BETWEEN #{currentStartDt} AND #{currentEndDt}
-            OR TRUNC(SIGNUP_DATE) BETWEEN #{lastYearStartDt} AND #{lastYearEndDt}
-        GROUP BY TRUNC(SIGNUP_DATE, 'MONTH')
-        ORDER BY TRUNC(SIGNUP_DATE, 'MONTH')
+        WHERE SIGNUP_DATE BETWEEN #{startDt} AND #{endDt}
+        ORDER BY SIGNUP_DATE
     </select>
 
 

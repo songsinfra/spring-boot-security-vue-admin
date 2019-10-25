@@ -39,4 +39,16 @@ public class GfnStatController {
                 .data(gfnJoinStatMonthInfos)
                 .build();
     }
+
+    @RequestMapping("/selectJoinStatDetailList")
+    public ResultInfo selectJoinStatDetailList(@RequestBody @Validated GfnJoinStatDetailInfoParam joinStatDetailInfo) {
+        List<GfnJoinStatDetailInfo> gfnJoinStatDetailInfos = gfnStatService.selectJoinStatDetailList(joinStatDetailInfo);
+
+        return ResultInfo.builder()
+                .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+                .data(gfnJoinStatDetailInfos)
+                .build();
+    }
+
+
 }

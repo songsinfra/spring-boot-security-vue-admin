@@ -21,7 +21,11 @@ public class GfnJoinStatMonthInfo {
     }
 
     private float calculateChangeRate(float oriData, float compareData) {
-        return ((oriData-compareData)/compareData)*100;
+        float result = ((oriData - compareData) / compareData) * 100;
+        if(Double.isNaN(result)) return 0;
+        if(Double.isInfinite(result)) return 100;
+
+        return result;
     }
 
     public String getLastMonthRate() {

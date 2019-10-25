@@ -11,7 +11,6 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-@Setter
 @Getter
 public class GfnJoinStatInfoParam {
 
@@ -23,18 +22,32 @@ public class GfnJoinStatInfoParam {
     private String currentEndDt;
     private String lastYearStartDt;
     private String lastYearEndDt;
+    private String lastYearField;
+    private String prevMonthField;
+    private String lastMonthField;
+    private String currentMonthField;
 
     public void initDate() {
         try {
             LocalDate date = LocalDate.parse(this.date, DateTimeFormatter.ofPattern("yyyyMMdd"));
 
             this.currentStartDt = getPrevMonth(date);
-            this.currentEndDt = yesterday(date);
+            this.currentEndDt = convertString(date);
             this.lastYearStartDt = getLastYear(date);
-            this.lastYearEndDt = getYesterdayOfLastYear(date);
+            this.lastYearEndDt = getTodayOfLastYear(date);
+
+            this.lastYearField = date.minusYears(1).format(DateTimeFormatter.ofPattern("yyyyMM"));
+            this.prevMonthField = date.minusMonths(2).format(DateTimeFormatter.ofPattern("yyyyMM"));
+            this.lastMonthField = date.minusMonths(1).format(DateTimeFormatter.ofPattern("yyyyMM"));
+            this.currentMonthField = date.format(DateTimeFormatter.ofPattern("yyyyMM"));
+
         } catch (Exception e) {
             throw new AdminException(SystemStatusCode.INTERNAL_ERROR, e.getMessage());
         }
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     private String getLastYear(LocalDate now) {
@@ -42,8 +55,8 @@ public class GfnJoinStatInfoParam {
         return convertString(LocalDate.of(lastYear.getYear(), lastYear.getMonth(), 1));
     }
 
-    private String getYesterdayOfLastYear(LocalDate now) {
-        LocalDate lastYear = now.minusYears(1).minusDays(1);
+    private String getTodayOfLastYear(LocalDate now) {
+        LocalDate lastYear = now.minusYears(1);
         return convertString(lastYear);
     }
 
@@ -52,12 +65,8 @@ public class GfnJoinStatInfoParam {
         return convertString(LocalDate.of(prev.getYear(), prev.getMonth(), 1));
     }
 
-    private String yesterday(LocalDate today) {
-        return convertString(today.minusDays(1));
-
-    }
-
     private String convertString(LocalDate date) {
         return DateTimeFormatter.ofPattern("yyyyMMdd").format(date);
     }
+
 }
