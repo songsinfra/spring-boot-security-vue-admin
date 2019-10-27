@@ -129,7 +129,7 @@
     </select>
 
     <select id="selectJoinStatDetailList" resultMap="gfnJoinStatDetailMap">
-        SELECT TO_CHAR(SIGNUP_DATE, 'yyyy.MM.dd'),
+        SELECT TO_CHAR(SIGNUP_DATE, 'yyyy.MM.dd') as SIGNUP_DATE,
          FREE_USER_CNT,
          PAID_USER_CNT,
          TOT_USER_CNT

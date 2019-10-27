@@ -89,7 +89,7 @@
 
             getDay() {
                 const currentDate = this.$moment(this.$props.date,'YYYYMMDD');
-                const startDt = currentDate.startOf('month').format('YYYYMMDD');
+                const startDt = currentDate.clone().startOf('month').format('YYYYMMDD');
                 const endDt = currentDate.format("YYYYMMDD");
 
                 return {startDt, endDt};

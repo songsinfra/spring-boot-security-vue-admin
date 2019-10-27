@@ -147,7 +147,6 @@
             },
 
             clickHeaderOfTable(arg, {key, label}) {
-                debugger;
                 if (key === 'prevMonthData' || key === 'lastMonthData') {
                     const date = label.replace(/\./g, '');
                     this.popupDetail(date, 'MONTH');
