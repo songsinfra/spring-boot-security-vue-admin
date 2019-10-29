@@ -70,8 +70,8 @@
 
             async ok() {
                 try {
-                    const url = this.$props.state === 'CREATE' ? "/api/menu/setUpMenuAdd" : "/api/menu/setMenuUpdate";
-                    const response = await this.$axios.$post(url, {
+                    const url = this.$props.state === 'CREATE' ? "/menu/setUpMenuAdd" : "/menu/setMenuUpdate";
+                    const response = await this.$axios.$post( process.env.contextPath + url, {
                         menuId: this.upMenu.menuId,
                         menuName: this.upMenu.upMenuName,
                         menuURL: this.upMenu.menuURL,

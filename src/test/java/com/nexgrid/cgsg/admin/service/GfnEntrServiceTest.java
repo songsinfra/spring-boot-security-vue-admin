@@ -6,7 +6,6 @@ import com.nexgrid.cgsg.admin.constants.SocTypeCode;
 import com.nexgrid.cgsg.admin.constants.StatusCode;
 import com.nexgrid.cgsg.admin.vo.GfnAddInfo;
 import com.nexgrid.cgsg.admin.vo.GfnEntrInfo;
-import com.nexgrid.cgsg.admin.vo.GfnMapInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

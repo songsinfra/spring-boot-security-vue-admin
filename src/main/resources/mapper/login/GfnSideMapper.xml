@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nexgrid.cgsg.admin.mapper.GfnPromoMapper">
+    <resultMap id="gfnPromoMap" type="com.nexgrid.cgsg.admin.vo.GfnPromoInfo">
+        <result property="promoCode" 		    column="PROMO_CODE"/>
+        <result property="email" 		        column="EMAIL"/>
+        <result property="createDt" 		    column="CREATE_DT"/>
+        <result property="dueDt" 		        column="DUE_DT"/>
+        <result property="mbrId" 		        column="MBR_ID"/>
+        <result property="statusCd" 		    column="STATUS_CD"/>
+        <result property="contactNo" 		    column="CONTACT_NO"/>
+        <result property="gfnId" 		        column="GFN_ID"/>
+    </resultMap>
+
+    <insert id="insertPromo">
+        INSERT INTO TB_PROMO_CODE
+		(
+			 PROMO_CODE
+            ,EMAIL
+            ,CREATE_DT
+            ,DUE_DT
+            ,MBR_ID
+            ,STATUS_CD
+            ,CONTACT_NO
+            ,GFN_ID
+		)
+		VALUES
+		(
+			 #{promoCode}
+			,#{email}
+			, sysdate
+			,to_date(#{dueDt}||'235959', 'yyyyMMddhh24miss')
+			,#{mbrId, jdbcType=VARCHAR}
+			,#{statusCd}
+			,#{contactNo, jdbcType=VARCHAR}
+			,#{gfnId}
+		)
+    </insert>
+
+    <select id="selectPromoList" resultMap="gfnPromoMap">
+        SELECT
+             PROMO_CODE
+            ,EMAIL
+            ,to_char(CREATE_DT, 'yyyyMMdd') as CREATE_DT
+            ,to_char(DUE_DT, 'yyyyMMdd') as DUE_DT
+            ,MBR_ID
+            ,STATUS_CD
+            ,CONTACT_NO
+            ,GFN_ID
+        FROM TB_PROMO_CODE
+        <where>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(promoCode)">
+                AND PROMO_CODE LIKE '%'|| #{promoCode} || '%'
+            </if>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(email)">
+                AND EMAIL LIKE '%' || #{email} || '%'
+            </if>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(contactNo)">
+                AND CONTACT_NO = #{contactNo}
+            </if>
+        </where>
+        ORDER BY CREATE_DT DESC
+    </select>
+
+    <select id="existPromo" resultMap="gfnPromoMap">
+        SELECT
+        PROMO_CODE
+        ,EMAIL
+        ,to_char(CREATE_DT, 'yyyyMMdd') as CREATE_DT
+        ,to_char(DUE_DT, 'yyyyMMdd') as DUE_DT
+        ,MBR_ID
+        ,STATUS_CD
+        ,CONTACT_NO
+        ,GFN_ID
+        FROM TB_PROMO_CODE
+        <where>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(email)">
+                EMAIL = #{email}
+            </if>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(contactNo)">
+                OR CONTACT_NO = #{contactNo}
+            </if>
+        </where>
+    </select>
+
+    <update id="updatePromo">
+        UPDATE TB_PROMO_CODE
+        <set>
+            <if test="dueDt != null">DUE_DT=to_date(#{dueDt}||'235959', 'yyyyMMddhh24miss'),</if>
+            <if test="mbrId != null">MBR_ID=#{mbrId},</if>
+            <if test="statusCd != null">STATUS_CD=#{statusCd},</if>
+        </set>
+        WHERE PROMO_CODE = #{promoCode}
+    </update>
+
+    <update id="updateGfnMaster">
+        UPDATE TB_GFN_MASTER
+        <set>
+            UPDATE_DT= sysdate
+            <if test="dueDt != null">,DUE_DT= to_date(#{dueDt}||'235959', 'yyyymmddhh24miss')</if>
+        </set>
+        WHERE GFN_ID = #{gfnId}
+    </update>
+
+
+</mapper>
