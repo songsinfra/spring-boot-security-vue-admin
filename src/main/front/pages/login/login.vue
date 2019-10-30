@@ -71,14 +71,20 @@
                 </section>
             </div>
         </div>
+        <modal-update-pw :mbr-id="user.username"/>
     </div>
 </template>
 
 
 <script>
+    import ModalUpdatePw from '~/components/pages/mbrInfoList/ModalUpdatePw.vue';
+
     export default {
         layout: 'login',
         name: 'Login',
+
+        components: {ModalUpdatePw},
+
         data: ()=>{
             return {
                 user: {
@@ -87,6 +93,7 @@
                 }
             }
         },
+
         methods : {
             async login(){
                 try {
@@ -96,13 +103,28 @@
                     }
 
                     await this.$store.dispatch('login/setUser', {id: this.user.username, password: this.user.password});
-                    // this.$router.push("/");
-                    window.location = '/';
+
+                    if(await this.isExpirePasswordDuration(this.user.username) &&
+                        await this.$bvModal.msgBoxConfirm("개인정보 보호를 위해서 주기적(최소 3개월)으로 비밀번호를 변경해주세요. 변경하시겠습니까?")){
+                        this.$bvModal.show('modal_update_pw');
+                    } else {
+                        window.location = '/';
+                    }
                 } catch (e) {
                     const msg = e.response.data.message || e.response.data;
                     await this.$bvModal.msgBoxOk(msg);
                 }
-            }
+            },
+
+            async isExpirePasswordDuration(mbrId) {
+                try {
+                    const {data} = await this.$axios.post(process.env.contextPath + '/login/isExpirePasswordDuration',{mbrId});
+                    return data.data;
+                } catch (e) {
+                    await this.$bvModal.msgBoxOk(e.message);
+                }
+            },
+
         }
     }
 </script>

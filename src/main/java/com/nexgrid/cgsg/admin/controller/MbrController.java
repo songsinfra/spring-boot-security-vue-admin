@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -112,6 +110,14 @@ public class MbrController {
 
     @RequestMapping("/updatePwd")
     public ResultInfo updatePwd(@RequestBody @Validated UpdatePwdParam mbrInfo) {
+
+        if(loginService.isSamePassword(LoginInfo.builder()
+                                                .mbrId(mbrInfo.getMbrId())
+                                                .mbrPw(mbrInfo.getMbrNewPw())
+                                             .build()))
+            throw new AdminException(SystemStatusCode.INVALID_PARAMETER, "기존에 사용하던 비밀번호입니다");
+
+
         int updateCnt = mbrService.updatePwd(mbrInfo.getMbrId(), mbrInfo.getMbrNewPw());
         String message = String.format("%s 건 업데이트 되었습니다.", updateCnt);
 
@@ -130,5 +136,45 @@ public class MbrController {
                 .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
                 .message(message)
                 .build();
+    }
+
+    /**
+     * @Date : 2015. 9. 7.
+     * @작성자 : 김영호
+     * @프로그램 설명 : 비밀번호 변경시 기존 비밀번호 확인
+     * @개정이력 :
+     */
+    @RequestMapping(value = "/isExistLoginInfo", method = RequestMethod.POST)
+    public ResultInfo loginChk(@RequestBody LoginInfo loginInfo) {
+
+        logger.debug("=== loginChk loginInfo: " + loginInfo.toString());
+
+        boolean result = loginService.isExistLoginInfo(loginInfo);
+
+        return ResultInfo.builder()
+                         .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+                         .data(result)
+                         .build();
+    }
+
+
+    /**
+     * @author PSJ
+     * @Date   2019. 3. 25.
+     * @param
+     * @기능설명 비밀번호 변경 시 직전3회 체크
+     *
+     */
+    @RequestMapping(value = "/isSamePassword", method = RequestMethod.POST)
+    public ResultInfo oldInfoChk(@RequestBody LoginInfo loginInfo) {
+
+        logger.debug("=== oldInfoChk loginInfo: " + loginInfo.toString());
+
+        boolean result = loginService.isSamePassword(loginInfo);
+
+        return ResultInfo.builder()
+                         .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+                         .data(result)
+                         .build();
     }
 }

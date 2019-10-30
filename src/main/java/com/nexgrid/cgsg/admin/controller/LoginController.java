@@ -21,16 +21,15 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@CrossOrigin
-@Controller
 @RequestMapping("/login")
+@RestController
 public class LoginController {
 	
 	private Logger logger = LoggerFactory.getLogger(LoginController.class);
@@ -45,7 +44,6 @@ public class LoginController {
 	 * @개정이력 :
 	 */
 	@RequestMapping(value = "/loginProcessForAuth", method = RequestMethod.POST)
-	@ResponseBody
 	public int loginProcessForAuth(@RequestBody LoginInfo loginInfo) {
 
 		logger.debug("=== loginProcessForAuth loginInfo: " + loginInfo.toString());
@@ -215,65 +213,17 @@ public class LoginController {
 
 		return loginInfoListSize;
 	}
-	
-	/**
-	 * @Date : 2017. 1. 18.
-	 * @작성자 : 이충건
-	 * @프로그램 설명 : 비밀번호 3개월 이전 수정 체크
-	 * @개정이력 :
-	 */
-	@RequestMapping(value = "/getApplyDate", method = RequestMethod.POST)
-	@ResponseBody
-	public boolean getApplyDate(@ModelAttribute MbrInfo mbrInfo, HttpServletRequest request, Model model) {
 
-		String result = "";
-
-		logger.debug("=== getApplyDate mbrId:" + mbrInfo.getMbrId());
-
-		result = CommonUtil.nullCheck(loginService.getApplyDate(mbrInfo));
-		boolean before3M = true;
-		
-		if(!"".equals(result)) {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			long curTime = System.currentTimeMillis();
-			String todayStr = sdf.format(new Date(curTime));
-			try {
-				Date applyDate = sdf.parse(result);
-				Date todayDate = sdf.parse(todayStr);
-				logger.debug("=== 현재시간 :" + sdf.format(todayDate));
-				todayDate.setMonth(todayDate.getMonth() - 3);
-
-				String a = sdf.format(applyDate);
-				String b = sdf.format(todayDate);
-
-				logger.debug("=== 입력된 시간 :" + a);
-				logger.debug("=== 현재시간-3M :" + b);
-
-				if(applyDate.after(todayDate)) {
-					logger.info("=== 3개월 이전");
-					before3M = true;
-				} else {
-					logger.info("=== 3개월 이후");
-					before3M = false;
-				}
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-
-			if(before3M) {
-				return true;
-			} else {
-				return false;
-			}
-
-		} else {
-			logger.debug("=== 입력된 시간 없음:" + result);
-			return false;
-		}
+	@RequestMapping("/isExpirePasswordDuration")
+	public ResultInfo isExpirePasswordDuration(@RequestBody MbrInfo mbrInfo) {
+		boolean result = loginService.isExpirePasswordDuration(mbrInfo, LocalDate.now());
+		return ResultInfo.builder()
+						 .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+						 .data(result)
+						 .build();
 	}
 
 	@RequestMapping(value = "/goLoginFinal", method = RequestMethod.POST)
-	@ResponseBody
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public int goLoginFinal(HttpServletRequest request, @ModelAttribute LoginInfo loginInfo) {
 
@@ -468,7 +418,6 @@ public class LoginController {
 	 * @개정이력 :
 	 */
 	@RequestMapping(value = "/session", method = RequestMethod.POST)
-	@ResponseBody
 	public String authVuew(HttpServletRequest request, Model model) {
 	
 		logger.info("-------- SessionInterceptor preHandle ----------");
@@ -544,7 +493,6 @@ public class LoginController {
 	 * @개정이력 :
 	 */
 	@RequestMapping(value = "/getSessionInfo", method = RequestMethod.POST)
-	@ResponseBody
 	public LoginInfo sessionInfo(HttpServletRequest request, Model model) {
 
 		logger.info("getSessionInfo");
@@ -559,92 +507,12 @@ public class LoginController {
 	
 
 	@RequestMapping(value = "/logoutProcess2", method = RequestMethod.GET)
-	@ResponseBody
 	public void logoutProcess2(HttpServletRequest request, @ModelAttribute LoginInfo loginInfo, Model model, BindingResult result) {
 
 		logger.info("=== logoutProcess");
 		
 		SessionUtil.sessionDel();
 
-	}
-	
-	/**
-	 * @Date : 2015. 9. 7.
-	 * @작성자 : 김영호
-	 * @프로그램 설명 : 비밀번호 변경시 기존 비밀번호 확인
-	 * @개정이력 :
-	 */
-	@RequestMapping(value = "/loginChk", method = RequestMethod.POST)
-	@ResponseBody
-	public boolean loginChk(HttpServletRequest request, HttpServletResponse response, @ModelAttribute LoginInfo loginInfo) {
-
-		logger.debug("=== loginChk loginInfo: " + loginInfo.toString());
-
-		// pw 암호화
-		loginInfo.setMbrPw(Nexgrid_SHA512.encrypt(CommonUtil.nullCheck(loginInfo.getMbrPw())));
-		
-		int loginInfoListSize = 0;
-		boolean rst = false;
-
-		try {
-
-			List<LoginInfo> loginInfoList = loginService.getLoginInfo(loginInfo);
-			loginInfoListSize = loginInfoList.size();
-
-			// 데이터가 1개 있을 경우에만 로그인 처리
-			if(loginInfoListSize == 1) {
-				logger.info("### 기존패스워드 확인 - 성공");
-				rst = true;
-			} else {
-				logger.info("### 기존패스워드 확인 - 실패");
-				loginInfoListSize = 0;
-				rst = false;
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return rst;
-	}
-
-
-	/**
-	 * @author PSJ
-	 * @Date   2019. 3. 25.
-	 * @param  
-	 * @기능설명 비밀번호 변경 시 직전3회 체크   
-	 *
-	 */
-	@RequestMapping(value = "/oldInfoChk", method = RequestMethod.POST)
-	@ResponseBody
-	public boolean oldInfoChk(HttpServletRequest request, HttpServletResponse response, @ModelAttribute LoginInfo loginInfo) {
-
-		logger.debug("=== oldInfoChk loginInfo: " + loginInfo.toString());
-
-		// pw 암호화
-		loginInfo.setMbrPw(Nexgrid_SHA512.encrypt(CommonUtil.nullCheck(loginInfo.getMbrPw())));
-		
-		int oldInfoCnt = 0;
-		boolean rst = false;
-
-		try {
-			
-			oldInfoCnt = loginService.getOldPwValidate(loginInfo);
-
-			if(oldInfoCnt > 0) {
-				logger.info("### 기존패스워드에 존재 - 변경불가");
-				rst = false;
-			} else {
-				logger.info("### 기존패스워드에 미존재 - 변경가능");
-				rst = true;
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return rst;
 	}
 
 }

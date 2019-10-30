@@ -154,8 +154,8 @@
 	
 	<select id="getApplyDate" resultType="String">
 		/* LoginMapper.getApplyDate */
-		
-	 	SELECT pw_apply_dt 
+
+	 	SELECT pw_apply_dt
 	 	FROM tb_mbr_info 
 
 	 	WHERE mbr_id = #{mbrId}
@@ -168,7 +168,7 @@
 			COUNT(mbr_id) AS cnt
 		FROM tb_mbr_info
 		WHERE mbr_id = #{mbrId}
-        AND ( mbr_pw = #{mbrpw} OR mbr_pw_old1 = #{mbrPw} OR mbr_pw_old2 = #{mbrPw} )
+        AND ( mbr_pw = #{mbrPw} OR mbr_pw_old1 = #{mbrPw} OR mbr_pw_old2 = #{mbrPw} )
 	</select>
 
 	<update id="updateLoginEndDt">

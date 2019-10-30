@@ -51,14 +51,14 @@
             </b-form-group>
             <b-form-group
                     id="mbrPw-group-1"
-                    label="비밀번호:"
+                    label="비밀번호: (영문대소문자, 숫자, 특수문자 혼용해서 8~32자 이내)"
                     label-for="mbrPw-1"
             >
                 <b-form-input
                         id="mbrPw-1"
                         v-model="mbrInfo.mbrPw"
                         type="password"
-                        v-validate="'required'"
+                        v-validate="{required : true ,regex:/^.*(?=.{8,32})(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{6,}$/}"
                         data-vv-name="비밀번호"
                         ref="password"
                         @change="changePassword"

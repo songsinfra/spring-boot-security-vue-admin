@@ -33,6 +33,7 @@ public class MbrService {
         Assert.notNull(mbrInfo.getMbrNm(), "mbrNm is null");
 
         mbrInfo.setMbrPw(CommonUtil.convertEncryptPassword(mbrInfo.getMbrPw()));
+        mbrInfo.setPwApplyDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
 
         return mbrMapper.insertMbr(mbrInfo);
     }
@@ -51,10 +52,9 @@ public class MbrService {
 
         if (!StringUtil.empty(mbrInfo.getNewPw())) {
             mbrInfo.setNewPw(CommonUtil.convertEncryptPassword(mbrInfo.getNewPw()));
+            mbrInfo.setPwApplyDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
             this.setPwdHistoryTo(mbrInfo);
         }
-
-        mbrInfo.setPwApplyDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
         return mbrMapper.updateMbr(mbrInfo);
     }
 
@@ -75,7 +75,7 @@ public class MbrService {
         Assert.notNull(mbrOldInfo, "registered Member is not found");
 
         MbrInfo mbrInfoParam = MbrInfo.builder()
-                .newPw(newPwd)
+                .newPw(CommonUtil.convertEncryptPassword(newPwd))
                 .mbrId(mbrId)
                 .pwApplyDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))
                 .mbrPw(mbrOldInfo.getMbrPw())

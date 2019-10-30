@@ -19,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
@@ -60,6 +61,18 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter implement
     }
 
     @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(
+                "/_nuxt/**",
+                "/css/**",
+                "/data/**",
+                "/fonts/**",
+                "/images/**",
+                "/js/**",
+                "/vendors/**");
+    }
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         CookieCsrfTokenRepository csrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
         csrfTokenRepository.setCookiePath("/");
@@ -72,14 +85,7 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter implement
 //                .and()
                 .disable()
                 .authorizeRequests()
-                    .antMatchers("/",
-                            "/_nuxt/**",
-                            "/css/**",
-                            "/data/**",
-                            "/fonts/**",
-                            "/images/**",
-                            "/js/**",
-                            "/vendors/**").permitAll()
+                    .antMatchers("/").permitAll()
                     .antMatchers("/login/**").permitAll()
                     .antMatchers("/**").authenticated()
                 .and()

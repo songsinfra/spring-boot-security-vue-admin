@@ -32,38 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LoginControllerTest extends BaseControllerTest {
 
-
-    @Autowired
-    private WebApplicationContext context;
-
-    private MockMvc mvc;
-
-    @Before
-    public void setup() {
-        mvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
-    }
-
-//    @Test
-//    public void loginProcessForAuth() throws Exception {
-//        Map params = new HashMap();
-//        params.put("username", "admin");
-//        params.put("password", "test");
-//
-//        mvc.perform(post("/login")
-//                .param("username", "admin")
-//                .param("password", "test"))
-//                .andDo(print()).andExpect(status().isOk())
-//                .andExpect(jsonPath("userInfo").exists())
-//        ;
-//
-//
-//
-//
-//    }
-
     @Test
     public void getApplyDate() {
 

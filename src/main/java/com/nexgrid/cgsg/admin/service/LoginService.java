@@ -7,6 +7,7 @@ import com.nexgrid.cgsg.admin.utils.CommonUtil;
 import com.nexgrid.cgsg.admin.vo.LoginInfo;
 import com.nexgrid.cgsg.admin.vo.MbrInfo;
 import com.nexgrid.cgsg.admin.vo.MenuInfo;
+import nexgrid_SHA512.Nexgrid_SHA512;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,7 +171,17 @@ public class LoginService {
 		LocalDate passwordChangeDate = LocalDate.parse(applyDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S"));
 		LocalDate changeDate = nowDate.minusMonths(PASSWORD_CHANGE_MONTHS);
 
-		return changeDate.isBefore(passwordChangeDate);
+		return passwordChangeDate.isBefore(changeDate);
+	}
+
+	public boolean isExistLoginInfo(LoginInfo loginInfo) {
+		Assert.notNull(loginInfo, "loginInfo is null");
+		Assert.hasLength(loginInfo.getMbrPw(), "mbrPw is null");
+		Assert.hasLength(loginInfo.getMbrId(), "mbrId is null");
+
+		loginInfo.setMbrPw(CommonUtil.convertEncryptPassword(loginInfo.getMbrPw()));
+		List<LoginInfo> loginInfoList = mapper.getLoginInfo(loginInfo);
+		return loginInfoList.size() == 1;
 	}
 
 	public List<LoginInfo> getLoginInfo(LoginInfo loginInfo) {
@@ -197,10 +208,6 @@ public class LoginService {
 		return mapper.getLoginInfoOnlyId(loginInfo);
 	}
 
-	public String getApplyDate(MbrInfo mbrInfo) {
-		return mapper.getApplyDate(mbrInfo);
-	}
-
 	public List<LoginInfo> getLoginInfo2(LoginInfo loginInfo) {
 		return mapper.getLoginInfo2(loginInfo);
 	}
@@ -217,8 +224,11 @@ public class LoginService {
 		return mapper.setUserUnLockAndResetFailCnt(loginInfo.getMbrId());
 	}
 	
-	public int getOldPwValidate(LoginInfo loginInfo) {
-		return mapper.getOldPwValidate(loginInfo);
+	public boolean isSamePassword(LoginInfo loginInfo) {
+
+		loginInfo.setMbrPw(CommonUtil.convertEncryptPassword(loginInfo.getMbrPw()));
+		int result = mapper.getOldPwValidate(loginInfo);
+		return result > 0;
 	}
 
 	public int updateLoginEndDt(LoginInfo loginInfo) {
