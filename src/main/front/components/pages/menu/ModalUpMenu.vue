@@ -80,6 +80,8 @@
                     });
 
                     await this.$bvModal.msgBoxOk("저장이 완료 되었습니다.");
+                    await this.$store.dispatch('menu/addUpMenuList');
+
                     this.$eventBus.$emit('refreshGrid');
                     this.$refs.modal.hide();
                 } catch (e) {
@@ -94,7 +96,7 @@
                     this.errors.clear();
                     this.$nextTick(async () => {
                         if (this.$props.state === 'CREATE') {
-                            this.upMenu = {};
+                            this.upMenu = {useYn:'Y'};
                             this.title = '상위메뉴 등록';
                             return;
                         }
