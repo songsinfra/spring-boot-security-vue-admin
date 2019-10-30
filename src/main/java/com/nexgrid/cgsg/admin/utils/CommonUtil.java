@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -89,7 +91,15 @@ public class CommonUtil {
 	public static String getDateTime(String form, Date date){
         return new SimpleDateFormat(form).format( date );
 	}
-	
+
+	public static String getToday() {
+		return getToday("yyyyMMddHHmm");
+	}
+
+	public static String getToday(String format) {
+		return LocalDateTime.now().format(DateTimeFormatter.ofPattern(format));
+	}
+
 	/**
 	 * 지정된 포맷으로 현재 날짜, 시간 정보 가져오기
 	 * @author 이정훈(엔아이링크)

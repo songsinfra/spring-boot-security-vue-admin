@@ -7,13 +7,12 @@ import com.nexgrid.cgsg.admin.utils.CommonUtil;
 import com.nexgrid.cgsg.admin.vo.LoginInfo;
 import com.nexgrid.cgsg.admin.vo.MbrInfo;
 import com.nexgrid.cgsg.admin.vo.MenuInfo;
-import nexgrid_SHA512.Nexgrid_SHA512;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -93,8 +92,6 @@ public class LoginService {
 
 	public void unLockedLoginChecker(String mbrId, String loginFailCnt, String loginFailDate) {
 		Assert.hasLength(mbrId, "mbrId is empty");
-		Assert.hasLength(loginFailCnt, "loginFailCnt is empty");
-		Assert.hasLength(loginFailDate, "loginFailDate is empty");
 
 		int pwdFailCnt = CommonUtil.getNullValue(loginFailCnt);
 		long minute = this.getLeftMinuteBetweenNowDateAnd(loginFailDate);
@@ -166,7 +163,7 @@ public class LoginService {
 
 	public boolean isExpirePasswordDuration(MbrInfo mbrInf, LocalDate nowDate) {
 		String applyDate = mapper.getApplyDate(mbrInf);
-		Assert.hasLength(applyDate, "require selected applyDate");
+		if(StringUtils.isEmpty(applyDate)) return false;
 
 		LocalDate passwordChangeDate = LocalDate.parse(applyDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S"));
 		LocalDate changeDate = nowDate.minusMonths(PASSWORD_CHANGE_MONTHS);
