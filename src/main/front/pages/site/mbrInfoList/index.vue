@@ -15,6 +15,8 @@
                                 <b-table
                                         :items="items"
                                         :fields="fields"
+                                        :per-page="perPage"
+                                        :current-page="currentPage"
                                 >
                                     <template v-slot:select="{item}">
                                         <b-form-checkbox
@@ -32,6 +34,13 @@
                                         >수정</b-button>
                                     </template>
                                 </b-table>
+                                <b-pagination
+                                        v-model="currentPage"
+                                        :total-rows="rows"
+                                        :per-page="perPage"
+                                        aria-controls="my-table"
+                                        :align="'center'"
+                                ></b-pagination>
                             </div>
                         </div>
                     </div>
@@ -48,7 +57,6 @@
 
 
 <script>
-    import axios from 'axios';
     import ModalMbrInfo from '~/components/pages/mbrInfoList/ModalMbrInfo.vue';
 
 
@@ -56,6 +64,20 @@
         name: "index",
         layout: 'default',
         components: {ModalMbrInfo},
+
+        beforeMount() {
+            this.getMbrList();
+        },
+
+        async created() {
+            this.$eventBus.$on('refreshMbrList', this.getMbrList);
+        },
+
+        computed: {
+            rows() {
+                return this.items.length
+            }
+        },
 
         data() {
             return {
@@ -77,16 +99,10 @@
                 ],
                 items: [],
                 selectedMbrInfo: {},
-                modalState: ''
+                modalState: '',
+                perPage: 10,
+                currentPage: 1,
             }
-        },
-
-        beforeMount() {
-            this.getMbrList();
-        },
-
-        async created() {
-            this.$eventBus.$on('refreshMbrList', this.getMbrList);
         },
 
         methods:{

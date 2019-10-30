@@ -40,6 +40,8 @@
                                         :items="items"
                                         :fields="fields"
                                         :bordered="true"
+                                        :per-page="perPage"
+                                        :current-page="currentPage"
                                 >
                                     <template v-slot:select="{item}">
                                         <b-form-checkbox
@@ -57,6 +59,13 @@
                                         >수정</b-button>
                                     </template>
                                 </b-table>
+                                <b-pagination
+                                        v-model="currentPage"
+                                        :total-rows="rows"
+                                        :per-page="perPage"
+                                        aria-controls="my-table"
+                                        :align="'center'"
+                                ></b-pagination>
                             </div>
                         </div>
                     </div>
@@ -80,6 +89,12 @@
 
         async created() {
             this.$eventBus.$on('refreshPromoList', this.selectPromoList);
+        },
+
+        computed: {
+            rows() {
+                return this.items.length
+            }
         },
 
         data() {
@@ -106,7 +121,9 @@
                     email: '',
                 },
                 selectedPromo:{},
-                modalState:''
+                modalState:'',
+                perPage: 10,
+                currentPage: 1,
             };
         },
 

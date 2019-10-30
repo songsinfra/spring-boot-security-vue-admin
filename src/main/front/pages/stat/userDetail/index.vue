@@ -106,11 +106,17 @@
                                         :items="items"
                                         :fields="fields"
                                         :bordered="true"
+                                        :per-page="perPage"
+                                        :current-page="currentPage"
                                 >
-                                    <b-thead>
-
-                                    </b-thead>
                                 </b-table>
+                                <b-pagination
+                                        v-model="currentPage"
+                                        :total-rows="rows"
+                                        :per-page="perPage"
+                                        aria-controls="my-table"
+                                        :align="'center'"
+                                ></b-pagination>
                             </div>
                         </div>
                     </div>
@@ -127,6 +133,12 @@
 
         components: {
             downloadExcel : JsonExcel
+        },
+
+        computed: {
+            rows() {
+                return this.items.length
+            }
         },
 
         beforeMount() {
@@ -174,7 +186,9 @@
                     '상태': 'ctnStusCode',
                     '가입일시': 'createDt',
                     '마지막로그인': 'lastLoginDt',
-                }
+                },
+                perPage: 10,
+                currentPage: 1,
             };
         },
 

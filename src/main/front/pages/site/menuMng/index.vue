@@ -21,6 +21,8 @@
                         <b-table
                                 :items="items"
                                 :fields="fields"
+                                :per-page="perPage"
+                                :current-page="currentPage"
                         >
                             <template v-slot:action="{item}">
                                 <b-button
@@ -35,6 +37,13 @@
                                 >수정</b-button>
                             </template>
                         </b-table>
+                        <b-pagination
+                                v-model="currentPage"
+                                :total-rows="rows"
+                                :per-page="perPage"
+                                aria-controls="my-table"
+                                :align="'center'"
+                        ></b-pagination>
                     </div>
                 </div>
             </div>
@@ -65,6 +74,12 @@
             console.log("menuMng fetch");
         },
 
+        computed: {
+            rows() {
+                return this.items.length
+            }
+        },
+
         data(){
             return {
                 fields: [
@@ -80,7 +95,9 @@
                 form:{},
                 searchUseYn:"",
                 selectedMenu : {},
-                modalState: ""
+                modalState: "",
+                perPage: 10,
+                currentPage: 1,
             }
         },
 

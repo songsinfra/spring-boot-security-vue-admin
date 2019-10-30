@@ -21,6 +21,8 @@
                                 <b-table
                                         :items="items"
                                         :fields="fields"
+                                        :per-page="perPage"
+                                        :current-page="currentPage"
                                 >
                                     <template v-slot:index="data">
                                         {{ data.index + 1 }}
@@ -32,6 +34,13 @@
                                         >수정</b-button>
                                     </template>
                                 </b-table>
+                                <b-pagination
+                                        v-model="currentPage"
+                                        :total-rows="rows"
+                                        :per-page="perPage"
+                                        aria-controls="my-table"
+                                        :align="'center'"
+                                ></b-pagination>
                             </div>
                         </div>
                     </div>
@@ -56,6 +65,12 @@
         layout: 'default',
         components: {ModalAddInfo, downloadExcel: JsonExcel},
 
+        computed: {
+            rows() {
+                return this.items.length
+            }
+        },
+
         data() {
             return {
                 fields: [
@@ -73,6 +88,8 @@
                 selectedAddInfo: {},
                 modalState: '',
                 searchUseYn: '',
+                perPage: 10,
+                currentPage: 1,
             }
         },
 
