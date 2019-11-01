@@ -139,8 +139,9 @@
                 <b-form-input
                         id="tel-1"
                         v-model="mbrInfo.tel"
-                        v-validate="'required'"
+                        v-validate="'required|numeric'"
                         data-vv-name="휴대폰"
+                        type="number"
                 ></b-form-input>
                 <b-form-invalid-feedback :state="!errors.has('휴대폰')">
                     {{errors.first('휴대폰')}}

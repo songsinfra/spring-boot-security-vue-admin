@@ -43,8 +43,14 @@
                 <b-form-input
                         id="contactNo-1"
                         v-model="promoInfo.contactNo"
+                        type="number"
                         :disabled="state === 'UPDATE'"
+                        v-validate="'numeric'"
+                        data-vv-name="연락처"
                 ></b-form-input>
+                <b-form-invalid-feedback :state="!errors.has('연락처')">
+                    {{errors.first('연락처')}}
+                </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group
                     id="useYn-group-1"
@@ -110,7 +116,7 @@
                     return;
                 }
 
-                if(this.$props.state === 'CREATE' && await this.isExistPromo() &&
+                if(this.$props.state === 'CREATE' && await this.isExistPromoUserInfo() &&
                     !await this.$bvModal.msgBoxConfirm("동일한 요청정보로 생성된 프로모션 코드가 있습니다. \n추가발급 하시겠습니까.")) return;
 
                 if(await this.isInvalidDueDt()) return;
@@ -225,8 +231,8 @@
                 return false;
             },
 
-            async isExistPromo() {
-                const {data} = await this.$axios.$post(process.env.contextPath + '/side/existPromo', {
+            async isExistPromoUserInfo() {
+                const {data} = await this.$axios.$post(process.env.contextPath + '/side/existPromoUserInfo', {
                     email: this.promoInfo.email,
                     contactNo: this.promoInfo.contactNo
                 });
