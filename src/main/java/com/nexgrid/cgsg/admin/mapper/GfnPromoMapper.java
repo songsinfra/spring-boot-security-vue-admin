@@ -10,7 +10,7 @@ import java.util.List;
 public interface GfnPromoMapper {
     int insertPromo(GfnPromoInfo promoInfo);
     List<GfnPromoInfo> selectPromoList(GfnPromoInfoParam promoInfo);
-    List<GfnPromoInfo> existPromo(GfnPromoInfoParam promoInfo);
+    List<GfnPromoInfo> existPromoUserInfo(GfnPromoInfoParam promoInfo);
     int updatePromo(GfnPromoInfoParam promoInfo);
     int updateGfnMaster(String gfnId, String dueDt);
 }

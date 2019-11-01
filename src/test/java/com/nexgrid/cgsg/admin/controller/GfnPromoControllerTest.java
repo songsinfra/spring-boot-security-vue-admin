@@ -86,7 +86,7 @@ public class GfnPromoControllerTest extends BaseControllerTest {
     public void existPromo() throws Exception {
         GfnPromoInfoParam promoInfo = GfnPromoInfoParam.builder().email(EMAIL).build();
 
-        mvc.perform(post("/side/existPromo")
+        mvc.perform(post("/side/existPromoUserInfo")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(promoInfo))
         )
@@ -106,7 +106,7 @@ public class GfnPromoControllerTest extends BaseControllerTest {
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("2건 변경이 완료 되었습니다."))
+                .andExpect(jsonPath("$.message").value("2건 만료처리 되었습니다."))
         ;
     }
 
@@ -114,7 +114,7 @@ public class GfnPromoControllerTest extends BaseControllerTest {
     public void existPromo_invalid_Email() throws Exception {
         GfnPromoInfoParam promoInfo = GfnPromoInfoParam.builder().email(EMAIL+"!!!").build();
 
-        mvc.perform(post("/side/existPromo")
+        mvc.perform(post("/side/existPromoUserInfo")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(promoInfo))
         )
@@ -128,7 +128,7 @@ public class GfnPromoControllerTest extends BaseControllerTest {
     public void existPromo_변수_없음() throws Exception {
         GfnPromoInfoParam promoInfo = GfnPromoInfoParam.builder().build();
 
-        mvc.perform(post("/side/existPromo")
+        mvc.perform(post("/side/existPromoUserInfo")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(promoInfo))
         )

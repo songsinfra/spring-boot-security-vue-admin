@@ -98,13 +98,13 @@ public class GfnPromoServiceTest extends BaseServiceTest {
     }
 
     @Test
-    public void existPromo() {
+    public void existPromoUserInfo() {
         GfnPromoInfoParam promoInfo = GfnPromoInfoParam.builder()
                 .email(EMAIL)
                 .contactNo(CONTACT_NO)
                 .build();
 
-        boolean result = promoService.existPromo(promoInfo);
+        boolean result = promoService.existPromoUserInfo(promoInfo);
 
         assertThat(result).isTrue();
     }
@@ -115,7 +115,7 @@ public class GfnPromoServiceTest extends BaseServiceTest {
                 .email(EMAIL)
                 .build();
 
-        boolean result = promoService.existPromo(promoInfo);
+        boolean result = promoService.existPromoUserInfo(promoInfo);
 
         assertThat(result).isTrue();
     }
@@ -126,7 +126,7 @@ public class GfnPromoServiceTest extends BaseServiceTest {
                 .email(EMAIL+"111")
                 .build();
 
-        boolean result = promoService.existPromo(promoInfo);
+        boolean result = promoService.existPromoUserInfo(promoInfo);
 
         assertThat(result).isFalse();
     }
@@ -219,5 +219,10 @@ public class GfnPromoServiceTest extends BaseServiceTest {
         promoService.deletePromoCode(mbrId, promoCodeList);
     }
 
-
+    @Test
+    public void checkExistPromoCode() {
+        String promoCode = promoCode1;
+        boolean existPromoCode = promoService.isExistPromoCode(promoCode);
+        assertThat(existPromoCode).isTrue();
+    }
 }

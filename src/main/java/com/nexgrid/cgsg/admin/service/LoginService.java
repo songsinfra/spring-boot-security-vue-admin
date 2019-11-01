@@ -67,7 +67,7 @@ public class LoginService {
 	}
 
 	public void setLoginEndDate(LoginInfo loginInfo) {
-		loginInfo.setLoginEndDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
+		loginInfo.setLoginEndDt(CommonUtil.getToday());
 		mapper.updateLoginEndDt(loginInfo);		// 마지막 접속날짜 등록
 	}
 
@@ -136,7 +136,7 @@ public class LoginService {
 		mapper.updateLoginFailCnt(LoginInfo.builder()
 				.mbrId(mbrId)
 				.loginFailCnt(loginFailCnt)
-				.loginFailDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))
+				.loginFailDt(CommonUtil.getToday())
 				.build()
 		); // 비밀번호 오류 회수 +1
 	}
@@ -152,7 +152,7 @@ public class LoginService {
 			mapper.updateLoginFailCnt(LoginInfo.builder()
 					.mbrId(mbrId)
 					.loginFailCnt("0")
-					.loginFailDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))
+					.loginFailDt(CommonUtil.getToday())
 					.build());
 			//log.debug("### 비밀번호 오류 회수 없데이트 : " + uptCnt);
 		} else {
@@ -165,7 +165,7 @@ public class LoginService {
 		String applyDate = mapper.getApplyDate(mbrInf);
 		if(StringUtils.isEmpty(applyDate)) return false;
 
-		LocalDate passwordChangeDate = LocalDate.parse(applyDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S"));
+		LocalDate passwordChangeDate = LocalDate.parse(applyDate, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 		LocalDate changeDate = nowDate.minusMonths(PASSWORD_CHANGE_MONTHS);
 
 		return passwordChangeDate.isBefore(changeDate);

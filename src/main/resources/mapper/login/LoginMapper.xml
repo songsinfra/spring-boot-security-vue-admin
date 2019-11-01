@@ -107,7 +107,7 @@
 		UPDATE TB_MBR_INFO
 		SET
 			LOGIN_FAIL_CNT = #{loginFailCnt} + 1,
-            LOGIN_FAIL_DT = TO_DATE(#{loginFailDt}, 'yyyy/mm/dd hh24:mi:ss')
+            LOGIN_FAIL_DT = TO_DATE(#{loginFailDt}, 'yyyymmddhh24miss')
 		WHERE	MBR_ID = #{mbrId}
 	</insert>
 	
@@ -126,7 +126,7 @@
 		UPDATE TB_MBR_INFO
 		SET
 			LOGIN_FAIL_CNT = 0
-			, LOGIN_END_DT = TO_DATE(#{loginEndDt}, 'yyyy/mm/dd hh24:mi:ss')
+			, LOGIN_END_DT = TO_DATE(#{loginEndDt}, 'yyyymmddhh24miss')
 		WHERE MBR_ID = #{mbrId}
 	</update>
 
@@ -146,7 +146,7 @@
 		SELECT 
 			 USE_YN 			as useYn
 			, LOGIN_FAIL_CNT 	as loginFailCnt
-            , TO_CHAR(LOGIN_FAIL_DT,'YYYYMMddHH24mi') AS loginFailDt
+            , TO_CHAR(LOGIN_FAIL_DT,'YYYYMMddHH24miss') AS loginFailDt
 		FROM TB_MBR_INFO A
 		WHERE 1 = 1
 		AND MBR_ID = #{mbrId}
@@ -155,7 +155,7 @@
 	<select id="getApplyDate" resultType="String">
 		/* LoginMapper.getApplyDate */
 
-	 	SELECT pw_apply_dt
+	 	SELECT TO_CHAR(PW_APPLY_DT,'YYYYMMddHH24miss') as PW_APPLY_DT
 	 	FROM tb_mbr_info 
 
 	 	WHERE mbr_id = #{mbrId}
@@ -176,7 +176,7 @@
 		
 		UPDATE tb_mbr_info
 		SET
-			login_end_dt = TO_DATE(#{loginEndDt}, 'yyyy/mm/dd hh24:mi:ss')
+			login_end_dt = TO_DATE(#{loginEndDt}, 'yyyymmddhh24miss')
 		WHERE mbr_id = #{mbrId}
 	</update>
 </mapper>

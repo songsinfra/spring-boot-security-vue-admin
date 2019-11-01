@@ -93,7 +93,7 @@ public class CommonUtil {
 	}
 
 	public static String getToday() {
-		return getToday("yyyyMMddHHmm");
+		return getToday("yyyyMMddHHmmss");
 	}
 
 	public static String getToday(String format) {

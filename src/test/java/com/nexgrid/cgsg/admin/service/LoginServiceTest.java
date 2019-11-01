@@ -133,8 +133,8 @@ public class LoginServiceTest extends BaseServiceTest {
 
     @Test
     public void 비밀번호변경확인_날짜_지남_MOCK() {
-        when(loginMapper.getApplyDate(any(MbrInfo.class))).thenReturn("2019-06-09 00:00:00.0");
-        LocalDate nowDate = LocalDate.of(2019, 9, 8);
+        when(loginMapper.getApplyDate(any(MbrInfo.class))).thenReturn("20190709000000");
+        LocalDate nowDate = LocalDate.of(2020, 9, 8);
         boolean expirePasswordDuration = loginServiceMock.isExpirePasswordDuration(new MbrInfo(), nowDate);
 
         assertThat(expirePasswordDuration).isTrue();
@@ -145,7 +145,7 @@ public class LoginServiceTest extends BaseServiceTest {
         MbrInfo mbrInfo = new MbrInfo();
         mbrInfo.setMbrId(MBR_ID);
 
-        LocalDate nowDate = LocalDate.of(2019, 9, 8);
+        LocalDate nowDate = LocalDate.of(2020, 9, 8);
         boolean expirePasswordDuration = loginService.isExpirePasswordDuration(mbrInfo, nowDate);
 
         assertThat(expirePasswordDuration).isTrue();
@@ -153,18 +153,19 @@ public class LoginServiceTest extends BaseServiceTest {
 
     @Test
     public void 비밀번호변경확인_날짜_안지남_MOCK() {
-        when(loginMapper.getApplyDate(any(MbrInfo.class))).thenReturn("2019-06-08 00:00:00.0");
+        when(loginMapper.getApplyDate(any(MbrInfo.class))).thenReturn("20190708000000");
         LocalDate nowDate = LocalDate.of(2019, 9, 8);
         boolean expirePasswordDuration = loginServiceMock.isExpirePasswordDuration(new MbrInfo(), nowDate);
 
         assertThat(expirePasswordDuration).isFalse();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void 비밀번호변경확인_Mbrinfo_없음() {
         when(loginMapper.getApplyDate(any(MbrInfo.class))).thenReturn("");
         LocalDate nowDate = LocalDate.of(2019, 9, 8);
         boolean expirePasswordDuration = loginServiceMock.isExpirePasswordDuration(new MbrInfo(), nowDate);
+        assertThat(expirePasswordDuration).isFalse();
     }
 
 

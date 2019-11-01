@@ -44,12 +44,12 @@ public class GfnPromoController {
                 .build();
     }
 
-    @RequestMapping("/existPromo")
-    public ResultInfo existPromo(@RequestBody @Validated GfnPromoInfoParam promoInfo) {
+    @RequestMapping("/existPromoUserInfo")
+    public ResultInfo existPromoUserInfo(@RequestBody @Validated GfnPromoInfoParam promoInfo) {
         Assert.notNull(promoInfo, "promoInfo is null");
         Assert.isTrue(ObjectUtils.anyNotNull(promoInfo.getEmail(), promoInfo.getContactNo()), "email or contactNo is require");
 
-        boolean result = promoService.existPromo(promoInfo);
+        boolean result = promoService.existPromoUserInfo(promoInfo);
 
         return ResultInfo.builder()
                 .code(SystemStatusCode.LOGIN_SUCCESS.getCode())

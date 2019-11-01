@@ -1,6 +1,8 @@
 package com.nexgrid.cgsg.admin.service;
 
 import com.nexgrid.cgsg.admin.constants.StatusCode;
+import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
+import com.nexgrid.cgsg.admin.exception.AdminException;
 import com.nexgrid.cgsg.admin.mapper.GfnPromoMapper;
 import com.nexgrid.cgsg.admin.vo.GfnPromoInfo;
 import com.nexgrid.cgsg.admin.vo.GfnPromoInfoParam;
@@ -28,6 +30,7 @@ public class GfnPromoService {
         Assert.notNull(promoInfo.getDueDt(), "promoInfo.duDt is null");
 
         String promoCode = this.generatePromoCode();
+
         promoInfo.setPromoCode(promoCode);
         promoInfo.setStatusCd(StatusCode.UNUSED.getCode());
         promoInfo.setGfnId(this.makeGfnId(promoCode));
@@ -63,10 +66,20 @@ public class GfnPromoService {
         return gfnPromoMapper.updateGfnMaster(gfnPromoInfo.getGfnId(), promoInfo.getDueDt());
     }
 
-    private String generatePromoCode() {
-        String promoCode = RandomStringUtils.randomAlphanumeric(16).toUpperCase();
-        Assert.hasLength(promoCode, "promoCode was not made");
-        Assert.isTrue(promoCode.length() == 16, "promoCode was not made");
+    public String generatePromoCode() {
+
+        String promoCode;
+        int limitLoop = 5;
+
+        do {
+            promoCode = RandomStringUtils.randomAlphanumeric(16).toUpperCase();
+            Assert.hasLength(promoCode, "promoCode was not made");
+            Assert.isTrue(promoCode.length() == 16, "promoCode was not made");
+            limitLoop--;
+        } while (this.isExistPromoCode(promoCode) && limitLoop > 0);
+
+        if(limitLoop == 0)
+            throw new AdminException(SystemStatusCode.INTERNAL_ERROR, "it was exceed a generation promoCode");
 
         return promoCode;
     }
@@ -102,8 +115,18 @@ public class GfnPromoService {
         return gfnPromoMapper.updatePromo(promoInfo);
     }
 
-    public boolean existPromo(GfnPromoInfoParam promoInfo) {
-        List<GfnPromoInfo> gfnPromoInfos = gfnPromoMapper.existPromo(promoInfo);
+    public boolean existPromoUserInfo(GfnPromoInfoParam promoInfo) {
+        List<GfnPromoInfo> gfnPromoInfos = gfnPromoMapper.existPromoUserInfo(promoInfo);
+
+        return gfnPromoInfos.size() > 0 ? true : false;
+    }
+
+    public boolean isExistPromoCode(String promoCode) {
+        Assert.notNull(promoCode, "promoCode is null");
+
+        List<GfnPromoInfo> gfnPromoInfos = gfnPromoMapper.selectPromoList(GfnPromoInfoParam.builder()
+                                                                                           .promoCode(promoCode)
+                                                                                           .build());
 
         return gfnPromoInfos.size() > 0 ? true : false;
     }

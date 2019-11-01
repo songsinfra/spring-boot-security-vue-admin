@@ -33,7 +33,7 @@ public class MbrService {
         Assert.notNull(mbrInfo.getMbrNm(), "mbrNm is null");
 
         mbrInfo.setMbrPw(CommonUtil.convertEncryptPassword(mbrInfo.getMbrPw()));
-        mbrInfo.setPwApplyDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
+        mbrInfo.setPwApplyDt(CommonUtil.getToday());
 
         return mbrMapper.insertMbr(mbrInfo);
     }
@@ -50,9 +50,10 @@ public class MbrService {
         Assert.notNull(mbrInfo, "mbrInfo is null");
         Assert.hasLength(mbrInfo.getMbrId(), "mbrId is null");
 
+        mbrInfo.setMbrPw(""); // 회원수정시 업데이트는 newPw만 가능하게 초기화
         if (!StringUtil.empty(mbrInfo.getNewPw())) {
             mbrInfo.setNewPw(CommonUtil.convertEncryptPassword(mbrInfo.getNewPw()));
-            mbrInfo.setPwApplyDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
+            mbrInfo.setPwApplyDt(CommonUtil.getToday());
             this.setPwdHistoryTo(mbrInfo);
         }
         return mbrMapper.updateMbr(mbrInfo);
@@ -77,7 +78,7 @@ public class MbrService {
         MbrInfo mbrInfoParam = MbrInfo.builder()
                 .newPw(CommonUtil.convertEncryptPassword(newPwd))
                 .mbrId(mbrId)
-                .pwApplyDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))
+                .pwApplyDt(CommonUtil.getToday())
                 .mbrPw(mbrOldInfo.getMbrPw())
                 .mbrPwOld1(StringUtil.nvl(mbrOldInfo.getMbrPwOld1(), ""))
                 .build();

@@ -63,7 +63,7 @@
         ORDER BY CREATE_DT DESC
     </select>
 
-    <select id="existPromo" resultMap="gfnPromoMap">
+    <select id="existPromoUserInfo" resultMap="gfnPromoMap">
         SELECT
         PROMO_CODE
         ,EMAIL

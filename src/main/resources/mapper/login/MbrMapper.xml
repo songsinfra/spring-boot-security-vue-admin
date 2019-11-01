@@ -133,14 +133,14 @@
 	    <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(tel)">
 		    ,tel = #{tel}
 	    </if>
-	    <if test="mbrPw != null">
-		    ,pw_apply_dt = TO_DATE(#{pwApplyDt}, 'yyyy/mm/dd hh24:mi:ss')
+	    <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(mbrPw)">
+		    ,pw_apply_dt = TO_DATE(#{pwApplyDt}, 'yyyymmddhh24miss')
 		    ,mbr_pw = #{mbrPw}    
 	    </if>
-	    <if test="mbrPwOld1 != null">
+	    <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(mbrPwOld1)">
 		    ,mbr_pw_old1 = #{mbrPwOld1}
 	    </if>
-	     <if test="mbrPwOld2 != null">
+	     <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(mbrPwOld2)">
 		    ,mbr_pw_old2 = #{mbrPwOld2}
 	    </if>
 		WHERE mbr_id = #{mbrId}
@@ -156,7 +156,7 @@
 			,mbr_pw = #{newPw}
 			,mbr_pw_old1 = #{mbrPw}
 			,mbr_pw_old2 = #{mbrPwOld1}
-			,pw_apply_dt = TO_DATE(#{pwApplyDt}, 'yyyy/mm/dd hh24:mi:ss')
+			,pw_apply_dt = TO_DATE(#{pwApplyDt}, 'yyyymmddhh24miss')
 		WHERE mbr_id = #{mbrId}
 	</update>
 	
