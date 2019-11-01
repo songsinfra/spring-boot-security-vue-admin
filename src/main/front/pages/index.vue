@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="card-content collapse show">
                         <div style="text-align: center;" class="card-body card-dashboard">
-                            <p class="card-text" id="tete">GFN 관리자 환영합니다.</p>
+                            <p class="card-text" id="tete">{{user.mbrNm}} 님 환영합니다.</p>
                         </div>
                     </div>
                 </div>
@@ -16,6 +16,13 @@
 <script>
     export default {
         layout: 'default',
+
+        computed:{
+            user() {
+                return this.$store.state.login.authUser;
+            }
+
+        },
 
         beforeCreate() {
             this.$store.dispatch('login/getUser');
