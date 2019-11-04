@@ -88,9 +88,9 @@ public class GfnPromoService {
         return DigestUtils.sha256Hex("PROMO" + promoCode);
     }
 
-    public int deletePromoCode(String mbrId, List<String> promoCodeList) {
+    public int expirePromoCode(String mbrId, List<String> promoCodeList) {
         Assert.notNull(promoCodeList, "promoCodeList is null");
-        Assert.isTrue(promoCodeList.size() > 0, "promoCodeList size is greater than 0");
+        Assert.isTrue(promoCodeList.size() > 0, "promoCodeList size is 0");
 
         int result = 0;
         for (String promoCode : promoCodeList) {
@@ -105,6 +105,20 @@ public class GfnPromoService {
         return result;
     }
 
+    public int deletePromoCode(List<String> promoCodeList) {
+        Assert.notNull(promoCodeList, "promoCodeList is null");
+        Assert.isTrue(promoCodeList.size() > 0, "promoCodeList size is 0");
+
+        int result = 0;
+        for (String promoCode : promoCodeList) {
+            result += this.deletePromo(GfnPromoInfoParam.builder()
+                                                           .promoCode(promoCode)
+                                                           .dueDt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                                                           .build());
+        }
+        return result;
+    }
+
     private int updatePromoRaw(GfnPromoInfoParam promoInfo) {
         Assert.notNull(promoInfo, "promoInfo is null");
         Assert.hasLength(promoInfo.getPromoCode(), "promoCode is null");
@@ -113,6 +127,15 @@ public class GfnPromoService {
 
         this.updateGfnMaster(promoInfo);
         return gfnPromoMapper.updatePromo(promoInfo);
+    }
+
+    private int deletePromo(GfnPromoInfoParam promoInfo) {
+        Assert.notNull(promoInfo, "promoInfo is null");
+        Assert.hasLength(promoInfo.getPromoCode(), "promoCode is null");
+        Assert.notNull(promoInfo.getDueDt(), "dueDt is null");
+
+        this.updateGfnMaster(promoInfo);
+        return gfnPromoMapper.deletePromo(promoInfo.getPromoCode());
     }
 
     public boolean existPromoUserInfo(GfnPromoInfoParam promoInfo) {

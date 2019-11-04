@@ -26,7 +26,10 @@
                                 <b-button @click="selectPromoList" class="btn-primary">검색</b-button>
                             </div>
                             <div class="col-auto">
-                                <b-button @click="deletePromoList" variant="danger">만료처리</b-button>
+                                <b-button @click="expirePromoList" variant="danger">만료</b-button>
+                            </div>
+                            <div class="col-auto">
+                                <b-button @click="deletePromoList" variant="danger">삭제</b-button>
                             </div>
                             <div class="col-auto">
                                 <b-button @click="createPromo" class="btn-primary">생성</b-button>
@@ -170,6 +173,33 @@
                 return this.$moment(date, 'YYYYMMDD').format("YYYY.MM.DD");
             },
 
+            async expirePromoList() {
+                try {
+                    const expirePromoCodeList = this.items.filter(item => item.checked === 'Y')
+                        .map(item=>item.promoCode);
+
+                    if(expirePromoCodeList.length === 0){
+                        await this.$bvModal.msgBoxOk('선택된 프로모션정보가 없습니다');
+                        return;
+                    }
+
+                    const isOk = await this.$bvModal.msgBoxConfirm("선택된 프로모션정보를 만료처리 하시겠습니까?");
+                    if (!isOk) return;
+
+                    const {message} = await this.$axios.post(process.env.contextPath + '/side/expirePromoCode',{
+                        promoCodeList : expirePromoCodeList
+                    });
+
+                    debugger;
+                    await this.$bvModal.msgBoxOk(message);
+
+                    await this.selectPromoList();
+                } catch (e) {
+                    await this.$bvModal.msgBoxOk(e.message);
+                }
+
+            },
+
             async deletePromoList() {
                 try {
                     const deletePromoCodeList = this.items.filter(item => item.checked === 'Y')
@@ -180,7 +210,7 @@
                         return;
                     }
 
-                    const isOk = await this.$bvModal.msgBoxConfirm("선택된 프로모션정보를 만료처리 하시겠습니까?");
+                    const isOk = await this.$bvModal.msgBoxConfirm("선택된 프로모션정보를 삭제처리 하시겠습니까?");
                     if (!isOk) return;
 
                     const {message} = await this.$axios.post(process.env.contextPath + '/side/deletePromoCode',{

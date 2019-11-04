@@ -97,10 +97,10 @@ public class GfnPromoControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void deletePromoCode() throws Exception {
+    public void expirePromoCode() throws Exception {
         GfnPromoInfoParam promoInfo = GfnPromoInfoParam.builder().promoCodeList(Arrays.asList(promoCode1, promoCode2)).build();
 
-        mvc.perform(post("/side/deletePromoCode")
+        mvc.perform(post("/side/expirePromoCode")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(promoInfo))
         )
@@ -135,6 +135,20 @@ public class GfnPromoControllerTest extends BaseControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("email or contactNo is require"))
+        ;
+    }
+
+    @Test
+    public void deletePromoCode() throws Exception {
+        GfnPromoInfoParam promoInfo = GfnPromoInfoParam.builder().promoCodeList(Arrays.asList(promoCode1, promoCode2)).build();
+
+        mvc.perform(post("/side/deletePromoCode")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(promoInfo))
+        )
+           .andDo(print())
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$.message").value("2건 삭제처리 되었습니다."))
         ;
     }
 

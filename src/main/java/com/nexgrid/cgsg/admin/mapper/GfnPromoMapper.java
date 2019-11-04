@@ -13,4 +13,5 @@ public interface GfnPromoMapper {
     List<GfnPromoInfo> existPromoUserInfo(GfnPromoInfoParam promoInfo);
     int updatePromo(GfnPromoInfoParam promoInfo);
     int updateGfnMaster(String gfnId, String dueDt);
+    int deletePromo(String promoCode);
 }

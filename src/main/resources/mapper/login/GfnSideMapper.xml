@@ -103,5 +103,10 @@
         WHERE GFN_ID = #{gfnId}
     </update>
 
+    <update id="deletePromo">
+        DELETE FROM TB_PROMO_CODE
+        WHERE PROMO_CODE = #{promoCode}
+    </update>
+
 
 </mapper>

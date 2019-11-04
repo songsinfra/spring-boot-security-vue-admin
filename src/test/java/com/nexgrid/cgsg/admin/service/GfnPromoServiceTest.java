@@ -190,34 +190,60 @@ public class GfnPromoServiceTest extends BaseServiceTest {
     }
 
     @Test
-    public void deletePromoCode() {
+    public void expirePromoCode() {
         String mbrId = "ADMIN";
         List<String> promoCodeList = Arrays.asList(promoCode1, promoCode2);
 
-        int result = promoService.deletePromoCode(mbrId, promoCodeList);
+        int result = promoService.expirePromoCode(mbrId, promoCodeList);
 
         assertThat(result).isEqualTo(2);
     }
 
     @Test
-    public void deletePromoCode_promoCode_empty() {
-        assertException(IllegalArgumentException.class, "promoCodeList size is greater than 0");
+    public void expirePromoCode_promoCode_empty() {
+        assertException(IllegalArgumentException.class, "promoCodeList size is 0");
 
         String mbrId = "ADMIN";
         List<String> promoCodeList = Arrays.asList();
 
-        promoService.deletePromoCode(mbrId, promoCodeList);
+        promoService.expirePromoCode(mbrId, promoCodeList);
     }
 
     @Test
-    public void deletePromoCode_promoCode_null() {
+    public void expirePromoCode_promoCode_null() {
         assertException(IllegalArgumentException.class, "promoCodeList is null");
 
         String mbrId = "ADMIN";
         List<String> promoCodeList = null;
 
-        promoService.deletePromoCode(mbrId, promoCodeList);
+        promoService.expirePromoCode(mbrId, promoCodeList);
     }
+
+    @Test
+    public void deletePromoCode() {
+        List<String> promoCodeList = Arrays.asList(promoCode1, promoCode2);
+
+        int result = promoService.deletePromoCode(promoCodeList);
+
+        assertThat(result).isEqualTo(2);
+    }
+
+    @Test
+    public void deletePromoCode_promoCodeList_null() {
+        assertException(IllegalArgumentException.class, "promoCodeList is null");
+        List<String> promoCodeList = null;
+
+        promoService.deletePromoCode(promoCodeList);
+    }
+
+    @Test
+    public void deletePromoCode_promoCodeList_size_0() {
+        assertException(IllegalArgumentException.class, "promoCodeList size is 0");
+        List<String> promoCodeList = Arrays.asList();
+
+        promoService.deletePromoCode(promoCodeList);
+    }
+
 
     @Test
     public void checkExistPromoCode() {

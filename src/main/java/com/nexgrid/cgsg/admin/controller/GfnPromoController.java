@@ -69,10 +69,10 @@ public class GfnPromoController {
                 .build();
     }
 
-    @RequestMapping("/deletePromoCode")
-    public ResultInfo deletePromoCode(@RequestBody @Validated GfnPromoInfoParam promoInfo, Principal principal) {
+    @RequestMapping("/expirePromoCode")
+    public ResultInfo expirePromoCode(@RequestBody @Validated GfnPromoInfoParam promoInfo, Principal principal) {
 
-        int result = promoService.deletePromoCode(principal.getName(), promoInfo.getPromoCodeList());
+        int result = promoService.expirePromoCode(principal.getName(), promoInfo.getPromoCodeList());
 
         return ResultInfo.builder()
                 .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
@@ -80,6 +80,16 @@ public class GfnPromoController {
                 .build();
     }
 
+    @RequestMapping("/deletePromoCode")
+    public ResultInfo deletePromoCode(@RequestBody @Validated GfnPromoInfoParam promoInfo, Principal principal) {
+
+        int result = promoService.deletePromoCode(promoInfo.getPromoCodeList());
+
+        return ResultInfo.builder()
+                         .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+                         .message(result + "건 삭제처리 되었습니다.")
+                         .build();
+    }
 
 
 }
