@@ -346,7 +346,7 @@ pre code
 .table th,
 .table td
 {
-    padding: .75rem 2rem;
+    /*padding: .75rem 2rem;*/
 }
 
 .table.table-xl th,
