@@ -63,7 +63,6 @@
 <script>
     import ModalMenu from '~/components/pages/menu/ModalMenu.vue';
     import ModalUpMenu from '~/components/pages/menu/ModalUpMenu.vue';
-    import axios from 'axios';
 
     export default {
         name: "index",

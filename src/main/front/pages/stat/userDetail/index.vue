@@ -93,6 +93,7 @@
                                         :class="'btn btn-primary btn-secondary'"
                                         :name    = "'가입자상세리스트.xls'"
                                         :fields="excelFields"
+                                        type="csv"
                                         :data='items'>
                                     엑셀
                                 </download-excel>
@@ -177,18 +178,19 @@
                 excelFields:{
                     'GFN ID': 'gfnId',
                     'CTN': 'ctn',
-                    '가입자번호': 'subNo',
-                    '상품구분': 'prodCd',
-                    '요금제코드': 'entrItemCode',
-                    '요금제명': 'entrItemNm',
-                    '부가서비스코드': 'addItemCode',
-                    '부가서비스명': 'addItemNm',
-                    '상태': 'ctnStusCode',
-                    '가입일시': 'createDt',
-                    '마지막로그인': 'lastLoginDt',
+                    'SUB_NO': 'subNo',
+                    'PROD_CD': 'prodCd',
+                    'ENTR_ITEM_CODE': 'entrItemCode',
+                    'ENTR_ITEM_NM': 'entrItemNm',
+                    'ADD_ITEM_CODE': 'addItemCode',
+                    'ADD_ITEM_NM': 'addItemNm',
+                    'CTN_STUS_CODE': 'ctnStusCode',
+                    'CREATE_DT': 'createDt',
+                    'LAST_LOGIN_DT': 'lastLoginDt',
                 },
                 perPage: 10,
                 currentPage: 1,
+                rows:0,
             };
         },
 
@@ -201,7 +203,11 @@
         methods:{
             async selectUserDetailStat() {
                 try {
-                    const {data} = await this.$axios.post(process.env.contextPath + '/stat/selectUserDetailStat', this.params);
+                    const params = {...this.params};
+                    if(params.createStartDt) params.createStartDt = params.createStartDt.replace(/-/g, '');
+                    if(params.createEndDt) params.createEndDt = params.createEndDt.replace(/-/g, '');
+
+                    const {data} = await this.$axios.post(process.env.contextPath + '/stat/selectUserDetailStat', params);
                     this.items = data.data;
                 } catch (e) {
                     await this.$bvModal.msgBoxOk(e.message);
