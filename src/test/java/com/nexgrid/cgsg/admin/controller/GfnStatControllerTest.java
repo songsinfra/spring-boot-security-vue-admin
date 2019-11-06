@@ -28,7 +28,7 @@ public class GfnStatControllerTest extends BaseControllerTest {
         GfnMasterInfoParam gfnMasterInfo = GfnMasterInfoParam.builder()
                 .entrItemCode("2222222")
                 .addItemCode("Test1234")
-                .createStartDt("")
+                .createStartDt("19801111")
                 .createEndDt("")
                 .subNo("7")
                 .ctn("ctn")
@@ -41,6 +41,27 @@ public class GfnStatControllerTest extends BaseControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
+        ;
+    }
+
+    @Test
+    public void selectUserStat_date_다른날짜포멧() throws Exception {
+        GfnMasterInfoParam gfnMasterInfo = GfnMasterInfoParam.builder()
+                                                             .entrItemCode("2222222")
+                                                             .addItemCode("Test1234")
+                                                             .createStartDt("1980-11-23")
+                                                             .createEndDt("")
+                                                             .subNo("7")
+                                                             .ctn("ctn")
+                                                             .build();
+
+        mvc.perform(post("/stat/selectUserDetailStat")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(gfnMasterInfo))
+        )
+           .andDo(print())
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.code").value(SystemStatusCode.INVALID_PARAMETER.getCode()))
         ;
     }
 

@@ -55,10 +55,10 @@
                 AND M.ADD_ITEM_CODE = #{addItemCode}
             </if>
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(createStartDt)">
-                AND M.CREATE_DT >= #{createStartDt}
+                AND M.CREATE_DT >= to_date(#{createStartDt}, 'yyyyMMdd')
             </if>
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(createEndDt)">
-                AND M.CREATE_DT <![CDATA[<]]>= #{createEndDt}
+                AND M.CREATE_DT <![CDATA[<]]>= to_date(#{createEndDt}, 'yyyyMMdd')
             </if>
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(subNo)">
                 AND M.SUB_NO = #{subNo}
