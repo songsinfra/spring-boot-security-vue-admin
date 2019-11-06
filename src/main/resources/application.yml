@@ -1,10 +1,6 @@
 spring:
   datasource:
 #    jndi-name: jdbc/gfnDB
-#    driver-class-name: oracle.jdbc.OracleDriver
-#    url: jdbc:oracle:thin:@nexgrid2.iptime.org:11522:ADCBDBO
-#    username: gfn
-#    password: gfn
   http:
     encoding:
       charset: utf-8
@@ -23,7 +19,11 @@ mybatis:
 server:
   servlet:
     context-path: /api
+  port: 8081
 
+cgsg:
+  aliveLog:
+    milliseconds: 300000
 --- ## 개발
 spring:
   profiles: local
