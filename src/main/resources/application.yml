@@ -19,7 +19,7 @@ mybatis:
 server:
   servlet:
     context-path: /api
-  port: 8081
+  port: 8080
 
 cgsg:
   aliveLog:
