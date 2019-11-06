@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-12 col-xl-12">
                 <div class="card">
-                    <div class="card-header pb-0">
+                    <div class="card-header pb-0" v-if="isAdmin()">
                         <ul class="list-inline float-right m-0">
                             <li><b-button @click="deleteMbrInfo" class="btn-danger">삭제</b-button></li>
                             <li><b-button @click="createMbrInfo" class="btn-primary">등록</b-button></li>
@@ -76,6 +76,9 @@
         computed: {
             rows() {
                 return this.items.length
+            },
+            user() {
+                return this.$store.state.login.authUser;
             }
         },
 
@@ -152,6 +155,10 @@
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },
+
+            isAdmin() {
+                return this.user.mbrId === 'admin';
+            }
         }
 
     }

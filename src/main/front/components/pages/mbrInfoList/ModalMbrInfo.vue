@@ -199,7 +199,9 @@
                 this.$nextTick(async () => {
                     try {
                         if (this.$props.state === 'CREATE') {
-                            this.mbrInfo = {};
+                            this.mbrInfo = {
+                                roleCd: 'R-002'
+                            };
                             this.title = "회원정보 등록"
                             return;
                         }
