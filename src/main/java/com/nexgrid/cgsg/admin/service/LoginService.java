@@ -135,7 +135,7 @@ public class LoginService {
 
 		mapper.updateLoginFailCnt(LoginInfo.builder()
 				.mbrId(mbrId)
-				.loginFailCnt(loginFailCnt)
+				.loginFailCnt(String.valueOf(pwdFailCnt))
 				.loginFailDt(CommonUtil.getToday())
 				.build()
 		); // 비밀번호 오류 회수 +1
