@@ -140,9 +140,18 @@
 	    <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(mbrPwOld1)">
 		    ,mbr_pw_old1 = #{mbrPwOld1}
 	    </if>
-	     <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(mbrPwOld2)">
+	    <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(mbrPwOld2)">
 		    ,mbr_pw_old2 = #{mbrPwOld2}
 	    </if>
+		<if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(mbrNm)">
+		    ,MBR_NM = #{mbrNm}
+	    </if>
+		<if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(mbrCompany)">
+			,company = #{mbrCompany}
+		</if>
+		<if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(mbrDptmt)">
+			,department = #{mbrDptmt}
+		</if>
 		WHERE mbr_id = #{mbrId}
 	</update>
 	

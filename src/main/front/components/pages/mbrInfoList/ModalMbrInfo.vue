@@ -43,6 +43,7 @@
                         id="mbrId-1"
                         v-model="mbrInfo.mbrId"
                         v-validate="'required'"
+                        :disabled="state !=='CREATE'"
                         data-vv-name="아이디"
                 ></b-form-input>
                 <b-form-invalid-feedback :state="!errors.has('아이디')">
