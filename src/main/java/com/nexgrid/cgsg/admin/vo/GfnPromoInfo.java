@@ -28,4 +28,5 @@ public class GfnPromoInfo {
     @Size(max = 20, message = "contactNo 의 크기가 20보다 큽니다")
     private String contactNo;
     private String gfnId;
+    private String name;
 }

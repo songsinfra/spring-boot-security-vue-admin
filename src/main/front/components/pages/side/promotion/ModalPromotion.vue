@@ -22,6 +22,20 @@
                 ></b-form-input>
             </b-form-group>
             <b-form-group
+                    label="성명:"
+                    label-for="name-1"
+            >
+                <b-form-input
+                        id="name-1"
+                        v-model="promoInfo.name"
+                        data-vv-name="성명"
+                        :disabled="state === 'UPDATE'"
+                ></b-form-input>
+                <b-form-invalid-feedback :state="!errors.has('성명')">
+                    {{errors.first('성명')}}
+                </b-form-invalid-feedback>
+            </b-form-group>
+            <b-form-group
                     label="이메일:"
                     label-for="email-1"
             >
@@ -126,7 +140,7 @@
 
             async ok() {
                 try {
-                    const {url, params} = this.$props.state === 'CREATE' ? this.create() : this.update();
+                    const {url, params} = this.$props.state === 'CREATE' ? this.createInfo() : this.updateInfo();
                     const {data} = await this.$axios.$post( process.env.contextPath + url, params);
 
                     if(this.$props.state === 'CREATE'){
@@ -175,18 +189,19 @@
                 ]);
             },
 
-            create() {
+            createInfo() {
                 return {
                     url: "/side/insertPromo",
                     params: {
                         email: this.promoInfo.email,
                         dueDt: this.dueDt && this.dueDt.replace(/-/g, ''),
                         contactNo: this.promoInfo.contactNo,
+                        name: this.promoInfo.name,
                     }
                 };
             },
 
-            update() {
+            updateInfo() {
                 return {
                     url: "/side/updatePromo",
                     params: {

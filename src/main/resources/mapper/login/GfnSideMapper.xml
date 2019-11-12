@@ -11,6 +11,7 @@
         <result property="statusCd" 		    column="STATUS_CD"/>
         <result property="contactNo" 		    column="CONTACT_NO"/>
         <result property="gfnId" 		        column="GFN_ID"/>
+        <result property="name" 		        column="NAME"/>
     </resultMap>
 
     <insert id="insertPromo">
@@ -24,6 +25,7 @@
             ,STATUS_CD
             ,CONTACT_NO
             ,GFN_ID
+            ,NAME
 		)
 		VALUES
 		(
@@ -35,6 +37,7 @@
 			,#{statusCd}
 			,#{contactNo, jdbcType=VARCHAR}
 			,#{gfnId}
+			,#{name}
 		)
     </insert>
 
@@ -48,6 +51,7 @@
             ,STATUS_CD
             ,CONTACT_NO
             ,GFN_ID
+            ,NAME
         FROM TB_PROMO_CODE
         <where>
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(promoCode)">
@@ -58,6 +62,9 @@
             </if>
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(contactNo)">
                 AND CONTACT_NO = #{contactNo}
+            </if>
+            <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(name)">
+                AND NAME = #{name}
             </if>
         </where>
         ORDER BY CREATE_DT DESC

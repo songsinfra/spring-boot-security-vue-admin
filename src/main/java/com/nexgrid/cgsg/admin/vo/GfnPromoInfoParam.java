@@ -29,6 +29,7 @@ public class GfnPromoInfoParam {
     private String contactNo;
 
     private String mbrId;
+    private String name;
 
     private List<String> promoCodeList;
 }

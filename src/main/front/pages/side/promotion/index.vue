@@ -7,6 +7,14 @@
                         <div class="form-row float-right align-items-center">
                             <div class="col-auto">
                                 <b-form-input
+                                        v-model="params.name"
+                                        :size="'sm'"
+                                        placeholder="성명"
+                                        @keydown.enter="selectPromoList"
+                                ></b-form-input>
+                            </div>
+                            <div class="col-auto">
+                                <b-form-input
                                         v-model="params.promoCode"
                                         :size="'sm'"
                                         placeholder="코드"
@@ -34,12 +42,22 @@
                             <div class="col-auto">
                                 <b-button @click="createPromo" class="btn-primary">생성</b-button>
                             </div>
+                            <div class="col-auto">
+                                <download-excel
+                                        :class="'btn btn-primary btn-secondary'"
+                                        :name    = "'프로모션코드리스트.xls'"
+                                        :fields="excelFields"
+                                        :fetch='getSortedData'>
+                                    엑셀
+                                </download-excel>
+                            </div>
                         </div>
                     </div>
                     <div class="card-content collapse show">
                         <div class="card-body">
                             <div class="table-responsive">
                                 <b-table
+                                        ref="grid"
                                         :items="items"
                                         :fields="fields"
                                         :bordered="true"
@@ -81,11 +99,15 @@
 
 <script>
     import ModalPromotion from "~/components/pages/side/promotion/ModalPromotion";
+    import JsonExcel from 'vue-json-excel';
 
     export default {
         name: "index",
-        components: {ModalPromotion},
 
+        components: {
+            ModalPromotion,
+            downloadExcel : JsonExcel
+        },
         beforeMount() {
             this.selectPromoList();
         },
@@ -96,8 +118,8 @@
 
         computed: {
             tableRows() {
-                return this.items.length
-            }
+                return this.items.length;
+            },
         },
 
         data() {
@@ -105,15 +127,16 @@
                 fields: [
                     {key: 'select', label: '선택'},
                     {key: 'promoCode', label: '코드'},
+                    {key: 'name', label: '성명'},
                     {key: 'email', label: '이메일'},
                     {key: 'contactNo', label: '연락처'},
-                    {key: 'createDt', label: '발급일',
+                    {key: 'createDt', label: '발급일', sortable: true,
                         formatter: (value) => this.convertDateFormater(value)
                     },
-                    {key: 'dueDt', label: '만료일',
+                    {key: 'dueDt', label: '만료일', sortable: true,
                         formatter: (value) => this.convertDateFormater(value)
                     },
-                    {key: 'statusCd', label: '상태',
+                    {key: 'statusCd', label: '상태', sortable: true,
                         formatter: (value) => this.getStatusNm(value)
                     },
                     {key: 'action', label: '수정'},
@@ -122,11 +145,33 @@
                 params: {
                     promoCode: '',
                     email: '',
+                    name: '',
                 },
                 selectedPromo:{},
                 modalState:'',
                 perPage: 10,
                 currentPage: 1,
+                excelFields:{
+                    '코드': 'promoCode',
+                    '성명': 'name',
+                    'EMAIL': 'email',
+                    '연락처': {
+                        field: 'contactNo',
+                        callback: this.convertToStringForExcel
+                    },
+                    '발급일': {
+                        field: 'createDt',
+                        callback: this.convertDateFormater
+                    },
+                    '만료일': {
+                        field: 'dueDt',
+                        callback: this.convertDateFormater
+                    },
+                    '상태': {
+                        field: 'statusCd',
+                        callback: this.getStatusNm
+                    },
+                },
             };
         },
 
@@ -225,6 +270,14 @@
                     await this.$bvModal.msgBoxOk(e.message);
                 }
 
+            },
+
+            convertToStringForExcel(value) {
+                return '=\"' + value + '\"';
+            },
+
+            getSortedData() {
+                return this.$refs.grid.sortedItems;
             }
         },
     }
