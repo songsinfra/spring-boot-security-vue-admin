@@ -113,7 +113,7 @@
                                 </b-table>
                                 <b-pagination
                                         v-model="currentPage"
-                                        :total-rows="rows"
+                                        :total-rows="tableRows"
                                         :per-page="perPage"
                                         aria-controls="my-table"
                                         :align="'center'"
@@ -137,12 +137,24 @@
         },
 
         computed: {
-            rows() {
+            tableRows() {
                 return this.items.length
+            },
+            yesterday(){
+                return this.$moment().subtract(1, 'days').format('YYYY-MM-DD');
             }
         },
 
         beforeMount() {
+            this.params = {
+                entrItemCode: '',
+                addItemCode: '',
+                createStartDt: this.yesterday,
+                createEndDt: this.yesterday,
+                subNo: '',
+                ctn: '',
+            };
+
             this.selectUserDetailStat();
             this.selectEntrItemList();
             this.getAddItemList();
@@ -192,12 +204,6 @@
                 currentPage: 1,
                 rows:0,
             };
-        },
-
-        computed:{
-            date(){
-                return this.$moment().format('YYYYMMDD');
-            }
         },
 
         methods:{

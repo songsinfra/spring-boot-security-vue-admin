@@ -39,7 +39,7 @@
                         </b-table>
                         <b-pagination
                                 v-model="currentPage"
-                                :total-rows="rows"
+                                :total-rows="tableRows"
                                 :per-page="perPage"
                                 aria-controls="my-table"
                                 :align="'center'"
@@ -74,7 +74,7 @@
         },
 
         computed: {
-            rows() {
+            tableRows() {
                 return this.items.length
             }
         },
