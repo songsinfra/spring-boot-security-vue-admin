@@ -77,8 +77,8 @@
                 ,'가입자' as join_type
                 , sum(tot_user_cnt) as total_sum
                 from TB_SIGNUP_STAT
-                WHERE  SIGNUP_DATE BETWEEN #{currentStartDt} AND #{currentEndDt}
-                    OR SIGNUP_DATE BETWEEN #{lastYearStartDt} AND #{lastYearEndDt}
+                WHERE  to_char(SIGNUP_DATE, 'yyyyMMdd') BETWEEN #{currentStartDt} AND #{currentEndDt}
+                    OR to_char(SIGNUP_DATE, 'yyyyMMdd') BETWEEN #{lastYearStartDt} AND #{lastYearEndDt}
                 group by trunc(signup_date, 'month')
                 order by trunc(signup_date, 'month')
             )
@@ -96,8 +96,8 @@
                 ,'무료가입자' as join_type
                 , sum(free_user_cnt) as free_sum
                 from TB_SIGNUP_STAT
-                WHERE  SIGNUP_DATE BETWEEN #{currentStartDt} AND #{currentEndDt}
-                    OR SIGNUP_DATE BETWEEN #{lastYearStartDt} AND #{lastYearEndDt}
+                WHERE  to_char(SIGNUP_DATE, 'yyyyMMdd') BETWEEN #{currentStartDt} AND #{currentEndDt}
+                    OR to_char(SIGNUP_DATE, 'yyyyMMdd') BETWEEN #{lastYearStartDt} AND #{lastYearEndDt}
                 group by trunc(signup_date, 'month')
                 order by trunc(signup_date, 'month')
             )
@@ -105,7 +105,7 @@
             pivot(
                 sum(free_sum)
                 for d_month
-                in( ${lastYearField} as LAST_YEAR_DATA, ${prevMonthField} as PREV_MONTH_DATA, ${lastMonthField} as LAST_MONTH_DATA, ${currentMonthField} as CURRENT_MONTH_DATA)
+                in( '''||${lastYearField}||''' as LAST_YEAR_DATA, '''||${prevMonthField}||''' as PREV_MONTH_DATA, '''||${lastMonthField}||''' as LAST_MONTH_DATA, '''||${currentMonthField}||''' as CURRENT_MONTH_DATA)
             )
         )
         union all
@@ -114,8 +114,8 @@
                 ,'유료가입자' as join_type
                 , sum( paid_user_cnt) as paid_sum
                 from TB_SIGNUP_STAT
-                WHERE  SIGNUP_DATE BETWEEN #{currentStartDt} AND #{currentEndDt}
-                    OR SIGNUP_DATE BETWEEN #{lastYearStartDt} AND #{lastYearEndDt}
+                WHERE  to_char(SIGNUP_DATE, 'yyyyMMdd') BETWEEN #{currentStartDt} AND #{currentEndDt}
+                    OR to_char(SIGNUP_DATE, 'yyyyMMdd') BETWEEN #{lastYearStartDt} AND #{lastYearEndDt}
                 group by trunc(signup_date, 'month')
                 order by trunc(signup_date, 'month')
             )
@@ -123,7 +123,7 @@
             pivot(
                 sum(paid_sum)
                 for d_month
-                in( ${lastYearField} as LAST_YEAR_DATA, ${prevMonthField} as PREV_MONTH_DATA, ${lastMonthField} as LAST_MONTH_DATA, ${currentMonthField} as CURRENT_MONTH_DATA)
+                in( '''||${lastYearField}||''' as LAST_YEAR_DATA, '''||${prevMonthField}||''' as PREV_MONTH_DATA, '''||${lastMonthField}||''' as LAST_MONTH_DATA, '''||${currentMonthField}||''' as CURRENT_MONTH_DATA)
             )
         )
 
