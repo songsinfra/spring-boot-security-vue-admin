@@ -93,7 +93,6 @@
                                         :class="'btn btn-primary btn-secondary'"
                                         :name    = "'가입자상세리스트.xls'"
                                         :fields="excelFields"
-                                        type="csv"
                                         :data='items'>
                                     엑셀
                                 </download-excel>
@@ -189,20 +188,43 @@
                 addInfoItems : [],
                 excelFields:{
                     'GFN ID': 'gfnId',
-                    'CTN': 'ctn',
-                    'SUB_NO': 'subNo',
-                    'PROD_CD': 'prodCd',
-                    'ENTR_ITEM_CODE': 'entrItemCode',
+                    'CTN': {
+                        field: 'ctn',
+                        callback: this.convertToStringForExcel
+                    },
+                    'SUB_NO': {
+                        field: 'subNo',
+                        callback: this.convertToStringForExcel
+                    },
+                    'PROD_CD': {
+                        field: 'prodCd',
+                        callback: this.convertToStringForExcel
+                    },
+                    'ENTR_ITEM_CODE': {
+                        field: 'entrItemCode',
+                        callback: this.convertToStringForExcel
+                    },
                     'ENTR_ITEM_NM': 'entrItemNm',
-                    'ADD_ITEM_CODE': 'addItemCode',
+                    'ADD_ITEM_CODE': {
+                        field: 'addItemCode',
+                        callback: this.convertToStringForExcel
+                    },
                     'ADD_ITEM_NM': 'addItemNm',
-                    'CTN_STUS_CODE': 'ctnStusCode',
-                    'CREATE_DT': 'createDt',
-                    'LAST_LOGIN_DT': 'lastLoginDt',
+                    'CTN_STUS_CODE': {
+                        field: 'ctnStusCode',
+                        callback: this.convertToStringForExcel
+                    },
+                    'CREATE_DT': {
+                        field: 'createDt',
+                        callback: this.convertToStringForExcel
+                    },
+                    'LAST_LOGIN_DT': {
+                        field: 'lastLoginDt',
+                        callback: this.convertToStringForExcel
+                    },
                 },
                 perPage: 10,
                 currentPage: 1,
-                rows:0,
             };
         },
 
@@ -242,6 +264,10 @@
                 this.$set(this.params, 'subNo', '');
                 this.$set(this.params, 'ctn', '');
             },
+
+            convertToStringForExcel(value) {
+                return '=\"' + value + '\"';
+            }
         },
     }
 </script>
