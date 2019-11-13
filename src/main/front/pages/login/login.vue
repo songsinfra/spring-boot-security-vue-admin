@@ -29,6 +29,7 @@
                                                        v-model="user.username"
                                                        v-validate="'required'"
                                                        data-vv-name="아이디"
+                                                       ref="username"
                                                 >
                                                 <b-form-invalid-feedback :state="!errors.has('아이디')">
                                                     {{errors.first('아이디')}}
@@ -92,6 +93,10 @@
                     password: '',
                 }
             }
+        },
+
+        mounted() {
+            this.$refs.username.focus();
         },
 
         methods : {
