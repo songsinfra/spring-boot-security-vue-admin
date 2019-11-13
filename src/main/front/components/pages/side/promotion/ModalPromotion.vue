@@ -228,7 +228,7 @@
                         this.title = "프로모션 코드 변경";
                         this.promoInfo = {...this.$props.selectedPromo};
                         this.dueDt = this.$moment(this.promoInfo.dueDt).format('YYYY-MM-DD');
-                        this.okButtonTitle = this.promoInfo.statusCd === '2' ? '재사용' : '기간변경';
+                        this.okButtonTitle = this.promoInfo.statusCd === '2' || this.promoInfo.statusCd === '3' ? '재사용' : '기간변경';
 
                      });
                 } catch (e) {
