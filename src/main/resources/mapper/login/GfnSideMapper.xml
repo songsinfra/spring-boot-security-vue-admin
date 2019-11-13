@@ -37,7 +37,7 @@
 			,#{statusCd}
 			,#{contactNo, jdbcType=VARCHAR}
 			,#{gfnId}
-			,#{name}
+			,#{name, jdbcType=VARCHAR}
 		)
     </insert>
 
@@ -94,7 +94,7 @@
     <update id="updatePromo">
         UPDATE TB_PROMO_CODE
         <set>
-            <if test="dueDt != null">DUE_DT=to_date(#{dueDt}||'235959', 'yyyyMMddhh24miss'),</if>
+            <if test="dueDt != null">DUE_DT=to_date(#{dueDt}, 'yyyyMMddhh24miss'),</if>
             <if test="mbrId != null">MBR_ID=#{mbrId},</if>
             <if test="statusCd != null">STATUS_CD=#{statusCd},</if>
         </set>
@@ -105,7 +105,7 @@
         UPDATE TB_GFN_MASTER
         <set>
             UPDATE_DT= sysdate
-            <if test="dueDt != null">,DUE_DT= to_date(#{dueDt}||'235959', 'yyyymmddhh24miss')</if>
+            <if test="dueDt != null">,DUE_DT= to_date(#{dueDt}, 'yyyymmddhh24miss')</if>
         </set>
         WHERE GFN_ID = #{gfnId}
     </update>

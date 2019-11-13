@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -46,10 +46,12 @@ public class GfnPromoService {
 
     public int updatePromo(GfnPromoInfoParam promoInfo) {
 
-        if (StatusCode.EXPIRATION.getCode().equalsIgnoreCase(promoInfo.getStatusCd())) {
+        if (StatusCode.EXPIRATION.getCode().equalsIgnoreCase(promoInfo.getStatusCd())||
+                StatusCode.TERM_EXPIRATION.getCode().equalsIgnoreCase(promoInfo.getStatusCd())) {
             promoInfo.setStatusCd(StatusCode.UNUSED.getCode());
         }
 
+        promoInfo.setDueDt(promoInfo.getDueDt()+"235959"); // StatusCode가 기간연장, 재사용시 235959 붙여줌
         return this.updatePromoRaw(promoInfo);
     }
 
@@ -96,7 +98,7 @@ public class GfnPromoService {
         for (String promoCode : promoCodeList) {
             result += this.updatePromoRaw(GfnPromoInfoParam.builder()
                     .promoCode(promoCode)
-                    .dueDt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                    .dueDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
                     .statusCd(StatusCode.EXPIRATION.getCode())
                     .mbrId(mbrId)
                     .build());
@@ -113,7 +115,7 @@ public class GfnPromoService {
         for (String promoCode : promoCodeList) {
             result += this.deletePromo(GfnPromoInfoParam.builder()
                                                            .promoCode(promoCode)
-                                                           .dueDt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                                                           .dueDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
                                                            .build());
         }
         return result;

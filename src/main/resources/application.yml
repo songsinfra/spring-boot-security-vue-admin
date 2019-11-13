@@ -10,7 +10,7 @@ spring:
 debug: true
 logging:
   level:
-    com.nexgrid.cgsg.admin.mapper : trace
+    com.nexgrid.cgsg.admin.mapper : debug
 
 mybatis:
   type-aliases-package: com.nexgrid.cgsg.admin.vo

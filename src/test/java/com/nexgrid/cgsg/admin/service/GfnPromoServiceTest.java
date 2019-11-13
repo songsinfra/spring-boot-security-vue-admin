@@ -158,7 +158,7 @@ public class GfnPromoServiceTest extends BaseServiceTest {
                 .email(EMAIL)
                 .build());
 
-        assertThat(gfnPromoInfos.get(0).getDueDt()).isEqualTo(promoInfo.getDueDt());
+        assertThat(gfnPromoInfos.get(0).getDueDt()).isEqualTo(promoInfo.getDueDt().replace("235959", ""));
     }
 
     @Test
@@ -176,7 +176,7 @@ public class GfnPromoServiceTest extends BaseServiceTest {
                 .email(EMAIL)
                 .build());
 
-        assertThat(gfnPromoInfos.get(0).getDueDt()).isEqualTo(promoInfo.getDueDt());
+        assertThat(gfnPromoInfos.get(0).getDueDt()).isEqualTo(promoInfo.getDueDt().replace("235959", ""));
         assertThat(gfnPromoInfos.get(0).getStatusCd()).isEqualTo(StatusCode.UNUSED.getCode());
     }
 

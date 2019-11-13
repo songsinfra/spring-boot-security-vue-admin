@@ -25,12 +25,12 @@ public class GfnStatServiceTest extends BaseServiceTest {
     @Test
     public void selectUserStat() {
         GfnMasterInfoParam gfnMasterInfo = GfnMasterInfoParam.builder()
-                .entrItemCode("2222222")
-                .addItemCode("Test1234")
+                .entrItemCode("")
+                .addItemCode("GFN0000007")
                 .createStartDt("")
                 .createEndDt("")
-                .subNo("7")
-                .ctn("ctn")
+                .subNo("500137677005")
+                .ctn("010043307609")
                 .build();
 
         List<GfnMasterInfo> gfnMasterInfos = gfnStatService.selectUserDetailStat(gfnMasterInfo);
@@ -55,7 +55,7 @@ public class GfnStatServiceTest extends BaseServiceTest {
     @Test
     public void selectJoinUserStat() {
         GfnJoinStatInfoParam joinStatInfo = new GfnJoinStatInfoParam();
-        joinStatInfo.setDate("20191023");
+        joinStatInfo.setDate("20191105");
 
         List<GfnJoinStatMonthInfo> gfnJoinStatMonthInfos = gfnStatService.selectJoinUserStat(joinStatInfo);
         assertThat(gfnJoinStatMonthInfos).size().isEqualTo(3);
@@ -74,8 +74,8 @@ public class GfnStatServiceTest extends BaseServiceTest {
     @Test
     public void selectJoinStatDetailList() {
         GfnJoinStatDetailInfoParam joinStatDetailInfo = GfnJoinStatDetailInfoParam.builder()
-                .startDt("20191001")
-                .endDt("20191030")
+                .startDt("20181001")
+                .endDt("20201030")
                 .build();
         List<GfnJoinStatDetailInfo> gfnJoinStatDetailInfos = gfnStatService.selectJoinStatDetailList(joinStatDetailInfo);
 

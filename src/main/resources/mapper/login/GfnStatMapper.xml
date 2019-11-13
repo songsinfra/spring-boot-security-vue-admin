@@ -135,7 +135,7 @@
          PAID_USER_CNT,
          TOT_USER_CNT
         FROM TB_SIGNUP_STAT
-        WHERE SIGNUP_DATE BETWEEN #{startDt} AND #{endDt}
+        WHERE to_char(SIGNUP_DATE, 'yyyyMMdd') BETWEEN #{startDt} AND #{endDt}
         ORDER BY SIGNUP_DATE
     </select>
 
