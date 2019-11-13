@@ -192,7 +192,7 @@
                     case '1':
                         return '사용';
                     case '2':
-                        return '만료';
+                        return '만료철';
                     case '3':
                         return '기간만료';
                 }

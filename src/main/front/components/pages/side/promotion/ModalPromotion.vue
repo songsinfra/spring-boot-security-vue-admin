@@ -81,7 +81,7 @@
                 >
                     <option value="0">미사용</option>
                     <option value="1">사용</option>
-                    <option value="2">만료</option>
+                    <option value="2">만료처리</option>
                     <option value="3">기간만료</option>
                 </b-form-select>
                 <b-form-invalid-feedback :state="!errors.has('상태')">
