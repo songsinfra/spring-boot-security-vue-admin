@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nexgrid.cgsg.admin.mapper.LoginMapper">
-	
+
+	<!-- 로그인정보 검색 -->
 	<select id="getLoginInfo" resultType="com.nexgrid.cgsg.admin.vo.LoginInfo">
 		/* LoginMapper.getLoginInfo */
 		
@@ -17,6 +18,7 @@
 		AND MBR_PW = #{mbrPw}
 	</select>
 
+	<!-- 로그인상세정보 검색 -->
 	<select id="getLoginInfo2" resultType="com.nexgrid.cgsg.admin.vo.LoginInfo">
 		/* LoginMapper.getLoginInfo2 */
 		
@@ -38,6 +40,7 @@
 -- 		AND use_yn = 'Y'
 	</select>
 
+	<!-- 아이디별 상위 메뉴 검색 -->
 	<select id="getCommonMenuList" resultType="com.nexgrid.cgsg.admin.vo.MenuInfo">
 		/* LoginMapper.getCommonMenuList */
 		
@@ -66,6 +69,7 @@
 		]]>
 	</select>
 
+	<!-- 아이디별 하위메뉴 검색 -->
 	<select id="getSubMenuList2" resultType="com.nexgrid.cgsg.admin.vo.MenuInfo">
 		/* LoginMapper.getSubMenuList2 */
 		
@@ -85,8 +89,9 @@
 		)
 		AND C.USE_YN = 'Y'
 		ORDER BY C.ORD_NO
-	</select>	
+	</select>
 
+	<!-- 모든 하위메뉴 검색 -->
 	<select id="getAllSubMenuList" resultType="com.nexgrid.cgsg.admin.vo.MenuInfo">
 		/* LoginMapper.getAllSubMenuList */
 		
@@ -101,6 +106,7 @@
 		AND		 USE_YN = 'Y'
 	</select>
 
+	<!-- 로그인실패 커운트 증가 수정 -->
 	<insert id="updateLoginFailCnt" parameterType="com.nexgrid.cgsg.admin.vo.LoginInfo">
 		/* LoginMapper.updateLoginFailCnt */
 		
@@ -110,7 +116,9 @@
             LOGIN_FAIL_DT = TO_DATE(#{loginFailDt}, 'yyyymmddhh24miss')
 		WHERE	MBR_ID = #{mbrId}
 	</insert>
-	
+
+
+	<!-- 로그인 사용정보 N으로 수정 -->
 	<update id="setUserLock">
 		/* LoginMapper.setUserLock */
 		
@@ -120,6 +128,7 @@
 		WHERE	MBR_ID = #{mbrId}
 	</update>
 
+	<!-- 로그인실패카운트 초기화 수정 -->
 	<update id="setLoginFailCntInit">
 		/* LoginMapper.setLoginFailCntInit */
 		
@@ -130,6 +139,7 @@
 		WHERE MBR_ID = #{mbrId}
 	</update>
 
+	<!-- 로그인사용정보, 실패카운트 초기화 수정 -->
    	<update id="setUserUnLockAndResetFailCnt">
    		/* LoginMapper.setUserUnLock */
    		
@@ -138,8 +148,9 @@
 			LOGIN_FAIL_CNT = 0
            ,USE_YN = 'Y'
 		WHERE MBR_ID = #{mbrId}
-	</update>	
+	</update>
 
+	<!-- 아이디로 로그인정보 검색 -->
 	<select id="getLoginInfoOnlyId" resultType="com.nexgrid.cgsg.admin.vo.LoginInfo">
 		/* LoginMapper.getLoginInfoOnlyId */
 		
@@ -151,7 +162,8 @@
 		WHERE 1 = 1
 		AND MBR_ID = #{mbrId}
 	</select>
-	
+
+	<!-- 비빌번호 수정날짜 검색 -->
 	<select id="getApplyDate" resultType="String">
 		/* LoginMapper.getApplyDate */
 
@@ -161,6 +173,7 @@
 	 	WHERE mbr_id = #{mbrId}
 	</select>
 
+	<!-- 이전 사용 비빌번호 검색 -->
     <select id="getOldPwValidate" resultType="int">
     	/* LoginMapper.getOldPwValidate */
     	
@@ -171,6 +184,7 @@
         AND ( mbr_pw = #{mbrPw} OR mbr_pw_old1 = #{mbrPw} OR mbr_pw_old2 = #{mbrPw} )
 	</select>
 
+	<!-- 로그인 성공 날짜 수정 -->
 	<update id="updateLoginEndDt">
 		/* LoginMapper.updateLoginEndDt */
 		

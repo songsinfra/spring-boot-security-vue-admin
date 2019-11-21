@@ -31,6 +31,7 @@
             <result property="totUserCnt" 		    column="TOT_USER_CNT"/>
     </resultMap>
 
+    <!-- 가입자상세 리스트 검색 -->
     <select id="selectUserDetailStat" resultMap="gfnMasterMap">
         SELECT
               M.GFN_ID
@@ -71,14 +72,15 @@
     </select>
 
 
+    <!-- 가입자 통계 검색 -->
     <select id="selectJoinUserStat" resultMap="gfnJoinStatMap">
         select JOIN_TYPE, LAST_YEAR_DATA, PREV_MONTH_DATA, LAST_MONTH_DATA, CURRENT_MONTH_DATA from ( WITH TEMP AS (
                select to_char(trunc(signup_date, 'month'), 'YYYYMM') as d_month
                 ,'가입자' as join_type
                 , sum(tot_user_cnt) as total_sum
                 from TB_SIGNUP_STAT
-                WHERE  to_char(SIGNUP_DATE, 'yyyyMMdd') BETWEEN #{currentStartDt} AND #{currentEndDt}
-                    OR to_char(SIGNUP_DATE, 'yyyyMMdd') BETWEEN #{lastYearStartDt} AND #{lastYearEndDt}
+                WHERE  SIGNUP_DATE BETWEEN to_date(#{currentStartDt}, 'yyyyMMdd') AND to_date(#{currentEndDt}, 'yyyyMMdd')
+                    OR SIGNUP_DATE BETWEEN to_date(#{lastYearStartDt}, 'yyyyMMdd') AND to_date(#{lastYearEndDt}, 'yyyyMMdd')
                 group by trunc(signup_date, 'month')
                 order by trunc(signup_date, 'month')
             )
@@ -96,8 +98,8 @@
                 ,'무료가입자' as join_type
                 , sum(free_user_cnt) as free_sum
                 from TB_SIGNUP_STAT
-                WHERE  to_char(SIGNUP_DATE, 'yyyyMMdd') BETWEEN #{currentStartDt} AND #{currentEndDt}
-                    OR to_char(SIGNUP_DATE, 'yyyyMMdd') BETWEEN #{lastYearStartDt} AND #{lastYearEndDt}
+                WHERE  SIGNUP_DATE BETWEEN to_date(#{currentStartDt}, 'yyyyMMdd') AND to_date(#{currentEndDt}, 'yyyyMMdd')
+                    OR SIGNUP_DATE BETWEEN to_date(#{lastYearStartDt}, 'yyyyMMdd') AND to_date(#{lastYearEndDt}, 'yyyyMMdd')
                 group by trunc(signup_date, 'month')
                 order by trunc(signup_date, 'month')
             )
@@ -114,8 +116,8 @@
                 ,'유료가입자' as join_type
                 , sum( paid_user_cnt) as paid_sum
                 from TB_SIGNUP_STAT
-                WHERE  to_char(SIGNUP_DATE, 'yyyyMMdd') BETWEEN #{currentStartDt} AND #{currentEndDt}
-                    OR to_char(SIGNUP_DATE, 'yyyyMMdd') BETWEEN #{lastYearStartDt} AND #{lastYearEndDt}
+                WHERE  SIGNUP_DATE BETWEEN to_date(#{currentStartDt}, 'yyyyMMdd') AND to_date(#{currentEndDt}, 'yyyyMMdd')
+                    OR SIGNUP_DATE BETWEEN to_date(#{lastYearStartDt}, 'yyyyMMdd') AND to_date(#{lastYearEndDt}, 'yyyyMMdd')
                 group by trunc(signup_date, 'month')
                 order by trunc(signup_date, 'month')
             )
@@ -129,13 +131,14 @@
 
     </select>
 
+    <!-- 가입자 통계 상세 리스트 검색 -->
     <select id="selectJoinStatDetailList" resultMap="gfnJoinStatDetailMap">
         SELECT TO_CHAR(SIGNUP_DATE, 'yyyy.MM.dd') as SIGNUP_DATE,
          FREE_USER_CNT,
          PAID_USER_CNT,
          TOT_USER_CNT
         FROM TB_SIGNUP_STAT
-        WHERE to_char(SIGNUP_DATE, 'yyyyMMdd') BETWEEN #{startDt} AND #{endDt}
+        WHERE SIGNUP_DATE BETWEEN to_date(#{startDt}, 'yyyyMMdd') AND to_date(#{endDt}, 'yyyyMMdd')
         ORDER BY SIGNUP_DATE
     </select>
 

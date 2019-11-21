@@ -22,6 +22,7 @@
 		<result property="mbrDptmt" column="DEPARTMENT"/>
 	</resultMap>
 
+	<!-- 사용자정보 검색 -->
 	<select id="getMemberList" resultMap="memberResultMap">
 		/* MbrMapper.getMemberList */
 		
@@ -49,6 +50,7 @@
 		</choose>
 	</select>
 
+	<!-- 회사정보 검색 -->
 	<select id="getCompanyList" resultType="string">
 		/* MbrMapper.getCompanyList */
 		
@@ -57,7 +59,8 @@
 		FROM tb_mbr_info A
 		WHERE COMPANY is not null
 	</select>
-	
+
+	<!-- 중복 사용자 검색 -->
 	<select id="isDuplicateMember" resultType="int">
 		/* MbrMapper.getMemberValidate */
 		
@@ -72,7 +75,8 @@
 	        AND tel = #{tel}
 	    </if>
 	</select>
-	
+
+	<!-- 사용자 비번 검색 -->
 	<select id="getMbrOldInfo" resultMap="memberResultMap">
 		/* MbrMapper.getMbrOldInfo */
 		
@@ -84,6 +88,7 @@
 		WHERE mbr_id = #{mbrId}
 	</select>
 
+	<!-- 사용자 등록 -->
 	<insert id="insertMbr">
 		/* MbrMapper.insertMbr */
 		
@@ -112,7 +117,8 @@
 			,#{mbrDptmt, jdbcType=VARCHAR}
 		)
 	</insert>
-	
+
+	<!-- 사용자정보 수정 -->
 	<update id="updateMbr">
 	    /* MbrMapper.updateMbr */
 	    
@@ -154,7 +160,8 @@
 		</if>
 		WHERE mbr_id = #{mbrId}
 	</update>
-	
+
+	<!-- 사용자 비밀번호 등록 -->
 	<update id="setMemberPwdInit">
 		/* MbrMapper.setMemberPwdInit */
 		
@@ -168,7 +175,8 @@
 			,pw_apply_dt = TO_DATE(#{pwApplyDt}, 'yyyymmddhh24miss')
 		WHERE mbr_id = #{mbrId}
 	</update>
-	
+
+	<!-- 사용자리스트 삭제 -->
 	<delete id="deleteMbr">
 		/* MbrMapper.deleteMbr */
 		

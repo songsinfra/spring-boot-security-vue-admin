@@ -61,6 +61,7 @@
 		ORDER BY C.ORD_NO
 	</select>
 
+	<!-- 메뉴리스트 검색 -->
 	<select id="getMenuList" resultMap="menuResultMap">
 		SELECT 
 		        A.MENU_ID
@@ -78,7 +79,8 @@
 		</if>
 		ORDER BY A.MENU_ID, A.ORD_NO
 	</select>
-	
+
+	<!-- 사용중인 메뉴리스트 검색 -->
 	<select id="getRoleMenuList" resultMap="menuResultMap">
 		SELECT 
 		        A.MENU_ID
@@ -92,8 +94,9 @@
  	 	 	AND A.USE_YN = 'Y'
 		ORDER BY A.UPMENU_ID, A.ORD_NO		
 	</select>
-	
 
+
+	<!-- 메뉴정보 검색 -->
 	<select id="getMenuInfo" resultMap="menuResultMap">
 		SELECT 
 		        A.MENU_ID
@@ -118,7 +121,8 @@
 		AND		A.USE_YN = 'Y'
 		]]>
 	</select>
-	
+
+	<!-- 하위 메뉴갯수 검색 -->
 	<select id="getMenuCnt" resultType="int">
 	<![CDATA[
 		SELECT 
@@ -127,7 +131,8 @@
 		WHERE   A.UPMENU_ID =#{upMenuId}
 		]]>
 	</select>
-	
+
+	<!-- 부모 메뉴갯수 검색 -->
 	<select id="getUpMenuCnt" resultType="int">
 	<![CDATA[
 		SELECT 
@@ -137,6 +142,7 @@
 		]]>
 	</select>
 
+	<!-- 메뉴 등록 -->
 	<insert id="setMenuAdd">
 		INSERT INTO TB_MENU_MST
 		(
@@ -165,6 +171,7 @@
 		)
 	</insert>
 
+	<!-- 메뉴 수정 -->
 	<insert id="setMenuUpdate">
 		<![CDATA[
 		UPDATE TB_MENU_MST

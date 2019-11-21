@@ -42,6 +42,7 @@
         <result property="statusCd" 		column="STATUS_CD"/>
     </resultMap>
 
+    <!-- 가입가능서비스 정보 검색 -->
     <select id="selectEntrItem" resultMap="gfnEntrInfoMap">
         SELECT
                 ENTR_ITEM_CODE,
@@ -58,6 +59,7 @@
         WHERE ENTR_ITEM_CODE = #{entrItemCode}
     </select>
 
+    <!-- 가입가능서비스 리스트 검색 -->
     <select id="selectEntrItemList" resultMap="gfnEntrInfoMap">
         SELECT
                 ENTR_ITEM_CODE,
@@ -79,6 +81,7 @@
         ORDER BY ENTR_ITEM_NM
     </select>
 
+    <!-- 가입가능서비스 등록 -->
     <insert id="insertEntrItem">
 		INSERT INTO TB_GFN_ENTR_ITEM
 		(
@@ -104,6 +107,7 @@
 		)
 	</insert>
 
+    <!-- 가입가능서비스 수정 -->
     <insert id="updateEntrItem">
         UPDATE TB_GFN_ENTR_ITEM
 		SET
@@ -127,7 +131,7 @@
 		WHERE ENTR_ITEM_CODE = #{entrItemCode}
 	</insert>
 
-    <!-- 권한 수정 -->
+    <!-- 가입가능서비스 삭제상태 수정 -->
     <insert id="deleteEntrItem">
 		UPDATE TB_GFN_ENTR_ITEM
 		SET
@@ -137,6 +141,7 @@
 		WHERE ENTR_ITEM_CODE = #{entrItemCode}
 	</insert>
 
+    <!-- 가입가능서비스 맵핑리스트 검색 -->
     <select id="selectEntrMappingList" resultMap="gfnAddInfoMap">
         SELECT
             ADD_ITEM_CODE
@@ -147,6 +152,7 @@
         AND ENTR_ITEM_CODE = #{entrItemCode}
     </select>
 
+    <!-- 가입가능서비스 맵핑정보 등록 -->
     <insert id="insertMapItem">
 		INSERT INTO TB_GFN_ITEM_MAP
 		(
@@ -166,6 +172,7 @@
 		)
 	</insert>
 
+    <!-- 가입가능서비스 맵핑정보 삭제상태 수정 -->
     <update id="disableMapItemForEntr">
 		UPDATE TB_GFN_ITEM_MAP SET
 		STATUS_CD = '0'
@@ -175,6 +182,7 @@
             ENTR_ITEM_CODE = #{entrItemCode}
 	</update>
 
+    <!-- 가입가능서비스 맵핑정보 사용상태 수정 -->
     <update id="enableMapItemForEntr">
         update TB_GFN_ITEM_MAP m set
             (m.status_cd, m.delete_id, m.delete_dt) = (
@@ -192,6 +200,7 @@
         )
 	</update>
 
+    <!-- 가입가능서비스 맵핑정보 삭제상태 수정_ 부가서비스기준 -->
     <update id="disableMapItemForAdd">
         UPDATE TB_GFN_ITEM_MAP SET
         STATUS_CD = '0'
@@ -201,6 +210,7 @@
             ADD_ITEM_CODE = #{addItemCode}
     </update>
 
+    <!-- 가입가능서비스 맵핑정보 사용상태 수정_ 부가서비스기준 -->
     <update id="enableMapItemForAdd">
         update TB_GFN_ITEM_MAP m set
             (m.status_cd, m.delete_id, m.delete_dt) = (
@@ -218,6 +228,7 @@
         )
     </update>
 
+    <!-- 가입가능서비스 맵핑정보 삭제 -->
     <delete id="deleteMapItem">
 		DELETE FROM TB_GFN_ITEM_MAP
 		WHERE ENTR_ITEM_CODE = #{entrItemCode}

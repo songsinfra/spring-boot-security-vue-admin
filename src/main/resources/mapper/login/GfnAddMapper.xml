@@ -21,6 +21,7 @@
         <result property="statusCd" 		column="STATUS_CD"/>
     </resultMap>
 
+    <!-- 부가서비스정보 검색 -->
     <select id="selectAddItem" resultMap="gfnAddInfoMap">
         SELECT
             ADD_ITEM_CODE
@@ -43,12 +44,14 @@
         WHERE ADD_ITEM_CODE = #{addItemCode}
     </select>
 
+    <!-- 부가서비스 등록 갯수 검색 -->
     <select id="selectAddItemCount" resultType="int">
         SELECT
         count(1)+1 as cnt
         FROM TB_GFN_ADD_ITEM
     </select>
 
+    <!-- 부가서비스리스트 검색 -->
     <select id="selectAddItemList" resultMap="gfnAddInfoMap">
         SELECT
             ADD_ITEM_CODE
@@ -65,6 +68,7 @@
         ORDER BY CREATE_DT DESC
     </select>
 
+    <!-- 부가서비스 등록 -->
     <insert id="insertAddItem">
 		INSERT INTO TB_GFN_ADD_ITEM
 		(
@@ -102,6 +106,7 @@
 		)
 	</insert>
 
+    <!-- 부가서비스 수정 -->
     <insert id="updateAddItem">
         UPDATE TB_GFN_ADD_ITEM
 		SET
@@ -142,7 +147,7 @@
 		WHERE ADD_ITEM_CODE = #{addItemCode}
 	</insert>
 
-    <!-- 권한 수정 -->
+    <!-- 부가서비스 삭제 -->
     <insert id="deleteAddItem">
 		DELETE FROM TB_GFN_ADD_ITEM
 		WHERE ADD_ITEM_CODE = #{addItemCode}
