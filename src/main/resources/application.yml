@@ -1,6 +1,6 @@
 spring:
   datasource:
-#    jndi-name: jdbc/gfnDB
+#    jndi-name: jdbc/gfnDB     # jndi 설정
   http:
     encoding:
       charset: utf-8
@@ -16,14 +16,9 @@ mybatis:
   type-aliases-package: com.nexgrid.cgsg.admin.vo
   mapper-locations: classpath:mapper/**/*.xml
 
-server:
-  servlet:
-    context-path: /api
-  port: 8080
-
 cgsg:
   aliveLog:
-    milliseconds: 300000
+    milliseconds: 300000     # 감시용 로그 기록되는 밀리세컨드
 --- ## 개발
 spring:
   profiles: local
@@ -33,6 +28,11 @@ spring:
     username: gfn
     password: gfn
 
+server:
+  servlet:
+    context-path: /api
+  port: 8080
+
 --- ## 테스트
 spring:
   profiles: test
@@ -41,6 +41,11 @@ spring:
     url: jdbc:oracle:thin:@nexgrid2.iptime.org:11522:ADCBDBO
     username: gfn
     password: gfn
+
+server:
+  servlet:
+    context-path: /api
+  port: 8080
 
 --- ## 개발
 spring:
