@@ -3,47 +3,55 @@
         <div class="row">
             <div class="col-lg-12 col-xl-12">
                 <div class="card">
-                    <div class="card-header p-1">
-                        <ul class="list-inline float-right m-0">
-                            <li class="mr-1 custom-control custom-checkbox">
+                    <div class="card-header pb-0">
+                        <div class="form-row float-right align-items-center">
+                            <div class="col-auto">
                                 <b-form-checkbox
-                                    v-model="searchUseYn"
-                                    value="Y"
-                                    unchecked-value=""
-                                    @change="changeCheckbox"
+                                        v-model="searchUseYn"
+                                        value="Y"
+                                        unchecked-value=""
+                                        @change="changeCheckbox"
                                 >미사용메뉴표시</b-form-checkbox>
-                            </li>
-                            <li><b-button @click="createUpMenu" class="btn-primary">상위메뉴등록</b-button></li>
-                            <li><b-button @click="createMenu" class="btn-primary">등록</b-button></li>
-                        </ul>
+                            </div>
+                            <div class="col-auto">
+                                <b-button @click="createUpMenu" class="btn-primary">상위메뉴등록</b-button>
+                            </div>
+                            <div class="col-auto">
+                                <b-button @click="createMenu" class="btn-primary">등록</b-button>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-content collapse show">
-                        <b-table
-                                :items="items"
-                                :fields="fields"
-                                :per-page="perPage"
-                                :current-page="currentPage"
-                        >
-                            <template v-slot:action="{item}">
-                                <b-button
-                                        v-if="!item.menuName"
-                                        variant="danger"
-                                        @click="updateUpMenu(item)"
-                                >수정</b-button>
-                                <b-button
-                                        v-if="item.menuName"
-                                        variant="danger"
-                                        @click="updateMenu(item)"
-                                >수정</b-button>
-                            </template>
-                        </b-table>
-                        <b-pagination
-                                v-model="currentPage"
-                                :total-rows="tableRows"
-                                :per-page="perPage"
-                                aria-controls="my-table"
-                                :align="'center'"
-                        ></b-pagination>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <b-table
+                                        :items="items"
+                                        :fields="fields"
+                                        :per-page="perPage"
+                                        :current-page="currentPage"
+                                >
+                                    <template v-slot:action="{item}">
+                                        <b-button
+                                                v-if="!item.menuName"
+                                                variant="danger"
+                                                @click="updateUpMenu(item)"
+                                        >수정</b-button>
+                                        <b-button
+                                                v-if="item.menuName"
+                                                variant="danger"
+                                                @click="updateMenu(item)"
+                                        >수정</b-button>
+                                    </template>
+                                </b-table>
+                                <b-pagination
+                                        v-model="currentPage"
+                                        :total-rows="tableRows"
+                                        :per-page="perPage"
+                                        aria-controls="my-table"
+                                        :align="'center'"
+                                ></b-pagination>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
