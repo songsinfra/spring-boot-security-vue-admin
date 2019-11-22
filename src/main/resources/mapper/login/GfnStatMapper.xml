@@ -56,10 +56,10 @@
                 AND M.ADD_ITEM_CODE = #{addItemCode}
             </if>
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(createStartDt)">
-                AND to_char(M.CREATE_DT, 'yyyyMMdd') >= #{createStartDt}
+                AND M.CREATE_DT >= TRUNC(TO_DATE(#{createStartDt},'yyyyMMdd'))
             </if>
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(createEndDt)">
-                AND to_char(M.CREATE_DT, 'yyyyMMdd') <![CDATA[<]]>= #{createEndDt}
+                AND M.CREATE_DT <![CDATA[<]]>= TRUNC(TO_DATE(#{createEndDt},'yyyyMMdd') + 1)
             </if>
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(subNo)">
                 AND M.SUB_NO = #{subNo}
@@ -138,7 +138,7 @@
          PAID_USER_CNT,
          TOT_USER_CNT
         FROM TB_SIGNUP_STAT
-        WHERE SIGNUP_DATE BETWEEN to_date(#{startDt}, 'yyyyMMdd') AND to_date(#{endDt}, 'yyyyMMdd')
+        WHERE SIGNUP_DATE BETWEEN trunc(to_date(#{startDt}, 'yyyyMMdd')) AND trunc(to_date(#{endDt}, 'yyyyMMdd'))
         ORDER BY SIGNUP_DATE
     </select>
 

@@ -27,8 +27,8 @@ public class GfnStatServiceTest extends BaseServiceTest {
         GfnMasterInfoParam gfnMasterInfo = GfnMasterInfoParam.builder()
                 .entrItemCode("")
                 .addItemCode("GFN0000007")
-                .createStartDt("")
-                .createEndDt("")
+                .createStartDt("20191101")
+                .createEndDt("20191101")
                 .subNo("500137677005")
                 .ctn("010043307609")
                 .build();
