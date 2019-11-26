@@ -126,6 +126,7 @@
                     const {data} = await this.$axios.post(process.env.contextPath + '/login/isExpirePasswordDuration',{mbrId});
                     return data.data;
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },

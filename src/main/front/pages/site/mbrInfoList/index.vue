@@ -114,6 +114,7 @@
                     const {data} = await this.$axios.post(process.env.contextPath + '/mbr/getMemberList', { searchUseYn: this.searchUseYn});
                     this.items = data.data;
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },
@@ -152,6 +153,7 @@
 
                     await this.getMbrList();
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },

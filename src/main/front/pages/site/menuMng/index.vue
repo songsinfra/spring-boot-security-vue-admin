@@ -159,6 +159,7 @@
                     const response = await this.$axios.post(process.env.contextPath + '/menu/getMenuList', { searchUseYn: this.searchUseYn});
                     this.items = response.data.data;
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                    await this.$bvModal.msgBoxOk(e.message);
                 }
             }

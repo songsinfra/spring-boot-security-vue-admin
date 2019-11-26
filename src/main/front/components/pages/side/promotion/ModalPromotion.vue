@@ -232,6 +232,7 @@
 
                      });
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },

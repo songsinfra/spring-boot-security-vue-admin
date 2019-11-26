@@ -241,6 +241,7 @@
                     const {data} = await this.$axios.post(process.env.contextPath + '/stat/selectUserDetailStat', params);
                     this.items = data.data;
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },
@@ -250,6 +251,7 @@
                     const {data} = await this.$axios.post(process.env.contextPath + '/entr/selectEntrItemList', { statusCd : this.searchUseYn});
                     this.entrItems = data.data;
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },
@@ -259,6 +261,7 @@
                     const {data} = await this.$axios.post(process.env.contextPath + '/add/selectAddItemList', { entrItemCode});
                     this.addInfoItems = data.data;
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },

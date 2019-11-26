@@ -146,6 +146,7 @@
                     const {data} = await this.$axios.post(process.env.contextPath + '/entr/selectEntrItemList', { statusCd : this.searchUseYn});
                     this.entrItems = data.data;
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },
@@ -155,6 +156,7 @@
                     const {data} = await this.$axios.post(process.env.contextPath + '/add/selectAddItemList', { entrItemCode});
                     this.addInfoItems = data.data;
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },
@@ -164,6 +166,7 @@
                     const {data} = await this.$axios.post(process.env.contextPath + '/entr/selectEntrMappingList', { entrItemCode });
                     return  data.data;
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },
@@ -174,6 +177,7 @@
                     await this.$bvModal.msgBoxOk(data.message);
 
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },

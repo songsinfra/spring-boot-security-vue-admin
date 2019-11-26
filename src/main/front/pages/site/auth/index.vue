@@ -109,6 +109,7 @@
                     const {data} = await this.$axios.post(process.env.contextPath + '/auth/selectRoleMstList', { useYn: ''});
                     this.roleItems = data.data;
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },
@@ -118,6 +119,7 @@
                     const {data} = await this.$axios.post(process.env.contextPath + '/auth/selectRoleMenuList', { roleCode });
                     return  data.data;
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },
@@ -127,6 +129,7 @@
                     const {data} = await this.$axios.post(process.env.contextPath + '/menu/getRoleMenuList', { useYn: ''});
                     this.menuItems = data.data;
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },
@@ -137,6 +140,7 @@
                     await this.$bvModal.msgBoxOk(data.message);
 
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },
