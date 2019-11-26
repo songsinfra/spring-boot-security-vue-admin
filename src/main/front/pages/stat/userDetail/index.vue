@@ -4,100 +4,108 @@
             <div class="col-lg-12 col-xl-12">
                 <div class="card">
                     <div class="card-header pb-0">
-                        <div class="form-row float-right align-items-center">
-                            <div class="col-auto">
-                                <b-form-select
-                                        :required="true"
-                                        v-model="params.entrItemCode"
-                                        :options="entrItems"
-                                        :value-field="'entrItemCode'"
-                                        :text-field="'entrItemNm'"
-                                        :size="'sm'"
-                                        placeholder="요금제"
-                                >
-                                    <template v-slot:first>
-                                        <option
-                                                :value="''"
-                                        >-- 요금제 --</option>
-                                    </template>
-                                </b-form-select>
+                        <b-form @submit.prevent="selectUserDetailStat">
+                            <div class="form-row float-right align-items-center">
+                                <div class="col-auto">
+                                    <b-form-select
+                                            v-model="params.entrItemCode"
+                                            :options="entrItems"
+                                            :value-field="'entrItemCode'"
+                                            :text-field="'entrItemNm'"
+                                            :size="'sm'"
+                                            placeholder="요금제"
+                                    >
+                                        <template v-slot:first>
+                                            <option
+                                                    :value="''"
+                                            >-- 요금제 --
+                                            </option>
+                                        </template>
+                                    </b-form-select>
+                                </div>
+                                <div class="col-auto">
+                                    <b-form-select
+                                            v-model="params.addItemCode"
+                                            :options="addInfoItems"
+                                            :value-field="'addItemCode'"
+                                            :text-field="'addItemNm'"
+                                            :size="'sm'"
+                                    >
+                                        <template v-slot:first>
+                                            <option
+                                                    :value="''"
+                                            >-- 상품 --
+                                            </option>
+                                        </template>
+                                    </b-form-select>
+                                </div>
+                                <div class="col-auto">
+                                    <label>가입기간</label>
+                                </div>
+                                <div class="col-auto">
+                                    <b-form-input
+                                            :required="true"
+                                            v-model="params.createStartDt"
+                                            type="date"
+                                            :size="'sm'"
+                                            placeholder="가입시작기간"
+                                    ></b-form-input>
+                                </div>
+                                <div class="col-auto">
+                                    ~
+                                </div>
+                                <div class="col-auto">
+                                    <b-form-input
+                                            :required="true"
+                                            v-model="params.createEndDt"
+                                            type="date"
+                                            :size="'sm'"
+                                            placeholder="가입종료기간"
+                                    ></b-form-input>
+                                </div>
+                                <div class="col-auto">
+                                    <b-form-select
+                                            v-model="searchType"
+                                            @change="changeSearchType"
+                                            :size="'sm'"
+                                    >
+                                        <option value="SUBNO">가입자번호</option>
+                                        <option value="CTN">CTN</option>
+                                    </b-form-select>
+                                </div>
+                                <div class="col-auto">
+                                    <b-form-input
+                                            v-show="searchType === 'SUBNO'"
+                                            v-model="params.subNo"
+                                            :size="'sm'"
+                                            @keydown.enter="selectUserDetailStat"
+                                            v-validate="'numeric|max:12'"
+                                            data-vv-name="가입자번호"
+                                    ></b-form-input>
+                                    <b-form-input
+                                            v-show="searchType === 'CTN'"
+                                            v-model="params.ctn"
+                                            :size="'sm'"
+                                            @keydown.enter="selectUserDetailStat"
+                                            v-validate="'numeric|max:20'"
+                                            :state="params.ctn.$dirty ? !params.ctn.name.$error : null"
+                                            data-vv-name="연락처"
+                                    ></b-form-input>
+                                </div>
+                                <div class="col-auto">
+                                    <b-button type="submit" class="btn-primary">검색</b-button>
+                                </div>
+                                <div class="col-auto">
+                                    <download-excel
+                                            :class="'btn btn-primary btn-secondary'"
+                                            :name="'가입자상세리스트.xls'"
+                                            :fields="excelFields"
+                                            :data='items'>
+                                        엑셀
+                                    </download-excel>
+                                </div>
                             </div>
-                            <div class="col-auto">
-                                <b-form-select
-                                        :required="true"
-                                        v-model="params.addItemCode"
-                                        :options="addInfoItems"
-                                        :value-field="'addItemCode'"
-                                        :text-field="'addItemNm'"
-                                        :size="'sm'"
-                                >
-                                    <template v-slot:first>
-                                        <option
-                                                :value="''"
-                                        >-- 상품 --</option>
-                                    </template>
-                                </b-form-select>
-                            </div>
-                            <div class="col-auto">
-                                <label>가입기간</label>
-                            </div>
-                            <div class="col-auto">
-                                <b-form-input
-                                        v-model="params.createStartDt"
-                                        type="date"
-                                        :size="'sm'"
-                                        placeholder="가입시작기간"
-                                ></b-form-input>
-                            </div>
-                            <div class="col-auto">
-                                ~
-                            </div>
-                            <div class="col-auto">
-                                <b-form-input
-                                        v-model="params.createEndDt"
-                                        type="date"
-                                        :size="'sm'"
-                                        placeholder="가입종료기간"
-                                ></b-form-input>
-                            </div>
-                            <div class="col-auto">
-                                <b-form-select
-                                        v-model="searchType"
-                                        @change="changeSearchType"
-                                        :size="'sm'"
-                                >
-                                    <option value="SUBNO">가입자번호</option>
-                                    <option value="CTN">CTN</option>
-                                </b-form-select>
-                            </div>
-                            <div class="col-auto">
-                                <b-form-input
-                                        v-if="searchType === 'SUBNO'"
-                                        v-model="params.subNo"
-                                        type="number"
-                                        :size="'sm'"
-                                        @keydown.enter="selectUserDetailStat"
-                                ></b-form-input>
-                                <b-form-input
-                                        v-if="searchType === 'CTN'"
-                                        v-model="params.ctn"
-                                        :size="'sm'"
-                                        @keydown.enter="selectUserDetailStat"
-                                ></b-form-input>
-                            </div>
-                            <div class="col-auto">
-                                <b-button @click="selectUserDetailStat" class="btn-primary">검색</b-button>
-                            </div>
-                            <div class="col-auto">
-                                <download-excel
-                                        :class="'btn btn-primary btn-secondary'"
-                                        :name    = "'가입자상세리스트.xls'"
-                                        :fields="excelFields"
-                                        :data='items'>
-                                    엑셀
-                                </download-excel>
-                            </div>
-                        </div>
+                        </b-form>
                     </div>
                     <div class="card-content collapse show">
                         <div class="card-body">
@@ -145,14 +153,8 @@
         },
 
         beforeMount() {
-            this.params = {
-                entrItemCode: '',
-                addItemCode: '',
-                createStartDt: this.yesterday,
-                createEndDt: this.yesterday,
-                subNo: '',
-                ctn: '',
-            };
+            this.$set(this.params, "createStartDt", this.yesterday);
+            this.$set(this.params, "createEndDt", this.yesterday);
 
             this.selectUserDetailStat();
             this.selectEntrItemList();
@@ -231,6 +233,8 @@
         methods:{
             async selectUserDetailStat() {
                 try {
+                    this.validateField();
+
                     const params = {...this.params};
                     this.checkAndConvertDate(params);
 
@@ -279,7 +283,17 @@
                 const end = this.$moment(params.createEndDt, 'YYYYMMDD');
 
                 if(start.diff(end, 'days') > 0) throw Error("시작날짜가 종료날짜보다 빠릅니다.");
-                if(start.diff(end, 'months') < 0 ) throw Error("검색기간은 1개월 이하만 입력해주세요");
+                if(start.diff(end, 'months') < 0 ) {
+                    this.$set(this.params, 'createEndDt', start.add(1, 'months').subtract(1, 'days').format("YYYY-MM-DD"));
+                    throw Error("검색기간은 1개월 이하만 입력해주세요");
+                }
+            },
+
+            validateField(){
+                this.$validator.validateAll()
+                if (this.errors.any()) {
+                    throw Error(this.errors.items[0].msg);
+                }
             }
         },
     }
