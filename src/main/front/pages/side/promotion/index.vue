@@ -18,6 +18,7 @@
                                         v-model="params.promoCode"
                                         :size="'sm'"
                                         placeholder="코드"
+                                        maxlength="16"
                                         @keydown.enter="selectPromoList"
                                 ></b-form-input>
                             </div>
