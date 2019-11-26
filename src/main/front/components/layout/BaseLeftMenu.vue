@@ -83,7 +83,7 @@
 
             } catch (e) {
                 console.error(e);
-                if (e.response.status === 401|| e.response.status === 504) {
+                if (e.response.status === 401) {
                     this.$router.push('login/login');
                     // window.location = '/login/login';
                 } else {
