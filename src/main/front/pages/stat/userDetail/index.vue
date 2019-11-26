@@ -232,8 +232,7 @@
             async selectUserDetailStat() {
                 try {
                     const params = {...this.params};
-                    if(params.createStartDt) params.createStartDt = params.createStartDt.replace(/-/g, '');
-                    if(params.createEndDt) params.createEndDt = params.createEndDt.replace(/-/g, '');
+                    this.checkAndConvertDate(params);
 
                     const {data} = await this.$axios.post(process.env.contextPath + '/stat/selectUserDetailStat', params);
                     this.items = data.data;
@@ -267,6 +266,20 @@
 
             convertToStringForExcel(value) {
                 return '=\"' + value + '\"';
+            },
+
+            checkAndConvertDate(params){
+                if(!params.createStartDt) throw Error("시작날짜를 입력해주세요");
+                if(!params.createEndDt) throw Error("종료날짜를 입력해주세요");
+
+                params.createStartDt = params.createStartDt.replace(/-/g, '');
+                params.createEndDt = params.createEndDt.replace(/-/g, '');
+
+                const start = this.$moment(params.createStartDt, 'YYYYMMDD');
+                const end = this.$moment(params.createEndDt, 'YYYYMMDD');
+
+                if(start.diff(end, 'days') > 0) throw Error("시작날짜가 종료날짜보다 빠릅니다.");
+                if(start.diff(end, 'months') < 0 ) throw Error("검색기간은 1개월 이하만 입력해주세요");
             }
         },
     }
