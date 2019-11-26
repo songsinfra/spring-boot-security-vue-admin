@@ -42,7 +42,7 @@
                 <b-form-input
                         id="mbrId-1"
                         v-model="mbrInfo.mbrId"
-                        v-validate="'required'"
+                        v-validate="'required|max:10'"
                         :disabled="state !=='CREATE'"
                         data-vv-name="아이디"
                 ></b-form-input>
@@ -59,7 +59,7 @@
                         id="mbrPw-1"
                         v-model="mbrInfo.mbrPw"
                         type="password"
-                        v-validate="{required : true ,regex:/^.*(?=.{8,32})(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{6,}$/}"
+                        v-validate="{required : true, max:512 ,regex:/^.*(?=.{8,32})(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{6,}$/}"
                         data-vv-name="비밀번호"
                         ref="password"
                         @change="changePassword"
@@ -93,7 +93,7 @@
                 <b-form-input
                         id="mbrNm-1"
                         v-model="mbrInfo.mbrNm"
-                        v-validate="'required'"
+                        v-validate="'required|max:40'"
                         data-vv-name="이름"
                 ></b-form-input>
                 <b-form-invalid-feedback :state="!errors.has('이름')">
@@ -142,7 +142,7 @@
                         v-model="mbrInfo.tel"
                         v-validate="'required|numeric'"
                         data-vv-name="휴대폰"
-                        type="number"
+                        type="text"
                 ></b-form-input>
                 <b-form-invalid-feedback :state="!errors.has('휴대폰')">
                     {{errors.first('휴대폰')}}
@@ -285,6 +285,7 @@
                     const {data} = await this.$axios.post(process.env.contextPath + '/mbr/isDuplicateMember',{mbrId});
                     return data.data;
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },
@@ -294,6 +295,7 @@
                     const {data} = await this.$axios.post(process.env.contextPath + '/auth/selectRoleMstList');
                     this.authList = data.data;
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },
@@ -303,6 +305,7 @@
                     const {data} = await this.$axios.post(process.env.contextPath + '/mbr/getCompanyList');
                     this.companyList = data.data;
                 } catch (e) {
+                    e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);
                 }
             },
