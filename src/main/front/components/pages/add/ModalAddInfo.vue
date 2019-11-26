@@ -89,8 +89,8 @@
                                 id="svcSellPrice-1"
                                 v-model="addInfo.svcSellPrice"
                                 :disabled="disabledSvcSellPrice"
-                                type="number"
-                                v-validate="'required'"
+                                type="text"
+                                v-validate="'required|numeric|max:6'"
                                 data-vv-name="판매가"
                         ></b-form-input>
                         <b-form-invalid-feedback :state="!errors.has('판매가')">
@@ -102,9 +102,9 @@
                         <b-form-input
                                 id="svcBasePrice-2"
                                 v-model="addInfo.svcBasePrice"
-                                type="number"
+                                type="text"
                                 :disabled="disabledSvcBasePrice"
-                                v-validate="'required'"
+                                v-validate="'required|numeric|max:6'"
                                 data-vv-name="기본가격"
                         ></b-form-input>
                         <b-form-invalid-feedback :state="!errors.has('기본가격')">

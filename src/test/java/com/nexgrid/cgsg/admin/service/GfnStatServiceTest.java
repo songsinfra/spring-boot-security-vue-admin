@@ -2,6 +2,7 @@ package com.nexgrid.cgsg.admin.service;
 
 import com.nexgrid.cgsg.admin.base.BaseServiceTest;
 import com.nexgrid.cgsg.admin.vo.*;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,11 @@ public class GfnStatServiceTest extends BaseServiceTest {
 
     @Autowired
     private GfnStatService gfnStatService;
+
+    @Before
+    public void setup() {
+
+    }
 
     @Test
     public void selectUserStat() {
