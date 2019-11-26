@@ -42,7 +42,7 @@
                 <b-form-input
                         id="email-1"
                         v-model="promoInfo.email"
-                        v-validate="'required|email'"
+                        v-validate="'required|email|max:50'"
                         data-vv-name="이메일"
                         :disabled="state === 'UPDATE'"
                 ></b-form-input>
@@ -57,9 +57,9 @@
                 <b-form-input
                         id="contactNo-1"
                         v-model="promoInfo.contactNo"
-                        type="number"
+                        type="text"
                         :disabled="state === 'UPDATE'"
-                        v-validate="'numeric'"
+                        v-validate="'numeric|max:20'"
                         data-vv-name="연락처"
                 ></b-form-input>
                 <b-form-invalid-feedback :state="!errors.has('연락처')">

@@ -178,10 +178,13 @@
         methods:{
             async selectPromoList() {
                 try {
-                    const {data} = await this.$axios.post(process.env.contextPath + '/side/selectPromoList', this.params);
+                    const params = {...this.params};
+                    if(params.promoCode) params.promoCode = params.promoCode.toUpperCase().replace(/-/g, '');
+
+                    const {data} = await this.$axios.post(process.env.contextPath + '/side/selectPromoList', params);
                     this.items = data.data;
                 } catch (e) {
-                    await this.$bvModal.msgBoxOk(e.message);
+                    await this.$bvModal.msgBoxOk(e.response.data.message);
                 }
             },
 
@@ -237,7 +240,6 @@
                         promoCodeList : expirePromoCodeList
                     });
 
-                    debugger;
                     await this.$bvModal.msgBoxOk(message);
 
                     await this.selectPromoList();
@@ -264,7 +266,6 @@
                         promoCodeList : deletePromoCodeList
                     });
 
-                    debugger;
                     await this.$bvModal.msgBoxOk(message);
 
                     await this.selectPromoList();

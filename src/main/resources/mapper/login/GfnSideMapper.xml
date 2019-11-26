@@ -57,10 +57,10 @@
         FROM TB_PROMO_CODE
         <where>
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(promoCode)">
-                AND PROMO_CODE LIKE '%'|| #{promoCode} || '%'
+                AND UPPER(PROMO_CODE) LIKE '%'|| UPPER(#{promoCode}) || '%'
             </if>
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(email)">
-                AND EMAIL LIKE '%' || #{email} || '%'
+                AND UPPER(EMAIL) LIKE '%' || UPPER( #{email} ) || '%'
             </if>
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(contactNo)">
                 AND CONTACT_NO = #{contactNo}
