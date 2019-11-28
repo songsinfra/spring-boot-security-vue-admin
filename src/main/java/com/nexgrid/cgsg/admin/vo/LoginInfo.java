@@ -1,9 +1,6 @@
 package com.nexgrid.cgsg.admin.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +8,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "mbrId")
 public class LoginInfo {
 
 	private String mbrId;

@@ -10,6 +10,7 @@ import com.nexgrid.cgsg.admin.vo.ResultInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,7 +36,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -101,7 +106,36 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter implement
                     .exceptionHandling()
                         .authenticationEntryPoint(this.getAuthenticationEntryPoint())
         ;
+
+        /**
+         * 세션 클러스트링
+         */
+        http.sessionManagement()
+            .maximumSessions(1)
+            .maxSessionsPreventsLogin(true)
+            .expiredUrl("/")
+            .sessionRegistry(sessionRegistry());
     }
+
+
+    /**
+     * 세션 클러스트링
+     * @return
+     */
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
+
+    /**
+     * 세션 클러스트링
+     * @return
+     */
+    @Bean
+    public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
+        return new ServletListenerRegistrationBean<HttpSessionEventPublisher>(new HttpSessionEventPublisher());
+    }
+
 
     private AuthenticationEntryPoint getAuthenticationEntryPoint() {
         return (request, response, authException) -> {
@@ -146,9 +180,9 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter implement
             } else if (exception instanceof BadCredentialsException) {
                 resultInfo.setCode(SystemStatusCode.FAIL_LOGIN.getCode());
                 resultInfo.setMessage(exception.getMessage());
-            } else if (exception instanceof InternalAuthenticationServiceException) {
-                resultInfo.setCode(SystemStatusCode.NOT_FOUND_USER_ID.getCode());
-                resultInfo.setMessage(exception.getMessage());
+            } else if (exception instanceof SessionAuthenticationException) {
+                resultInfo.setCode(SystemStatusCode.FAIL_LOGIN.getCode());
+                resultInfo.setMessage("이미 로그인된 사용자가 있습니다.");
             } else{
                 log.error(exception.getMessage(), exception);
             }
@@ -232,5 +266,4 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter implement
             return new AdminUser(loginInfo.getMbrId(), loginInfo.getMbrPw(), authorityList, loginInfo);
         }
     }
-
 }
