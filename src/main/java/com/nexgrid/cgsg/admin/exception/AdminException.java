@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.security.core.AuthenticationException;
 
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class AdminException extends AuthenticationException {
     private SystemStatusCode code;
 

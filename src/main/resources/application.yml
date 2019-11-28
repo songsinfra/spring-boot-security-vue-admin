@@ -7,10 +7,11 @@ spring:
       enabled: true
       force: true
 
-debug: true
+#debug: true
 logging:
   level:
-    com.nexgrid.cgsg.admin.mapper : debug
+    com.nexgrid.cgsg.admin.mapper : info
+  config: classpath:log4j2-local.xml
 
 mybatis:
   type-aliases-package: com.nexgrid.cgsg.admin.vo
@@ -52,3 +53,6 @@ spring:
   profiles: dev
   datasource:
     jndi-name: jdbc/gfnDB
+logging:
+  config: classpath:log4j2-real.xml
+

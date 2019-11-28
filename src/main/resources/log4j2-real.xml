@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration xmlns:xi="http://www.w3.org/2001/XInclude" packages="com.nexgrid.cgsg">
+	<Appenders>
+
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d %-5p [%t] [%X{UUID}] (%C{2}:%L) - %m%n" />
+		</Console>
+
+		<RollingFile name="service-log" fileName="/logs/gfn/was/tomcat/adminService.log" filePattern="/logs/gfn/was/tomcat/adminService_%d{yyyy-MM-dd}.log" append="true">
+			<PatternLayout pattern="%d %-5p [%t] [%X{UUID}] (%C{2}:%L) - %m%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+			</Policies>
+		</RollingFile>
+	</Appenders>
+
+
+	<Loggers>
+		<Logger name="com.nexgrid.cgsg" additivity="false" level="info">
+			<AppenderRef ref="service-log"/>
+	  		<AppenderRef ref="console" />
+		</Logger>
+		
+		<Root level="info">
+			<AppenderRef ref="service-log"/>
+			<appender-ref ref="console" />
+		</Root>
+	</Loggers>
+</Configuration>

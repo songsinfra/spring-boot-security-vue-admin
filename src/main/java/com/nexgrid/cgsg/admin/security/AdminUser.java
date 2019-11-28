@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class AdminUser extends User {
 
     private LoginInfo loginInfo;
