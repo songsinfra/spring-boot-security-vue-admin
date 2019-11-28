@@ -7,6 +7,7 @@ import com.nexgrid.cgsg.admin.service.LoginService;
 import com.nexgrid.cgsg.admin.utils.CommonUtil;
 import com.nexgrid.cgsg.admin.vo.LoginInfo;
 import com.nexgrid.cgsg.admin.vo.ResultInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -44,6 +45,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@Slf4j
 public class AuthenticationConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
     @Autowired
@@ -108,6 +110,11 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter implement
                     .message(authException.getMessage())
                     .build();
 
+            if(!request.getMethod().equalsIgnoreCase("POST")) {
+                response.sendRedirect("/");
+                return;
+            }
+
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().append(objectMapper.writeValueAsString(resultInfo));
         };
@@ -142,6 +149,8 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter implement
             } else if (exception instanceof InternalAuthenticationServiceException) {
                 resultInfo.setCode(SystemStatusCode.NOT_FOUND_USER_ID.getCode());
                 resultInfo.setMessage(exception.getMessage());
+            } else{
+                log.error(exception.getMessage(), exception);
             }
 
             response.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -170,8 +179,6 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter implement
 
         @Autowired
         private LoginService loginService;
-
-
 
         @Override
         protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
@@ -217,10 +224,11 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter implement
 
             if (loginInfo2 == null || loginInfo2.size() == 0) throw new AdminException(SystemStatusCode.NOT_FOUND_USER_ID, "사용자 아이디 없음"); //throw new UsernameNotFoundException("Username Not Found");
 
-            List<GrantedAuthority> authorityList = new ArrayList<>();
-            authorityList.add(new SimpleGrantedAuthority("ROLE_USER"));
-
             LoginInfo loginInfo = loginInfo2.get(0);
+
+            List<GrantedAuthority> authorityList = new ArrayList<>();
+            authorityList.add(new SimpleGrantedAuthority(loginInfo.getRoleCd()));
+
             return new AdminUser(loginInfo.getMbrId(), loginInfo.getMbrPw(), authorityList, loginInfo);
         }
     }
