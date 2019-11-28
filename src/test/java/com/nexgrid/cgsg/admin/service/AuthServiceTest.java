@@ -1,6 +1,7 @@
 package com.nexgrid.cgsg.admin.service;
 
 import com.nexgrid.cgsg.admin.base.BaseServiceTest;
+import com.nexgrid.cgsg.admin.exception.AdminException;
 import com.nexgrid.cgsg.admin.vo.AuthInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -169,4 +170,16 @@ public class AuthServiceTest extends BaseServiceTest {
         String roleCode = null;
         authService.isDuplicateRoleCode(roleCode);
     }
+
+    @Test
+    public void checkUsingRoleCodeInMbrList() {
+        assertException(AdminException.class, "권한 변경 후 미사용으로 변경 해 주세요");
+        authService.checkUsingRoleCodeInMbrList("R-001");
+    }
+
+    @Test
+    public void checkUsingRoleCodeInMbrList_권한코드_사용안함() {
+        authService.checkUsingRoleCodeInMbrList("XXX");
+    }
+
 }

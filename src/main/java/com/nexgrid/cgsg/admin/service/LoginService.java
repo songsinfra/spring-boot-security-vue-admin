@@ -1,9 +1,11 @@
 package com.nexgrid.cgsg.admin.service;
 
 import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
+import com.nexgrid.cgsg.admin.constants.UseYnCode;
 import com.nexgrid.cgsg.admin.exception.AdminException;
 import com.nexgrid.cgsg.admin.mapper.LoginMapper;
 import com.nexgrid.cgsg.admin.utils.CommonUtil;
+import com.nexgrid.cgsg.admin.vo.AuthInfo;
 import com.nexgrid.cgsg.admin.vo.LoginInfo;
 import com.nexgrid.cgsg.admin.vo.MbrInfo;
 import com.nexgrid.cgsg.admin.vo.MenuInfo;
@@ -29,6 +31,9 @@ public class LoginService {
 
 	@Autowired
 	private LoginMapper mapper;
+
+	@Autowired
+	private AuthService authService;
 
 	public LoginInfo login(LoginInfo loginInfoParams) {
 		List<LoginInfo> loginInfoList = mapper.getLoginInfo(loginInfoParams);
@@ -57,6 +62,8 @@ public class LoginService {
 	public void successLogin(LoginInfo loginInfo) {
 		Assert.notNull(loginInfo, "selected loginInfo is null");
 
+		checkDisabledRoleCode(loginInfo.getRoleCd());
+
 		if (!"Y".equalsIgnoreCase(loginInfo.getUseYn())) {
 			this.lockedLoginChecker(loginInfo.getMbrId(), loginInfo.getLoginFailCnt(), loginInfo.getLoginFailDt());
 		}else{
@@ -64,6 +71,14 @@ public class LoginService {
 		}
 
 		this.setLoginEndDate(loginInfo);
+	}
+
+	public void checkDisabledRoleCode(String roleCode) {
+		List<AuthInfo> authInfos = authService.selectRoleMstList(UseYnCode.N.name());
+		boolean anyMatch = authInfos.stream()
+							 .anyMatch(authInfo -> authInfo.getRoleCode()
+														   .equalsIgnoreCase(roleCode));
+		if(anyMatch) throw new AdminException(SystemStatusCode.FAIL_LOGIN, "사용 중인 권한 코드가 미사용 상태입니다. 관리자에게 문의해 주세요");
 	}
 
 	public void setLoginEndDate(LoginInfo loginInfo) {

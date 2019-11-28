@@ -4,6 +4,7 @@ import com.nexgrid.cgsg.admin.base.BaseServiceTest;
 import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
 import com.nexgrid.cgsg.admin.exception.AdminException;
 import com.nexgrid.cgsg.admin.mapper.LoginMapper;
+import com.nexgrid.cgsg.admin.vo.AuthInfo;
 import com.nexgrid.cgsg.admin.vo.LoginInfo;
 import com.nexgrid.cgsg.admin.vo.MbrInfo;
 import org.junit.Test;
@@ -20,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,6 +43,9 @@ public class LoginServiceTest extends BaseServiceTest {
     @Mock
     private LoginMapper loginMapper;
     public static final String MBR_ID = "admin";
+
+    @Mock
+    private AuthService authServiceMock;
 
     @Test
     public void login() {
@@ -243,6 +249,23 @@ public class LoginServiceTest extends BaseServiceTest {
     }
 
     @Test
-    public void isExpirePasswordDuration() {
+    public void checkDisabledRoleCode_미사용_데이터_있음() {
+        String roleCode = "aaa";
+        assertException(AdminException.class, "사용 중인 권한 코드가 미사용 상태입니다");
+
+        List<AuthInfo> authInfos = Arrays.asList(AuthInfo.builder()
+                                                         .roleCode(roleCode)
+                                                         .build());
+
+        when(authServiceMock.selectRoleMstList(anyString())).thenReturn(authInfos);
+        loginServiceMock.checkDisabledRoleCode(roleCode);
+    }
+
+    @Test
+    public void checkDisabledRoleCode_미사용_데이터_없음() {
+        String roleCode = "aaa";
+
+        when(authServiceMock.selectRoleMstList(anyString())).thenReturn(Arrays.asList());
+        loginServiceMock.checkDisabledRoleCode(roleCode);
     }
 }

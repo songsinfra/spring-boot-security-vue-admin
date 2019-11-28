@@ -85,7 +85,7 @@ public class AuthService {
 		return duplicateRoleCode > 0;
 	}
 
-	private void checkUsingRoleCodeInMbrList(String roleCode) {
+	public void checkUsingRoleCodeInMbrList(String roleCode) {
 		List<MbrInfo> mbrInfoList = mbrMapper.getMemberList("Y", "");
 
 		String findUsers = mbrInfoList.stream()
@@ -95,7 +95,7 @@ public class AuthService {
 										   .collect(Collectors.joining(","));
 
 		if(StringUtils.isNotEmpty(findUsers))
-			throw new AdminException(SystemStatusCode.INVALID_PARAMETER, String.format("%s가 %s 코드를 사용하고 있습니다. 권한 변경 후 미사용으로 변경 해 주세요", findUsers, roleCode));
+			throw new AdminException(SystemStatusCode.INVALID_PARAMETER, String.format("[%s] 사용자가 %s 코드를 사용하고 있습니다. 권한 변경 후 미사용으로 변경 해 주세요", findUsers, roleCode));
 
 	}
 	
