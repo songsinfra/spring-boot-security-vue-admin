@@ -20,7 +20,7 @@
                                 <div class="card-content">
 
                                     <div class="card-body">
-                                        <form class="form-horizontal" novalidate @submit.prevent="login">
+                                        <b-form class="form-horizontal" novalidate @submit.prevent="login" method="post" autocomplete="off">
                                             <fieldset class="form-group position-relative has-icon-left">
                                                 <input type="text"
                                                        class="form-control round"
@@ -63,7 +63,7 @@
                                                 </button>
                                             </div>
 
-                                        </form>
+                                        </b-form>
                                     </div>
                                 </div>
                             </div>
