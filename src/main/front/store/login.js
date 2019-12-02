@@ -39,6 +39,9 @@ export const getters = {
     authUser (state) {
         return state.authUser
     },
+    isAdmin(state) {
+        return state.authUser.mbrId === 'admin';
+    },
 };
 
 export const actions = {

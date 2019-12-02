@@ -17,7 +17,7 @@
                         :options="authList"
                         :value-field="'roleCode'"
                         :text-field="'codeNm'"
-                        :disabled="state !=='CREATE'"
+                        :disabled="state !=='CREATE' && !isAdmin"
                         :class="'form-control'"
                         v-validate="'required'"
                         data-vv-name="권한"
@@ -188,6 +188,12 @@
                     email: '이메일'
                 }
             };
+        },
+
+        computed:{
+            isAdmin() {
+                return this.$store.getters['login/isAdmin'];
+            }
         },
 
         async beforeMount() {
