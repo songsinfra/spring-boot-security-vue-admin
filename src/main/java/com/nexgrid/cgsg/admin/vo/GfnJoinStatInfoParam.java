@@ -32,9 +32,9 @@ public class GfnJoinStatInfoParam {
             LocalDate date = LocalDate.parse(this.date, DateTimeFormatter.ofPattern("yyyyMMdd"));
 
             this.currentStartDt = getPrevMonth(date);
-            this.currentEndDt = convertString(date);
+            this.currentEndDt = convertString(date.plusDays(1));
             this.lastYearStartDt = getLastYear(date);
-            this.lastYearEndDt = getTodayOfLastYear(date);
+            this.lastYearEndDt = getTodayOfLastYear(date.plusDays(1));
 
             this.lastYearField = date.minusYears(1).format(DateTimeFormatter.ofPattern("yyyyMM"));
             this.prevMonthField = date.minusMonths(2).format(DateTimeFormatter.ofPattern("yyyyMM"));

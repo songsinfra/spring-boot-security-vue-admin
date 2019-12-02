@@ -107,7 +107,7 @@
             pivot(
                 sum(free_sum)
                 for d_month
-                in( '''||${lastYearField}||''' as LAST_YEAR_DATA, '''||${prevMonthField}||''' as PREV_MONTH_DATA, '''||${lastMonthField}||''' as LAST_MONTH_DATA, '''||${currentMonthField}||''' as CURRENT_MONTH_DATA)
+                in( ${lastYearField} as LAST_YEAR_DATA, ${prevMonthField} as PREV_MONTH_DATA, ${lastMonthField} as LAST_MONTH_DATA, ${currentMonthField} as CURRENT_MONTH_DATA)
             )
         )
         union all
@@ -125,7 +125,7 @@
             pivot(
                 sum(paid_sum)
                 for d_month
-                in( '''||${lastYearField}||''' as LAST_YEAR_DATA, '''||${prevMonthField}||''' as PREV_MONTH_DATA, '''||${lastMonthField}||''' as LAST_MONTH_DATA, '''||${currentMonthField}||''' as CURRENT_MONTH_DATA)
+                in( ${lastYearField} as LAST_YEAR_DATA, ${prevMonthField} as PREV_MONTH_DATA, ${lastMonthField} as LAST_MONTH_DATA, ${currentMonthField} as CURRENT_MONTH_DATA)
             )
         )
 
