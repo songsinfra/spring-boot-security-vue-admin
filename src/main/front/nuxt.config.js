@@ -57,7 +57,7 @@ module.exports = {
     generate: {
         dir: "../resources/static",
         // subFolders : false
-        devtools: true,
+        // devtools: true,
     },
     modules: [
         '@nuxtjs/axios',
