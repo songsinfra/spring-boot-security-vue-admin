@@ -6,7 +6,7 @@
 			<PatternLayout pattern="%d %-5p [%t] [%X{UUID}] (%C{2}:%L) - %m%n" />
 		</Console>
 
-		<RollingFile name="service-log" fileName="/logs/gfn/was/tomcat/adminService.log" filePattern="/logs/gfn/was/tomcat/adminService_%d{yyyy-MM-dd}.log" append="true">
+		<RollingFile name="service-log" fileName="/logs/gfn/was/tomcat/gfnadm.001.log" filePattern="/logs/gfn/was/tomcat/gfnadm.001.%d{yyyy-MM-dd}.log" append="true">
 			<PatternLayout pattern="%d %-5p [%t] [%X{UUID}] (%C{2}:%L) - %m%n" />
 			<Policies>
 				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
