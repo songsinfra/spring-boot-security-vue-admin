@@ -2,6 +2,7 @@ package com.nexgrid.cgsg.admin.vo;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
@@ -9,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(of = "mbrId")
-public class LoginInfo {
+public class LoginInfo implements Serializable {
 
 	private String mbrId;
 	private String mbrNm;
