@@ -110,11 +110,11 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter implement
         /**
          * 세션 클러스트링
          */
-//        http.sessionManagement()
-//            .maximumSessions(1)
-//            .maxSessionsPreventsLogin(true)
-//            .expiredUrl("/")
-//            .sessionRegistry(sessionRegistry());
+        http.sessionManagement()
+            .maximumSessions(1)
+            .maxSessionsPreventsLogin(true)
+            .expiredUrl("/")
+            .sessionRegistry(sessionRegistry());
     }
 
 
