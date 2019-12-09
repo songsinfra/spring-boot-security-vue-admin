@@ -48,11 +48,26 @@ server:
     context-path: /api
   port: 8080
 
---- ## 개발
+--- ## local tomcat
 spring:
-  profiles: dev
+  profiles: localTomcat
+  datasource:
+    jndi-name: jdbc/gfnDB
+
+
+--- ## 개발1
+spring:
+  profiles: dev1
   datasource:
     jndi-name: jdbc/gfnDB
 logging:
-  config: classpath:log4j2-real.xml
+  config: classpath:log4j2-real1.xml
+
+--- ## 개발2
+spring:
+  profiles: dev2
+  datasource:
+    jndi-name: jdbc/gfnDB
+logging:
+  config: classpath:log4j2-real2.xml
 
