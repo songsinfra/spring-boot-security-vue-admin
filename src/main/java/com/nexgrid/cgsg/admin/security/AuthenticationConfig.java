@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -184,12 +183,22 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter implement
                 resultInfo.setCode(SystemStatusCode.FAIL_LOGIN.getCode());
                 resultInfo.setMessage("이미 로그인된 사용자가 있습니다.");
             } else{
+                // 정의 되지 않은 오류는 로그 찍음
                 log.error(exception.getMessage(), exception);
+                resultInfo.setCode(SystemStatusCode.INTERNAL_ERROR.getCode());
+                resultInfo.setMessage(this.getExceptionMsg(exception));
             }
 
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.getWriter().append(objectMapper.writeValueAsString(resultInfo));
         };
+    }
+
+    private String getExceptionMsg(Exception e) {
+        return e.getCause() != null ?
+                                    e.getCause().getCause() != null ? e.getCause().getCause().getMessage()
+                                                                    : e.getCause().getMessage()
+                                    : e.getMessage();
     }
 
     private LogoutSuccessHandler getLogoutSuccessHandler() {
