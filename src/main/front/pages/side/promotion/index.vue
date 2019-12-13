@@ -128,9 +128,15 @@
                 fields: [
                     {key: 'select', label: '선택'},
                     {key: 'promoCode', label: '코드'},
-                    {key: 'name', label: '성명'},
-                    {key: 'email', label: '이메일'},
-                    {key: 'contactNo', label: '연락처'},
+                    {key: 'name', label: '성명',
+                        formatter:(value => value.replace(/(?<=.{1}).+(?=.{1})/, "*"))
+                    },
+                    {key: 'email', label: '이메일',
+                        formatter: (value => value.replace(/(?<=.{2}).+(?=@.+)/, "***"))
+                    },
+                    {key: 'contactNo', label: '연락처',
+                        formatter: (value => value.replace(/(?<=.{3}).+(?=.{4})/, "****"))
+                    },
                     {key: 'createDt', label: '발급일', sortable: true,
                         formatter: (value) => this.convertDateFormater(value)
                     },

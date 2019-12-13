@@ -89,11 +89,15 @@
                     {key: '', label: '번호'},
                     {key: 'codeNm', label: '구분', tdClass:'pr-1'},
                     {key: 'mbrId', label: 'ID'},
-                    {key: 'mbrNm', label: '이름' },
-                    // {key: 'mbrCompany', label: '회사'},
-                    // {key: 'mbrDptmt', label: '부서'},
-                    {key: 'tel', label: 'CTN'},
-                    {key: 'email', label: 'Email'},
+                    {key: 'mbrNm', label: '이름',
+                        formatter:(value => value.replace(/(?<=.{1}).+(?=.{1})/, "*"))
+                    },
+                    {key: 'tel', label: 'CTN',
+                        formatter: (value => value.replace(/(?<=.{3}).+(?=.{4})/, "****"))
+                    },
+                    {key: 'email', label: 'Email',
+                        formatter: (value => value.replace(/(?<=.{2}).+(?=@.+)/, "***"))
+                    },
                     {key: 'loginEndDt', label: '마지막접속일'},
                     {key: 'useYn', label: '사용여부',
                         formatter:(value)=> value === 'Y' ? '사용' : '미사용'

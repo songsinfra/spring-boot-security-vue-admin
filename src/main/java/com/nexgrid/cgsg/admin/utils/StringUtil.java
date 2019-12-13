@@ -179,4 +179,17 @@ public class StringUtil {
 		return textList.stream().collect(Collectors.joining("\n"));
 	}
 
+
+	public static String maskingName(String name) {
+		return name.replaceAll("(?<=.{1}).+(?=.{1})", "*");
+	}
+
+	public static String maskingEmail(String email) {
+		return email.replaceAll("(?<=.{2}).+(?=@.+)", "***");
+	}
+
+	public static String maskingTel(String tel) {
+		return tel.replaceAll("(?<=\\d{3}).+(?=\\d{4})", "****");
+	}
+
 }
