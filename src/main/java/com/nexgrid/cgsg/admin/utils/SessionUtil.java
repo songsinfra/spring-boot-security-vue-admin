@@ -1,8 +1,12 @@
 package com.nexgrid.cgsg.admin.utils;
 
+import com.nexgrid.cgsg.admin.security.AdminUser;
 import com.nexgrid.cgsg.admin.vo.LoginInfo;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -237,5 +241,13 @@ public class SessionUtil implements HttpSessionListener {
 		if(sessionInfo.containsKey(e.getSession())) {
 			sessionInfo.remove(e.getSession());
 		}
+	}
+
+	public static boolean isAdmin() {
+		AdminUser adminUser = (AdminUser) SecurityContextHolder.getContext()
+															   .getAuthentication()
+															   .getPrincipal();
+
+		return ObjectUtils.isNotEmpty(adminUser) && StringUtils.equals(adminUser.getUsername(), "admin");
 	}
 }

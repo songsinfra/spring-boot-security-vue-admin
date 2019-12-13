@@ -274,9 +274,15 @@
 
                     const response = await this.$axios.$post(process.env.contextPath + url, mbrInfo);
 
-                    await this.$bvModal.msgBoxOk("저장이 완료 되었습니다.");
-                    this.$eventBus.$emit('refreshMbrList')
-                    this.$refs.modal.hide();
+                    if(mbrInfo.mbrPw && !this.isAdmin){
+                        await this.$bvModal.msgBoxOk("저장이 완료 되었습니다. 변경된 비밀번호로 다시 로그인 해 주세요");
+                        this.logout();
+                    } else {
+                        await this.$bvModal.msgBoxOk("저장이 완료 되었습니다.");
+                        this.$eventBus.$emit('refreshMbrList')
+                        this.$refs.modal.hide();
+                    }
+
                 } catch (e) {
                     console.dir(e);
                     e = (e.response && e.response.data) || e;
@@ -320,6 +326,11 @@
                 if (this.$props.state === 'UPDATE' && !this.mbrInfo.mbrPw && !this.mbrInfo.mbrPwRe) {
                     this.errors.clear();
                 }
+            },
+
+            logout() {
+                this.$store.dispatch('login/logout');
+                this.$router.push("/login/login");
             }
 
         }

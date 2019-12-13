@@ -115,7 +115,6 @@
             async isExistLoginInfo(mbrId, mbrPw) {
                 try {
                     const {data} = await this.$axios.post(process.env.contextPath + '/mbr/isExistLoginInfo', {mbrId, mbrPw});
-                    debugger;
                     return data.data;
                 } catch (e) {
                     e = (e.response && e.response.data) || e;

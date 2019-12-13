@@ -5,11 +5,14 @@ import com.nexgrid.cgsg.admin.exception.AdminException;
 import com.nexgrid.cgsg.admin.security.AdminUser;
 import com.nexgrid.cgsg.admin.service.LoginService;
 import com.nexgrid.cgsg.admin.service.MbrService;
+import com.nexgrid.cgsg.admin.utils.SessionUtil;
 import com.nexgrid.cgsg.admin.vo.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -101,6 +104,10 @@ public class MbrController {
 
         int updateCnt = mbrService.updateMbr(mbrInfo);
         String message = String.format("%s 건 업데이트 되었습니다.", updateCnt);
+
+        if (updateCnt > 0 && StringUtils.isNotEmpty(mbrInfo.getNewPw()) && !SessionUtil.isAdmin() ) {
+            SecurityContextHolder.clearContext();
+        }
 
         return ResultInfo.builder()
                 .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
