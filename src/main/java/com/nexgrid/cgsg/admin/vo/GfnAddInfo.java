@@ -1,18 +1,14 @@
 package com.nexgrid.cgsg.admin.vo;
 
-import com.nexgrid.cgsg.admin.utils.StringUtil;
+import com.nexgrid.cgsg.admin.constants.NvidiaPlanType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Data
@@ -59,4 +55,5 @@ public class GfnAddInfo {
     private Date createDt;
     private String updateId;
     private Date updateDt;
+    private NvidiaPlanType nvidiaPlan;
 }

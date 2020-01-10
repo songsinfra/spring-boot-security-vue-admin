@@ -200,6 +200,26 @@
                 </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group
+                    v-if="addInfo.svcTermType === '2'"
+                    id="nvidia-group-1"
+                    label="엔비디아 요금제:"
+                    label-for="nvidia-1"
+            >
+                <b-form-select
+                        id="nvidiaPlan-1"
+                        :required="true"
+                        v-model="addInfo.nvidiaPlan"
+                        v-validate="'required'"
+                        data-vv-name="엔비디아요금제"
+                >
+                    <option value="PREMIUM">PREMIUM</option>
+                    <option value="BASIC">BASIC</option>
+                </b-form-select>
+                <b-form-invalid-feedback :state="!errors.has('엔비디아요금제')">
+                    {{errors.first('엔비디아요금제')}}
+                </b-form-invalid-feedback>
+            </b-form-group>
+            <b-form-group
                     id="useYn-group-1"
                     label="사용여부:"
                     label-for="useYn-1"
