@@ -200,7 +200,6 @@
                 </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group
-                    v-if="addInfo.svcTermType === '2'"
                     id="nvidia-group-1"
                     label="엔비디아 요금제:"
                     label-for="nvidia-1"

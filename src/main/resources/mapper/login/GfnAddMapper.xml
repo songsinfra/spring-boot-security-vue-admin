@@ -149,7 +149,7 @@
             ,STATUS_CD = #{statusCd}
         </if>
         <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(nvidiaPlan)">
-            ,STATUS_CD = #{nvidiaPlan}
+            ,NVIDIA_PLAN = #{nvidiaPlan}
         </if>
 
 		WHERE ADD_ITEM_CODE = #{addItemCode}
