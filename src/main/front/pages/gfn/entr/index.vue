@@ -86,6 +86,7 @@
                 modalState: '',
                 entrItems: [],
                 entrFields: [
+                    {key: 'entrItemCode', label: '코드'},
                     {key: 'entrItemNm', label: '가입가능요금제명'},
                     {key: 'socTypeCode', label: 'SOC타입코드',
                         formatter:(value)=> value === 'R' ? '부가서비스' : '요금제'},
