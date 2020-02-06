@@ -120,7 +120,7 @@
             >
                 <b-form-radio-group v-model="addInfo.svcTermType" @change="changeSvcTermType">
                     <b-form-radio v-if="addInfo.addItemType === 'U'" value="0">없음</b-form-radio>
-<!--                    <b-form-radio v-if="addInfo.addItemType === 'G'" value="1">이용기간</b-form-radio>-->
+                    <b-form-radio v-if="addInfo.addItemType === 'G'" value="1">이용기간</b-form-radio>
                     <b-form-radio v-if="addInfo.addItemType === 'G'" value="2">기간한정</b-form-radio>
                 </b-form-radio-group>
             </b-form-group>
