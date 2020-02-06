@@ -4,6 +4,7 @@ import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
 import com.nexgrid.cgsg.admin.vo.ResultInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -87,6 +88,28 @@ public class ExceptionController implements ErrorController {
         }
 
         resultInfo.setCode(SystemStatusCode.INVALID_PARAMETER.getCode());
+
+        return new ResponseEntity(resultInfo, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DuplicateKeyException.class)
+    public ResponseEntity Exception(DuplicateKeyException exception) {
+        log.error(exception.getMessage(), exception);
+
+        ResultInfo resultInfo = new ResultInfo();
+        resultInfo.setMessage("중복된 데이터가 있습니다");
+        resultInfo.setCode(SystemStatusCode.INTERNAL_ERROR.getCode());
+
+        return new ResponseEntity(resultInfo, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity Exception(Exception exception) {
+        log.error(exception.getMessage(), exception);
+
+        ResultInfo resultInfo = new ResultInfo();
+        resultInfo.setMessage(exception.getMessage());
+        resultInfo.setCode(SystemStatusCode.INTERNAL_ERROR.getCode());
 
         return new ResponseEntity(resultInfo, HttpStatus.BAD_REQUEST);
     }
