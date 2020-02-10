@@ -278,6 +278,7 @@
                     try {
                         this.getNvidiaPlanTypeList();
                         this.errors.clear();
+                        this.showNvidiaPlanText = false;
 
                         if (this.$props.state === 'CREATE') {
                             console.log('this.$props.state', this.$props.state);
@@ -356,12 +357,12 @@
                                 break;
                         }
 
-                        if (addInfo.nvidiaPlan === 'new') {
-                            addInfo.nvidiaPlan = addInfo.nvidiaPlanText;
-                        }
-
                         // 기간한정의 날짜 초기화
                         addInfo.svcTermDate = '';
+                    }
+
+                    if (addInfo.nvidiaPlan === 'new') {
+                        addInfo.nvidiaPlan = addInfo.nvidiaPlanText;
                     }
 
                     const response = await this.$axios.$post(process.env.contextPath + url, addInfo);
