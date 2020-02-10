@@ -42,6 +42,11 @@ public class GfnAddService {
         return gfnAddInfo;
     }
 
+    public List<String> getNvidiaPlanTypeList() {
+        List<String> gfnAddInfo = gfnAddMapper.getNvidiaPlanTypeList();
+        return gfnAddInfo;
+    }
+
     public List<GfnAddInfo> selectAddItemList(String statusCd) {
         return gfnAddMapper.selectAddItemList(statusCd);
     }
@@ -124,7 +129,7 @@ public class GfnAddService {
         Assert.isTrue(StringUtils.equalsIgnoreCase(AddItemType.UCUBE.getType(), gfnAddInfo.getAddItemType()),
                 "addItemType is invalid");
 
-        Assert.isTrue(StringUtils.equalsIgnoreCase(SvcTermType.NONE.getType(), gfnAddInfo.getSvcTermType()),
+        Assert.isTrue(StringUtils.containsAny(gfnAddInfo.getSvcTermType(), SvcTermType.NONE.getType(), SvcTermType.AVAILABLE_DATE.getType()),
                 "SvcTermType is invalid");
 
         Assert.hasLength(gfnAddInfo.getAddItemCode(), "addItemCode is null");

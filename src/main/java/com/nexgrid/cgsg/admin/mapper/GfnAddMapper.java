@@ -19,4 +19,6 @@ public interface GfnAddMapper {
     int updateAddItem(GfnAddInfo gfnAddInfo);
 
     int deleteAddItem(String addItemCode);
+
+    List<String> getNvidiaPlanTypeList();
 }

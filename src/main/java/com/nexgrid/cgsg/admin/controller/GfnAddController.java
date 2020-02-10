@@ -47,6 +47,16 @@ public class GfnAddController {
                 .build();
     }
 
+    @RequestMapping("/getNvidiaPlanTypeList")
+    public ResultInfo getNvidiaPlanTypeList() {
+        List<String> nvidiaPlanTypeList = gfnAddService.getNvidiaPlanTypeList();
+
+        return ResultInfo.builder()
+                         .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+                         .data(nvidiaPlanTypeList)
+                         .build();
+    }
+
     @RequestMapping("/insertAddItem")
     public ResultInfo insertAddItem(@RequestBody @Validated GfnAddInfo gfnAddInfo, Principal principal) {
         gfnAddInfo.setCreateId(principal.getName());

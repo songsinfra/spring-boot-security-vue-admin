@@ -1,6 +1,5 @@
 package com.nexgrid.cgsg.admin.vo;
 
-import com.nexgrid.cgsg.admin.constants.NvidiaPlanType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -55,5 +54,5 @@ public class GfnAddInfo {
     private Date createDt;
     private String updateId;
     private Date updateDt;
-    private NvidiaPlanType nvidiaPlan;
+    private String nvidiaPlan;
 }

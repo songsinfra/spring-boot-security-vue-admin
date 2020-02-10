@@ -20,7 +20,7 @@
                     <b-row class="my-1">
                         <b-col sm="5">
                             <b-form-radio v-if="state === 'CREATE' || state === 'UPDATE' && addInfo.addItemType === 'U'" value="U">U-Cube 연동 상품</b-form-radio>
-                            <b-form-radio v-if="state === 'CREATE' || state === 'UPDATE' && addInfo.addItemType === 'G'" value="G">NVIDIA 직접 연동 상품</b-form-radio>
+<!--                            <b-form-radio v-if="state === 'CREATE' || state === 'UPDATE' && addInfo.addItemType === 'G'" value="G">NVIDIA 직접 연동 상품</b-form-radio>-->
                         </b-col>
                         <b-col sm="7">
                             <b-form-input
@@ -63,7 +63,7 @@
                     label-for="addItemDetail-1"
             >
                 <b-form-textarea
-                        id="textarea"
+                        id="addItemDetail"
                         v-model="addInfo.addItemDetail"
                         rows="3"
                         max-rows="6"
@@ -75,7 +75,7 @@
                     label-for="addItemNotice-1"
             >
                 <b-form-textarea
-                        id="textarea"
+                        id="addItemNotice"
                         v-model="addInfo.addItemNotice"
                         rows="3"
                         max-rows="6"
@@ -120,8 +120,8 @@
             >
                 <b-form-radio-group v-model="addInfo.svcTermType" @change="changeSvcTermType">
                     <b-form-radio v-if="addInfo.addItemType === 'U'" value="0">없음</b-form-radio>
-                    <b-form-radio v-if="addInfo.addItemType === 'G'" value="1">이용기간</b-form-radio>
-                    <b-form-radio v-if="addInfo.addItemType === 'G'" value="2">기간한정</b-form-radio>
+                    <b-form-radio v-if="addInfo.addItemType === 'U'" value="1">이용기간</b-form-radio>
+<!--                    <b-form-radio v-if="addInfo.addItemType === 'G'" value="2">기간한정</b-form-radio>-->
                 </b-form-radio-group>
             </b-form-group>
             <b-form-group
@@ -153,7 +153,7 @@
                         </b-col>
                         <b-col sm="3">
                             <b-form-input
-                                    id="svcTermNum-1"
+                                    id="svcTermNum-2"
                                     v-model="addInfo.svcTermNumDay"
                                     type="number"
                                     :disabled="addInfo.svcTermUnit !== 'D'"
@@ -169,7 +169,7 @@
                         </b-col>
                         <b-col sm="3">
                             <b-form-input
-                                    id="svcTermNum-1"
+                                    id="svcTermNum-3"
                                     v-model="addInfo.svcTermNumMonth"
                                     type="number"
                                     :disabled="addInfo.svcTermUnit !== 'M'"
@@ -210,10 +210,16 @@
                         v-model="addInfo.nvidiaPlan"
                         v-validate="'required'"
                         data-vv-name="엔비디아요금제"
+                        :options="nvidiaPlanList"
+                        @change="showNvidiaPlanText = addInfo.nvidiaPlan === 'new'"
                 >
-                    <option value="PREMIUM">PREMIUM</option>
-                    <option value="BASIC">BASIC</option>
+                    <option :value="'new'">-- 직접입력 --</option>
                 </b-form-select>
+                <b-form-input
+                        id="mbrCompanyText-1"
+                        v-model="addInfo.nvidiaPlanText"
+                        v-if="showNvidiaPlanText"
+                ></b-form-input>
                 <b-form-invalid-feedback :state="!errors.has('엔비디아요금제')">
                     {{errors.first('엔비디아요금제')}}
                 </b-form-invalid-feedback>
@@ -257,7 +263,9 @@
                 disabledSvcBasePrice: false,
                 disabledSvcSellPrice: false,
                 disabledAddItemCode: false,
-                title: ''
+                title: '',
+                showNvidiaPlanText: false,
+                nvidiaPlanList: []
             };
         },
 
@@ -266,9 +274,9 @@
 
         methods:{
             showModal() {
-
                 this.$nextTick(async () => {
                     try {
+                        this.getNvidiaPlanTypeList();
                         this.errors.clear();
 
                         if (this.$props.state === 'CREATE') {
@@ -348,6 +356,10 @@
                                 break;
                         }
 
+                        if (addInfo.nvidiaPlan === 'new') {
+                            addInfo.nvidiaPlan = addInfo.nvidiaPlanText;
+                        }
+
                         // 기간한정의 날짜 초기화
                         addInfo.svcTermDate = '';
                     }
@@ -409,6 +421,16 @@
                         addItemCode
                     });
                     return data.data;
+                } catch (e) {
+                    e = (e.response && e.response.data) || e;
+                    await this.$bvModal.msgBoxOk(e.message);
+                }
+            },
+
+            async getNvidiaPlanTypeList() {
+                try {
+                    const {data} = await this.$axios.post(process.env.contextPath + '/add/getNvidiaPlanTypeList');
+                    this.nvidiaPlanList = data.data;
                 } catch (e) {
                     e = (e.response && e.response.data) || e;
                     await this.$bvModal.msgBoxOk(e.message);

@@ -161,4 +161,12 @@
 		WHERE ADD_ITEM_CODE = #{addItemCode}
 	</insert>
 
+    <!-- nvidia grad type List -->
+    <select id="getNvidiaPlanTypeList" resultType="String">
+        SELECT
+			DISTINCT NVIDIA_PLAN as nvidiaPlan
+		FROM TB_GFN_ADD_ITEM A
+		WHERE NVIDIA_PLAN is not null
+
+    </select>
 </mapper>
