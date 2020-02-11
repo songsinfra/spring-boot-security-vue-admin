@@ -20,7 +20,7 @@
                     <b-row class="my-1">
                         <b-col sm="5">
                             <b-form-radio v-if="state === 'CREATE' || state === 'UPDATE' && addInfo.addItemType === 'U'" value="U">U-Cube 연동 상품</b-form-radio>
-<!--                            <b-form-radio v-if="state === 'CREATE' || state === 'UPDATE' && addInfo.addItemType === 'G'" value="G">NVIDIA 직접 연동 상품</b-form-radio>-->
+                            <b-form-radio v-if="state === 'UPDATE' && addInfo.addItemType === 'G'" value="G">NVIDIA 직접 연동 상품</b-form-radio>
                         </b-col>
                         <b-col sm="7">
                             <b-form-input
