@@ -1,14 +1,15 @@
 package com.nexgrid.cgsg.admin.controller;
 
 import com.nexgrid.cgsg.admin.base.BaseControllerTest;
-import com.nexgrid.cgsg.admin.constants.AddItemType;
-import com.nexgrid.cgsg.admin.constants.StatusCode;
 import com.nexgrid.cgsg.admin.constants.SvcTermType;
-import com.nexgrid.cgsg.admin.constants.SvcTermUnit;
+import com.nexgrid.cgsg.admin.service.GfnAddService;
+import com.nexgrid.cgsg.admin.utils.TestObjectFactory;
 import com.nexgrid.cgsg.admin.vo.GfnAddInfo;
 import com.nexgrid.cgsg.admin.vo.GfnAddInfoParam;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -26,6 +27,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class GfnAddControllerTest extends BaseControllerTest {
 
+    @Autowired
+    private TestObjectFactory testObjectFactory;
+    @Autowired
+    private GfnAddService gfnAddService;
+    private final String ADD_ITEM_CODE = "TES00001";
+
+    @Before
+    public void setUp() {
+        this.gfnAddService.insertAddItemForUcube(testObjectFactory.getInitGfnAddInfoForUcube().addItemCode(ADD_ITEM_CODE)
+                                                                   .build());
+    }
 
     @Test
     public void selectAddItemList() throws Exception {
@@ -44,7 +56,7 @@ public class GfnAddControllerTest extends BaseControllerTest {
 
     @Test
     public void selectAddItem() throws Exception {
-        String addItemCode = "TES00001";
+        String addItemCode = this.ADD_ITEM_CODE;
         GfnAddInfo gfnAddInfo = GfnAddInfo.builder().addItemCode(addItemCode).build();
 
         mvc.perform(post("/add/selectAddItem")
@@ -62,39 +74,9 @@ public class GfnAddControllerTest extends BaseControllerTest {
         this.checkParam("/add/selectAddItem", GfnAddInfo.builder().addItemCode("").build(), this.NULL_MSG);
         this.checkParam("/add/selectAddItem", GfnAddInfo.builder().addItemCode(this.genStr(11)).build(), this.OVER_SIZE_MSG);
     }
-
-
-    private GfnAddInfo.GfnAddInfoBuilder getInitGfnAddInfoForGfn() {
-        return GfnAddInfo.builder()
-                .addItemType(AddItemType.GFN.getType())
-                .addItemNm("테스트 부과서비스1")
-                .svcSellPrice(1000)
-                .svcBasePrice(5000)
-                .addItemDetail("디테일1")
-                .addItemNotice("notice1")
-                .svcTermType(SvcTermType.AVAILABLE_DATE.getType())
-                .svcTermUnit(SvcTermUnit.Month.getCode())
-                .statusCd(StatusCode.USED.getCode())
-                .svcTermNum(1);
-    }
-
-    private GfnAddInfo.GfnAddInfoBuilder getInitGfnAddInfoForUcube() {
-        return GfnAddInfo.builder()
-                .addItemCode("UCUBE00001")
-                .addItemType(AddItemType.UCUBE.getType())
-                .addItemNm("테스트 부과서비스1")
-                .svcSellPrice(1000)
-                .svcBasePrice(5000)
-                .addItemDetail("디테일1")
-                .addItemNotice("notice1")
-                .svcTermType(SvcTermType.NONE.getType())
-                .statusCd(StatusCode.USED.getCode())
-                ;
-    }
-
     @Test
     public void insertAddItem_gfn_AVAILABLE_DATE() throws Exception {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn().build();
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn().build();
 
         mvc.perform(post("/add/insertAddItem")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -107,7 +89,7 @@ public class GfnAddControllerTest extends BaseControllerTest {
 
     @Test
     public void insertAddItem_gfn_limitDate() throws Exception {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
                 .svcTermType(SvcTermType.LIMIT_DATE.getType())
                 .svcTermDate(new Date())
                 .build();
@@ -123,7 +105,7 @@ public class GfnAddControllerTest extends BaseControllerTest {
 
     @Test
     public void insertAddItem_ucube() throws Exception {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForUcube().build();
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForUcube().build();
 
         mvc.perform(post("/add/insertAddItem")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -136,19 +118,20 @@ public class GfnAddControllerTest extends BaseControllerTest {
 
     @Test
     public void insertAddItem_GfnAddInfo_잘못된값() throws Exception {
-        this.checkParam("/add/insertAddItem", this.getInitGfnAddInfoForGfn().addItemType("X").build(), "AddItemType is invalid");
+        this.checkParam("/add/insertAddItem", testObjectFactory.getInitGfnAddInfoForGfn().addItemType("X").build(), "AddItemType is invalid");
 
-        this.checkParam("/add/insertAddItem", this.getInitGfnAddInfoForGfn().addItemCode(genStr(11)).build(), this.OVER_SIZE_MSG);
-        this.checkParam("/add/insertAddItem", this.getInitGfnAddInfoForGfn().addItemType(null).build(), this.NULL_MSG);
-        this.checkParam("/add/insertAddItem", this.getInitGfnAddInfoForGfn().addItemType(genStr(2)).build(), OVER_SIZE_MSG);
+        this.checkParam("/add/insertAddItem", testObjectFactory.getInitGfnAddInfoForGfn().addItemCode(genStr(11)).build(), this.OVER_SIZE_MSG);
+        this.checkParam("/add/insertAddItem", testObjectFactory.getInitGfnAddInfoForGfn().addItemType(null).build(), this.NULL_MSG);
+        this.checkParam("/add/insertAddItem", testObjectFactory.getInitGfnAddInfoForGfn().nvidiaPlan(null).build(), this.NULL_MSG);
+        this.checkParam("/add/insertAddItem", testObjectFactory.getInitGfnAddInfoForGfn().addItemType(genStr(2)).build(), OVER_SIZE_MSG);
 
-        this.checkParam("/add/insertAddItem", this.getInitGfnAddInfoForGfn().addItemNm(genStr(121)).build(), OVER_SIZE_MSG);
+        this.checkParam("/add/insertAddItem", testObjectFactory.getInitGfnAddInfoForGfn().addItemNm(genStr(121)).build(), OVER_SIZE_MSG);
     }
 
     @Test
     public void updateAddItem_gfn_AVAILABLE_DATE() throws Exception {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
-                .addItemCode("TES00001")
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
+                .addItemCode(ADD_ITEM_CODE)
                 .build();
 
         mvc.perform(post("/add/updateAddItem")
@@ -162,8 +145,8 @@ public class GfnAddControllerTest extends BaseControllerTest {
 
     @Test
     public void updateAddItem_gfn_limitDate() throws Exception {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
-                .addItemCode("TES00001")
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
+                .addItemCode(ADD_ITEM_CODE)
                 .svcTermType(SvcTermType.LIMIT_DATE.getType())
                 .svcTermDate(new Date())
                 .build();
@@ -179,8 +162,8 @@ public class GfnAddControllerTest extends BaseControllerTest {
 
     @Test
     public void updateAddItem_ucube() throws Exception {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForUcube()
-                .addItemCode("TES00001")
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForUcube()
+                .addItemCode(ADD_ITEM_CODE)
                 .build();
 
         mvc.perform(post("/add/updateAddItem")
@@ -194,15 +177,15 @@ public class GfnAddControllerTest extends BaseControllerTest {
 
     @Test
     public void updateAddItem_GfnAddInfo_잘못된값() throws Exception {
-        this.checkParam("/add/updateAddItem", this.getInitGfnAddInfoForUcube().addItemType("X").build(), "AddItemType is invalid");
-        this.checkParam("/add/updateAddItem", this.getInitGfnAddInfoForUcube().addItemCode(null).build(), this.NULL_MSG);
+        this.checkParam("/add/updateAddItem", testObjectFactory.getInitGfnAddInfoForUcube().addItemType("X").build(), "AddItemType is invalid");
+        this.checkParam("/add/updateAddItem", testObjectFactory.getInitGfnAddInfoForUcube().addItemCode(null).build(), this.NULL_MSG);
     }
 
     @Test
     public void deleteAddItem() throws Exception {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForUcube()
-                .addItemCode("TES00001")
-                .build();
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForUcube()
+                                    .addItemCode(ADD_ITEM_CODE)
+                                    .build();
 
         mvc.perform(post("/add/deleteAddItem")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -35,7 +35,7 @@ public abstract class BaseControllerTest {
     protected ObjectMapper objectMapper;
 
     @Before
-    public void setup() {
+    public void baseSetup() {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .apply(springSecurity())

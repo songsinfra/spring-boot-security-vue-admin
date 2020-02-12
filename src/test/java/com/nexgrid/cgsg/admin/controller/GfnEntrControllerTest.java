@@ -1,14 +1,16 @@
 package com.nexgrid.cgsg.admin.controller;
 
 import com.nexgrid.cgsg.admin.base.BaseControllerTest;
-import com.nexgrid.cgsg.admin.constants.ProdCode;
-import com.nexgrid.cgsg.admin.constants.SocTypeCode;
 import com.nexgrid.cgsg.admin.constants.StatusCode;
+import com.nexgrid.cgsg.admin.service.GfnEntrService;
+import com.nexgrid.cgsg.admin.utils.TestObjectFactory;
 import com.nexgrid.cgsg.admin.vo.EntrMppingListParam;
 import com.nexgrid.cgsg.admin.vo.GfnEntrInfo;
 import com.nexgrid.cgsg.admin.vo.GfnMapInfo;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -27,20 +29,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class GfnEntrControllerTest extends BaseControllerTest {
 
-    private GfnEntrInfo.GfnEntrInfoBuilder getGfnEntrInfo() {
-        return GfnEntrInfo.builder()
-                .entrItemCode("ITEM999")
-                .socTypeCode(SocTypeCode.PROD.getCode())
-                .prodCd(ProdCode.MOBILE.getCode())
-                .entrItemNm("상품명")
-                .statusCd(StatusCode.USED.getCode())
-                .memo("메모");
+    @Autowired
+    private TestObjectFactory testObjectFactory;
+
+    @Autowired
+    private GfnEntrService gfnEntrService;
+    private final String ENTR_ITEM_CODE = "ITEM0001";
+
+    @Before
+    public void setUp() {
+        gfnEntrService.insertEntrItem(testObjectFactory.getGfnEntrInfo()
+                                                       .entrItemCode(this.ENTR_ITEM_CODE)
+                                                       .build());
     }
 
     @Test
     public void selectEntrItem() throws Exception {
-        String entrItemCode = "ITEM0001";
-        GfnEntrInfo gfnEntrInfo = this.getGfnEntrInfo()
+        String entrItemCode = ENTR_ITEM_CODE;
+        GfnEntrInfo gfnEntrInfo = testObjectFactory.getGfnEntrInfo()
                 .entrItemCode(entrItemCode)
                 .build();
 
@@ -55,7 +61,7 @@ public class GfnEntrControllerTest extends BaseControllerTest {
 
     @Test
     public void selectEntrItem_entrItemCode_null() throws Exception {
-        GfnEntrInfo gfnEntrInfo = this.getGfnEntrInfo()
+        GfnEntrInfo gfnEntrInfo = testObjectFactory.getGfnEntrInfo()
                 .entrItemCode(null)
                 .build();
 
@@ -65,7 +71,7 @@ public class GfnEntrControllerTest extends BaseControllerTest {
 
     @Test
     public void selectEntrItemList() throws Exception {
-        GfnEntrInfo gfnEntrInfo = this.getGfnEntrInfo()
+        GfnEntrInfo gfnEntrInfo = testObjectFactory.getGfnEntrInfo()
                 .build();
 
         mvc.perform(post("/entr/selectEntrItemList")
@@ -79,7 +85,7 @@ public class GfnEntrControllerTest extends BaseControllerTest {
 
     @Test
     public void selectEntrItemList_entrItemNm_검색() throws Exception {
-        GfnEntrInfo gfnEntrInfo = this.getGfnEntrInfo()
+        GfnEntrInfo gfnEntrInfo = testObjectFactory.getGfnEntrInfo()
                 .entrItemNm("상품명")
                 .build();
 
@@ -94,7 +100,7 @@ public class GfnEntrControllerTest extends BaseControllerTest {
 
     @Test
     public void insertEntrItem() throws Exception {
-        GfnEntrInfo gfnEntrInfo = this.getGfnEntrInfo()
+        GfnEntrInfo gfnEntrInfo = testObjectFactory.getGfnEntrInfo()
                 .build();
 
         mvc.perform(post("/entr/insertEntrItem")
@@ -109,28 +115,28 @@ public class GfnEntrControllerTest extends BaseControllerTest {
     @Test
     public void insertEntrItem_param_체크() throws Exception {
 
-        this.checkParam("/entr/insertEntrItem", this.getGfnEntrInfo().entrItemCode(null).build(), NULL_MSG);
-        this.checkParam("/entr/insertEntrItem", this.getGfnEntrInfo().entrItemCode(genStr(11)).build(), OVER_SIZE_MSG);
+        this.checkParam("/entr/insertEntrItem", testObjectFactory.getGfnEntrInfo().entrItemCode(null).build(), NULL_MSG);
+        this.checkParam("/entr/insertEntrItem", testObjectFactory.getGfnEntrInfo().entrItemCode(genStr(11)).build(), OVER_SIZE_MSG);
 
-        this.checkParam("/entr/insertEntrItem", this.getGfnEntrInfo().socTypeCode(null).build(), NULL_MSG);
-        this.checkParam("/entr/insertEntrItem", this.getGfnEntrInfo().socTypeCode(genStr(2)).build(), OVER_SIZE_MSG);
+        this.checkParam("/entr/insertEntrItem", testObjectFactory.getGfnEntrInfo().socTypeCode(null).build(), NULL_MSG);
+        this.checkParam("/entr/insertEntrItem", testObjectFactory.getGfnEntrInfo().socTypeCode(genStr(2)).build(), OVER_SIZE_MSG);
 
-        this.checkParam("/entr/insertEntrItem", this.getGfnEntrInfo().prodCd(null).build(), NULL_MSG);
-        this.checkParam("/entr/insertEntrItem", this.getGfnEntrInfo().prodCd(genStr(21)).build(), OVER_SIZE_MSG);
+        this.checkParam("/entr/insertEntrItem", testObjectFactory.getGfnEntrInfo().prodCd(null).build(), NULL_MSG);
+        this.checkParam("/entr/insertEntrItem", testObjectFactory.getGfnEntrInfo().prodCd(genStr(21)).build(), OVER_SIZE_MSG);
 
-        this.checkParam("/entr/insertEntrItem", this.getGfnEntrInfo().entrItemNm(null).build(), NULL_MSG);
-        this.checkParam("/entr/insertEntrItem", this.getGfnEntrInfo().entrItemNm(genStr(121)).build(), OVER_SIZE_MSG);
+        this.checkParam("/entr/insertEntrItem", testObjectFactory.getGfnEntrInfo().entrItemNm(null).build(), NULL_MSG);
+        this.checkParam("/entr/insertEntrItem", testObjectFactory.getGfnEntrInfo().entrItemNm(genStr(121)).build(), OVER_SIZE_MSG);
 
-        this.checkParam("/entr/insertEntrItem", this.getGfnEntrInfo().statusCd(null).build(), NULL_MSG);
-        this.checkParam("/entr/insertEntrItem", this.getGfnEntrInfo().statusCd(genStr(2)).build(), OVER_SIZE_MSG);
+        this.checkParam("/entr/insertEntrItem", testObjectFactory.getGfnEntrInfo().statusCd(null).build(), NULL_MSG);
+        this.checkParam("/entr/insertEntrItem", testObjectFactory.getGfnEntrInfo().statusCd(genStr(2)).build(), OVER_SIZE_MSG);
 
-        this.checkParam("/entr/insertEntrItem", this.getGfnEntrInfo().memo(genStr(2049)).build(), OVER_SIZE_MSG);
+        this.checkParam("/entr/insertEntrItem", testObjectFactory.getGfnEntrInfo().memo(genStr(2049)).build(), OVER_SIZE_MSG);
 
     }
 
     @Test
     public void updateEntrItem() throws Exception {
-        GfnEntrInfo gfnEntrInfo = this.getGfnEntrInfo()
+        GfnEntrInfo gfnEntrInfo = testObjectFactory.getGfnEntrInfo()
                 .entrItemCode("ITEM0001")
                 .build();
 
@@ -144,9 +150,9 @@ public class GfnEntrControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithUserDetails("admin1")
+    @WithUserDetails("admin")
     public void deleteEntrItem() throws Exception {
-        GfnEntrInfo gfnEntrInfo = this.getGfnEntrInfo()
+        GfnEntrInfo gfnEntrInfo = testObjectFactory.getGfnEntrInfo()
                 .entrItemCode("ITEM0001")
                 .build();
 
@@ -161,7 +167,7 @@ public class GfnEntrControllerTest extends BaseControllerTest {
 
     @Test
     public void deleteEntrItem_param_체크() throws Exception {
-        this.checkParam("/entr/deleteEntrItem", this.getGfnEntrInfo().entrItemCode(null).build(), NULL_MSG);
+        this.checkParam("/entr/deleteEntrItem", testObjectFactory.getGfnEntrInfo().entrItemCode(null).build(), NULL_MSG);
     }
 
     private GfnMapInfo.GfnMapInfoBuilder getGfnMapInfo() {

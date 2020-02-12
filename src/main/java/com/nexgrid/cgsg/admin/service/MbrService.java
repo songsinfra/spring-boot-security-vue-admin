@@ -93,9 +93,10 @@ public class MbrService {
         Assert.hasLength(newPwd, "newPwd is null");
 
         MbrInfo mbrOldInfo = mbrMapper.getMbrOldInfo(mbrId);
+        Assert.notNull(mbrOldInfo, "registered Member is not found");
+
         this.checkUserInfoInPwd(newPwd, mbrOldInfo);
 
-        Assert.notNull(mbrOldInfo, "registered Member is not found");
         String encNewPwd = CommonUtil.convertEncryptPassword(newPwd);
         this.checkUsedPassword(encNewPwd, mbrOldInfo);
 

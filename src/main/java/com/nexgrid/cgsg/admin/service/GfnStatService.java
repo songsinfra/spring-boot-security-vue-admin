@@ -35,7 +35,11 @@ public class GfnStatService {
         Assert.notNull(joinStatDetailInfo, "joinStatDetailInfo is null");
         Assert.hasLength(joinStatDetailInfo.getStartDt(), "startDt is null");
         Assert.hasLength(joinStatDetailInfo.getEndDt(), "endDt is null");
-        
+
         return gfnStatMapper.selectJoinStatDetailList(joinStatDetailInfo);
+    }
+
+    int insertJoiStat(GfnJoinStatInfo joinStatInfo) {
+        return gfnStatMapper.insertJoiStat(joinStatInfo);
     }
 }

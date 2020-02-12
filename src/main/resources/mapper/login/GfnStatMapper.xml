@@ -142,5 +142,19 @@
         ORDER BY SIGNUP_DATE
     </select>
 
+    <insert id="insertJoiStat" >
+        insert into TB_SIGNUP_STAT (
+         SIGNUP_DATE,
+         FREE_USER_CNT,
+         PAID_USER_CNT,
+         TOT_USER_CNT)
+         values (
+         #{signupDate},
+         #{freeUserCnt},
+         #{paidUserCnt},
+         #{totUserCnt}
+         )
+    </insert>
+
 
 </mapper>

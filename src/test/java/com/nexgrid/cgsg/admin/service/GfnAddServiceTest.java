@@ -2,16 +2,14 @@ package com.nexgrid.cgsg.admin.service;
 
 import com.nexgrid.cgsg.admin.base.BaseServiceTest;
 import com.nexgrid.cgsg.admin.constants.AddItemType;
-import com.nexgrid.cgsg.admin.constants.StatusCode;
 import com.nexgrid.cgsg.admin.constants.SvcTermType;
 import com.nexgrid.cgsg.admin.constants.SvcTermUnit;
 import com.nexgrid.cgsg.admin.utils.StringUtil;
+import com.nexgrid.cgsg.admin.utils.TestObjectFactory;
 import com.nexgrid.cgsg.admin.vo.GfnAddInfo;
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import org.hamcrest.CoreMatchers;
-import org.junit.Rule;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,32 +19,39 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
 public class GfnAddServiceTest extends BaseServiceTest {
 
+    private String ADD_ITEM_CODE;
+    @Autowired
+    private TestObjectFactory testObjectFactory;
+
     @Autowired
     private GfnAddService gfnAddService;
 
+    @Before
+    public void setUp() {
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
+                                            .addItemCode(ADD_ITEM_CODE)
+                                            .build();
 
+        this.gfnAddService.insertAddItemForGfn(gfnAddInfo);
+
+        this.ADD_ITEM_CODE = gfnAddInfo.getAddItemCode();
+    }
 //    @Test
 //    public void 테스트용데이터생성() {
 //        GfnAddInfo gfnAddInfo = GfnAddInfo.builder()
 //                .addItemCode("TES00001")
 //                .addItemType(AddItemType.GFN.getType())
-//                .addItemNm("테스트 부과서비스")
+//                .addItemNm("테스트 부가서비스")
 //                .svcSellPrice(1000)
 //                .svcBasePrice(500)
 //                .addItemDetail("디테일")
@@ -63,7 +68,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
     @Test
     @Transactional
     public void selectAddItem() {
-        String addItemCode = "TES00001";
+        String addItemCode = this.ADD_ITEM_CODE;
         GfnAddInfo gfnAddInfo = gfnAddService.selectAddItem(addItemCode);
 
         assertThat(gfnAddInfo).isNotNull();
@@ -97,17 +102,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
     @Test
     @Transactional
     public void insertAddItemForGfn_부가서비스_등록() {
-        GfnAddInfo gfnAddInfo = GfnAddInfo.builder()
-                .addItemType(AddItemType.GFN.getType())
-                .addItemNm("테스트 부과서비스1")
-                .svcSellPrice(1000)
-                .addItemDetail("디테일1")
-                .addItemNotice("notice1")
-                .svcTermType(SvcTermType.AVAILABLE_DATE.getType())
-                .svcTermUnit(SvcTermUnit.Month.getCode())
-                .svcTermNum(1)
-                .statusCd(StatusCode.USED.getCode())
-                .build();
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn().build();
 
         int insertCnt = gfnAddService.insertAddItemForGfn(gfnAddInfo);
 
@@ -122,24 +117,10 @@ public class GfnAddServiceTest extends BaseServiceTest {
         int insertCnt = gfnAddService.insertAddItemForGfn(gfnAddInfo);
     }
 
-    private GfnAddInfo.GfnAddInfoBuilder getInitGfnAddInfoForGfn() {
-        return GfnAddInfo.builder()
-                .addItemType(AddItemType.GFN.getType())
-                .addItemNm("테스트 부과서비스1")
-                .svcSellPrice(1000)
-                .addItemDetail("디테일1")
-                .addItemNotice("notice1")
-                .svcTermType(SvcTermType.AVAILABLE_DATE.getType())
-                .svcTermUnit(SvcTermUnit.Month.getCode())
-                .svcTermNum(1)
-                .statusCd(StatusCode.USED.getCode())
-                ;
-    }
-
     @Test(expected = IllegalArgumentException.class)
     @Transactional
     public void insertAddItemForGfn_부가서비스_등록_gfnAddInfo_statusCd_null() {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
                 .addItemType(null)
                 .build();
 
@@ -149,7 +130,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
     @Test(expected = IllegalArgumentException.class)
     @Transactional
     public void insertAddItemForGfn_부가서비스_등록_gfnAddInfo_addItemType_null() {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
                 .addItemType(null)
                 .build();
 
@@ -159,7 +140,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
     @Test
     @Transactional
     public void insertAddItemForGfn_부가서비스_등록_gfnAddInfo_SvcTermType_잘못된값() {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
                 .svcTermType(SvcTermType.NONE.getType())
                 .build();
 
@@ -170,7 +151,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
     @Test
     @Transactional
     public void insertAddItemForGfn_부가서비스_등록_gfnAddInfo_SvcTermUnit_잘못된값() {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
                 .svcTermType(SvcTermType.AVAILABLE_DATE.getType())
                 .svcTermUnit("aaa")
                 .build();
@@ -181,7 +162,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
     @Test
     @Transactional
     public void insertAddItemForGfn_부가서비스_등록_gfnAddInfo_svcTermNum_Null() {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
                 .svcTermType(SvcTermType.AVAILABLE_DATE.getType())
                 .svcTermUnit(SvcTermUnit.Day.getCode())
                 .svcTermNum(null)
@@ -193,7 +174,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
     @Test
     @Transactional
     public void insertAddItemForGfn_부가서비스_등록_GfnAddInfo_SvcTermType_로직처리() {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
                 .svcTermType(SvcTermType.LIMIT_DATE.getType())
                 .svcTermDate(new Date())
                 .build();
@@ -206,7 +187,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
     @Test
     @Transactional
     public void insertAddItemForGfn_부가서비스_등록_GfnAddInfo_SvcTermType_로직처리_svcTermDate_값없음() {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
                 .svcTermType(SvcTermType.LIMIT_DATE.getType())
                 .svcTermDate(null)
                 .build();
@@ -217,7 +198,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
     @Test
     @Transactional
     public void insertAddItemForUcube_gfnAddInfo_값없음() {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
                 .svcTermType(SvcTermType.LIMIT_DATE.getType())
                 .svcTermDate(null)
                 .build();
@@ -259,8 +240,8 @@ public class GfnAddServiceTest extends BaseServiceTest {
     @Test
     @Transactional
     public void updateAddItem_gfn() {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
-                .addItemCode("TES00001")
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
+                .addItemCode(this.ADD_ITEM_CODE)
                 .build();
 
         int updateCnt = gfnAddService.updateAddItemForGfn(gfnAddInfo);
@@ -270,8 +251,8 @@ public class GfnAddServiceTest extends BaseServiceTest {
     @Test
     @Transactional
     public void updateAddItem_gfn_AVAILABLE_DATE_Day() {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
-                .addItemCode("TES00001")
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
+                .addItemCode(this.ADD_ITEM_CODE)
                 .svcTermUnit(SvcTermUnit.Day.getCode())
                 .build();
 
@@ -282,8 +263,8 @@ public class GfnAddServiceTest extends BaseServiceTest {
     @Test
     @Transactional
     public void updateAddItem_gfn_AVAILABLE_DATE_Hour() {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
-                .addItemCode("TES00001")
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
+                .addItemCode(this.ADD_ITEM_CODE)
                 .svcTermUnit(SvcTermUnit.Hour.getCode())
                 .build();
 
@@ -296,7 +277,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
     public void updateAddItem_gfn_addItemType_null() {
         assertException(IllegalArgumentException.class, "addItemType is null");
 
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
                 .addItemType(null)
                 .build();
 
@@ -308,7 +289,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
     public void updateAddItem_gfn_addItemType_잘못된값() {
         assertException(IllegalArgumentException.class, "addItemType is invalid");
 
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
                 .addItemType(AddItemType.UCUBE.getType())
                 .build();
 
@@ -320,7 +301,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
     public void updateAddItem_gfn_SvcTermType_잘못된값() {
         assertException(IllegalArgumentException.class, "SvcTermType is invalid");
 
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
                 .svcTermType(SvcTermType.NONE.getType())
                 .build();
 
@@ -332,7 +313,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
     public void updateAddItem_gfn_SvcTermUnit_잘못된값() {
         assertException(IllegalArgumentException.class, "SvcTermUnit value is only M,D,H Code");
 
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
                 .svcTermType(SvcTermType.AVAILABLE_DATE.getType())
                 .svcTermUnit("XX")
                 .build();
@@ -345,7 +326,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
     public void updateAddItem_gfn_svcTermNum_null() {
         assertException(IllegalArgumentException.class, "svcTermNum is null");
 
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
                 .svcTermType(SvcTermType.AVAILABLE_DATE.getType())
                 .svcTermUnit(SvcTermUnit.Day.getCode())
                 .svcTermNum(null)
@@ -359,7 +340,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
     public void updateAddItem_gfn_addItemCode_null() {
         assertException(IllegalArgumentException.class, "addItemCode is null");
 
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForGfn()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForGfn()
                 .addItemCode(null)
                 .build();
 
@@ -368,8 +349,7 @@ public class GfnAddServiceTest extends BaseServiceTest {
 
     @Test
     public void deleteAddItem() {
-        String addItemCode = "TES00001";
-        int deleteCnt = gfnAddService.deleteAddItem(addItemCode);
+        int deleteCnt = gfnAddService.deleteAddItem(this.ADD_ITEM_CODE);
 
         assertThat(deleteCnt).isEqualTo(1);
     }

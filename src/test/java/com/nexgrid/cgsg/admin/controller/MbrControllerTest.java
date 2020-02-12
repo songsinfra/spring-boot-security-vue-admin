@@ -3,6 +3,8 @@ package com.nexgrid.cgsg.admin.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexgrid.cgsg.admin.base.BaseControllerTest;
 import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
+import com.nexgrid.cgsg.admin.service.MbrService;
+import com.nexgrid.cgsg.admin.utils.TestObjectFactory;
 import com.nexgrid.cgsg.admin.vo.DeleteMbrParam;
 import com.nexgrid.cgsg.admin.vo.MbrInfo;
 import com.nexgrid.cgsg.admin.vo.UpdatePwdParam;
@@ -15,10 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 
@@ -30,31 +29,34 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Transactional
 public class MbrControllerTest extends BaseControllerTest {
 
-    @Autowired
-    private WebApplicationContext context;
-
-    private MockMvc mvc;
-
+    private final String TEST_ID = "TestID";
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private MbrService mbrService;
+
+    @Autowired
+    private TestObjectFactory testObjectFactory;
+
     @Before
-    public void setup() {
-        mvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
+    public void setUp() {
+        MbrInfo mbrInfo = testObjectFactory.getMbrInfo()
+                                           .mbrId(TEST_ID)
+                                           .build();
+        mbrService.insertMbr(mbrInfo);
     }
 
     @Test
-    @WithUserDetails("admin1")
+    @WithUserDetails("admin")
     public void getMemberList() throws Exception {
         mvc.perform(post("/mbr/getMemberList"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.[0].mbrId").value("admin1"));
+                .andExpect(jsonPath("$.data.[0].mbrId").value("admin"));
     }
 
     @Test
@@ -69,16 +71,9 @@ public class MbrControllerTest extends BaseControllerTest {
     @Test
     @Transactional
     public void insertMbr() throws Exception {
-        MbrInfo mbrInfo = MbrInfo.builder()
-                .mbrId("iTest1")
-                .roleCd("R-001")
-                .mbrPw("password")
-                .mbrNm("관리자")
-                .tel("01012341234")
-                .email("test@test.co.kr")
-                .mbrCompany("넥스그리드99")
-                .mbrDptmt("컨버젼스팀")
-                .build();
+        MbrInfo mbrInfo = testObjectFactory.getMbrInfo()
+                                           .mbrId("InsertID")
+                                           .build();
 
         mvc.perform(post("/mbr/insertMbr")
                     .content(objectMapper.writeValueAsString(mbrInfo))
@@ -162,7 +157,7 @@ public class MbrControllerTest extends BaseControllerTest {
     @Transactional
     public void isDuplicateMember_mbrId_검색() throws Exception {
         MbrInfo mbrInfo = MbrInfo.builder()
-                .mbrId("admin1")
+                .mbrId("admin")
                 .build();
 
         mvc.perform(post("/mbr/isDuplicateMember")
@@ -178,8 +173,8 @@ public class MbrControllerTest extends BaseControllerTest {
     @Transactional
     public void isDuplicateMember_tel_검색() throws Exception {
         MbrInfo mbrInfo = MbrInfo.builder()
-                .tel("01012341234")
-                .build();
+                                 .mbrId(this.TEST_ID)
+                                 .build();
 
         mvc.perform(post("/mbr/isDuplicateMember")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -258,7 +253,7 @@ public class MbrControllerTest extends BaseControllerTest {
     @Transactional
     public void updateMbr_비밀번호_변경() throws Exception {
         MbrInfo mbrInfo = MbrInfo.builder()
-                .mbrId("admin1")
+                .mbrId("admin")
                 .roleCd("R-001")
                 .newPw("password")
                 .mbrNm("관리자")
@@ -282,7 +277,7 @@ public class MbrControllerTest extends BaseControllerTest {
     @Transactional
     public void updateMbr() throws Exception {
         MbrInfo mbrInfo = MbrInfo.builder()
-                .mbrId("admin1")
+                .mbrId("admin")
                 .roleCd("R-001")
                 .mbrNm("관리자")
                 .tel("01012341234")
@@ -305,7 +300,7 @@ public class MbrControllerTest extends BaseControllerTest {
     @Transactional
     public void updatePwd() throws Exception {
         UpdatePwdParam pwdInfo = UpdatePwdParam.builder()
-                .mbrId("admin1")
+                .mbrId("admin")
                 .mbrNewPw("newPwd")
                 .build();
 
@@ -339,7 +334,7 @@ public class MbrControllerTest extends BaseControllerTest {
     @Transactional
     public void updatePwd_newPwd_없음() throws Exception {
         UpdatePwdParam pwdInfo = UpdatePwdParam.builder()
-                .mbrId("admin1")
+                .mbrId("admin")
                 .build();
 
         mvc.perform(post("/mbr/updatePwd")
@@ -372,7 +367,7 @@ public class MbrControllerTest extends BaseControllerTest {
     @Transactional
     public void deleteMbr() throws Exception {
         DeleteMbrParam deleteMbrParam = DeleteMbrParam.builder()
-                .mbrIdList(Arrays.asList("admin1","admin2"))
+                .mbrIdList(Arrays.asList("admin","admin2"))
                 .build();
 
         mvc.perform(post("/mbr/deleteMbr")

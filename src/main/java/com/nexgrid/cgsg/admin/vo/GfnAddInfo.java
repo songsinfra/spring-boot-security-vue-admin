@@ -54,5 +54,9 @@ public class GfnAddInfo {
     private Date createDt;
     private String updateId;
     private Date updateDt;
+
+    @NotNull(message = "nvidiaPlan의 값이 없습니다.")
+    @NotEmpty(message = "nvidiaPlan의 값이 없습니다.")
     private String nvidiaPlan;
+
 }

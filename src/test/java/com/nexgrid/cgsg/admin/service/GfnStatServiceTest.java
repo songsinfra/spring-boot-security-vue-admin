@@ -1,6 +1,7 @@
 package com.nexgrid.cgsg.admin.service;
 
 import com.nexgrid.cgsg.admin.base.BaseServiceTest;
+import com.nexgrid.cgsg.admin.utils.TestObjectFactory;
 import com.nexgrid.cgsg.admin.vo.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,9 +24,15 @@ public class GfnStatServiceTest extends BaseServiceTest {
     @Autowired
     private GfnStatService gfnStatService;
 
+    @Autowired
+    private TestObjectFactory testObjectFactory;
+
     @Before
     public void setup() {
-
+        gfnStatService.insertJoiStat(testObjectFactory.getJoinStatInfo().signupDate("20200211").build());
+        gfnStatService.insertJoiStat(testObjectFactory.getJoinStatInfo().signupDate("20200212").build());
+        gfnStatService.insertJoiStat(testObjectFactory.getJoinStatInfo().signupDate("20200213").build());
+        gfnStatService.insertJoiStat(testObjectFactory.getJoinStatInfo().signupDate("20200214").build());
     }
 
     @Test
@@ -61,7 +68,7 @@ public class GfnStatServiceTest extends BaseServiceTest {
     @Test
     public void selectJoinUserStat() {
         GfnJoinStatInfoParam joinStatInfo = new GfnJoinStatInfoParam();
-        joinStatInfo.setDate("20191105");
+        joinStatInfo.setDate("20200211");
 
         List<GfnJoinStatMonthInfo> gfnJoinStatMonthInfos = gfnStatService.selectJoinUserStat(joinStatInfo);
         assertThat(gfnJoinStatMonthInfos).size().isEqualTo(3);

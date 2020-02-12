@@ -1,14 +1,11 @@
 package com.nexgrid.cgsg.admin.service;
 
 import com.nexgrid.cgsg.admin.base.BaseServiceTest;
-import com.nexgrid.cgsg.admin.constants.AddItemType;
-import com.nexgrid.cgsg.admin.constants.StatusCode;
 import com.nexgrid.cgsg.admin.constants.SvcTermType;
+import com.nexgrid.cgsg.admin.utils.TestObjectFactory;
 import com.nexgrid.cgsg.admin.vo.GfnAddInfo;
-import org.hamcrest.CoreMatchers;
-import org.junit.Rule;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,27 +18,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class GfnAddServiceUcubeTest extends BaseServiceTest {
 
+    private final String ADD_ITEM_CODE = "TES00001";
+
+    @Autowired
+    private TestObjectFactory testObjectFactory;
     @Autowired
     private GfnAddService gfnAddService;
 
-    private GfnAddInfo.GfnAddInfoBuilder getInitGfnAddInfoForUcube() {
-        return GfnAddInfo.builder()
-                .addItemCode("UCUBE00001")
-                .addItemType(AddItemType.UCUBE.getType())
-                .addItemNm("테스트 부과서비스1")
-                .svcSellPrice(1000)
-                .addItemDetail("디테일1")
-                .addItemNotice("notice1")
-                .svcTermType(SvcTermType.NONE.getType())
-                .statusCd(StatusCode.USED.getCode())
-                ;
+    @Before
+    public void setUp() {
+        this.gfnAddService.insertAddItemForUcube(testObjectFactory.getInitGfnAddInfoForUcube().addItemCode(ADD_ITEM_CODE)
+                                                                  .build());
     }
 
     @Test
     @Transactional
     public void insertAddItemForUcube() {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForUcube()
-                .build();
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForUcube()
+                                                 .build();
 
         int insertCnt = gfnAddService.insertAddItemForUcube(gfnAddInfo);
 
@@ -63,7 +57,7 @@ public class GfnAddServiceUcubeTest extends BaseServiceTest {
     public void insertAddItemForUcube_addItemCode_null() {
         this.assertException(IllegalArgumentException.class, "addItemCode is null");
 
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForUcube()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForUcube()
                 .addItemCode(null)
                 .build();
 
@@ -75,7 +69,7 @@ public class GfnAddServiceUcubeTest extends BaseServiceTest {
     public void insertAddItemForUcube_addItemType_null() {
         this.assertException(IllegalArgumentException.class, "addItemType is null");
 
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForUcube()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForUcube()
                 .addItemType(null)
                 .build();
 
@@ -87,7 +81,7 @@ public class GfnAddServiceUcubeTest extends BaseServiceTest {
     public void insertAddItemForUcube_addItemType_잘못된값() {
         this.assertException(IllegalArgumentException.class, "addItemType is invalid");
 
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForUcube()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForUcube()
                 .addItemType(SvcTermType.AVAILABLE_DATE.getType())
                 .build();
 
@@ -99,7 +93,7 @@ public class GfnAddServiceUcubeTest extends BaseServiceTest {
     public void insertAddItemForUcube_AddItemCode_null() {
         this.assertException(IllegalArgumentException.class, "addItemCode is null");
 
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForUcube()
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForUcube()
                 .addItemCode(null)
                 .build();
 
@@ -110,8 +104,8 @@ public class GfnAddServiceUcubeTest extends BaseServiceTest {
     @Test
     @Transactional
     public void updateAddItem_ucube() {
-        GfnAddInfo gfnAddInfo = this.getInitGfnAddInfoForUcube()
-                .addItemCode("TES00001")
+        GfnAddInfo gfnAddInfo = testObjectFactory.getInitGfnAddInfoForUcube()
+                .addItemCode(ADD_ITEM_CODE)
                 .build();
 
         int updateCnt = gfnAddService.updateAddItemForUcube(gfnAddInfo);

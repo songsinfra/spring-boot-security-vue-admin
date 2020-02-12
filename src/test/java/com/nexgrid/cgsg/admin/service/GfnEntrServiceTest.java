@@ -1,11 +1,10 @@
 package com.nexgrid.cgsg.admin.service;
 
 import com.nexgrid.cgsg.admin.base.BaseServiceTest;
-import com.nexgrid.cgsg.admin.constants.ProdCode;
-import com.nexgrid.cgsg.admin.constants.SocTypeCode;
-import com.nexgrid.cgsg.admin.constants.StatusCode;
+import com.nexgrid.cgsg.admin.utils.TestObjectFactory;
 import com.nexgrid.cgsg.admin.vo.GfnAddInfo;
 import com.nexgrid.cgsg.admin.vo.GfnEntrInfo;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +22,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 public class GfnEntrServiceTest extends BaseServiceTest {
 
+    private final String ENTR_ITEM_CODE = "ITEM0001";
     @Autowired
     private GfnEntrService gfnEntrService;
 
+    @Autowired
+    private TestObjectFactory testObjectFactory;
+
+    @Before
+    public void setUp() {
+       gfnEntrService.insertEntrItem(testObjectFactory.getGfnEntrInfo()
+                                                       .entrItemCode(this.ENTR_ITEM_CODE)
+                                                       .build());
+
+       gfnEntrService.insertMapItemList("creatId", this.ENTR_ITEM_CODE, Arrays.asList("test1"));    }
+
     @Test
     public void selectEntrItem() {
-        String entrItemCode = "ITEM0001";
+        String entrItemCode = this.ENTR_ITEM_CODE;
         GfnEntrInfo gfnEntrInfo = gfnEntrService.selectEntrItem(entrItemCode);
         assertThat(gfnEntrInfo.getEntrItemCode()).isEqualTo(entrItemCode);
     }
@@ -57,19 +68,9 @@ public class GfnEntrServiceTest extends BaseServiceTest {
         assertThat(gfnEntrInfos).size().isGreaterThan(0);
     }
 
-    private GfnEntrInfo.GfnEntrInfoBuilder getGfnEntrInfo() {
-        return GfnEntrInfo.builder()
-                .entrItemCode("ITEM999")
-                .socTypeCode(SocTypeCode.PROD.getCode())
-                .prodCd(ProdCode.MOBILE.getCode())
-                .entrItemNm("상품명")
-                .statusCd(StatusCode.USED.getCode())
-                .memo("메모");
-    }
-
     @Test
     public void insertEntrItem() {
-        GfnEntrInfo gfnEntrInfo = this.getGfnEntrInfo().build();
+        GfnEntrInfo gfnEntrInfo = testObjectFactory.getGfnEntrInfo().build();
         int insertCnt = gfnEntrService.insertEntrItem(gfnEntrInfo);
         assertThat(insertCnt).isEqualTo(1);
     }
@@ -81,27 +82,27 @@ public class GfnEntrServiceTest extends BaseServiceTest {
 
     @Test
     public void insertEntrItem_GfnEntrInfo_변수체크_entrItemCode() {
-        this.insertEntrItem_check_param(this.getGfnEntrInfo().entrItemCode(null).build(), "EntrItemCode is null");
+        this.insertEntrItem_check_param(testObjectFactory.getGfnEntrInfo().entrItemCode(null).build(), "EntrItemCode is null");
     }
 
     @Test
     public void insertEntrItem_GfnEntrInfo_변수체크_SocTypeCode() {
-        this.insertEntrItem_check_param(this.getGfnEntrInfo().socTypeCode(null).build(), "SocTypeCode is null");
+        this.insertEntrItem_check_param(testObjectFactory.getGfnEntrInfo().socTypeCode(null).build(), "SocTypeCode is null");
     }
 
     @Test
     public void insertEntrItem_GfnEntrInfo_변수체크_ProdCd() {
-        this.insertEntrItem_check_param(this.getGfnEntrInfo().prodCd(null).build(), "ProdCd is null");
+        this.insertEntrItem_check_param(testObjectFactory.getGfnEntrInfo().prodCd(null).build(), "ProdCd is null");
     }
 
     @Test
     public void insertEntrItem_GfnEntrInfo_변수체크_EntrItemNm() {
-        this.insertEntrItem_check_param(this.getGfnEntrInfo().entrItemNm(null).build(), "EntrItemNm is null");
+        this.insertEntrItem_check_param(testObjectFactory.getGfnEntrInfo().entrItemNm(null).build(), "EntrItemNm is null");
     }
 
     @Test
     public void insertEntrItem_GfnEntrInfo_변수체크_StatusCd() {
-        this.insertEntrItem_check_param(this.getGfnEntrInfo().statusCd(null).build(), "StatusCd is null");
+        this.insertEntrItem_check_param(testObjectFactory.getGfnEntrInfo().statusCd(null).build(), "StatusCd is null");
     }
 
     public void insertEntrItem_check_param(GfnEntrInfo gfnEntrInfo, String exceptionMsg) {
@@ -111,8 +112,8 @@ public class GfnEntrServiceTest extends BaseServiceTest {
 
     @Test
     public void updateEntrItem() {
-        GfnEntrInfo gfnEntrInfo = this.getGfnEntrInfo()
-                .entrItemCode("ITEM0001")
+        GfnEntrInfo gfnEntrInfo = testObjectFactory.getGfnEntrInfo()
+                .entrItemCode(ENTR_ITEM_CODE)
                 .build();
         int updateCnt = gfnEntrService.updateEntrItem(gfnEntrInfo);
         assertThat(updateCnt).isEqualTo(1);
@@ -130,14 +131,14 @@ public class GfnEntrServiceTest extends BaseServiceTest {
     public void updateEntrItem_gfnEntrInfo_EntrItemCode_null() {
         assertException(IllegalArgumentException.class, "EntrItemCode is null");
 
-        GfnEntrInfo gfnEntrInfo = getGfnEntrInfo().entrItemCode(null).build();
+        GfnEntrInfo gfnEntrInfo = testObjectFactory.getGfnEntrInfo().entrItemCode(null).build();
 
         int updateCnt = gfnEntrService.updateEntrItem(gfnEntrInfo);
     }
 
     @Test
     public void deleteEntrItem() {
-        String entrItemCode = "ITEM0001";
+        String entrItemCode = this.ENTR_ITEM_CODE;
         String updateId = "";
         int deleteCnt = gfnEntrService.deleteEntrItem(entrItemCode, updateId);
         assertThat(deleteCnt).isEqualTo(1);
@@ -155,7 +156,7 @@ public class GfnEntrServiceTest extends BaseServiceTest {
 
     @Test
     public void selectEntrMappingList() {
-        String entrItemCode = "ITEM0001";
+        String entrItemCode = this.ENTR_ITEM_CODE;
         List<GfnAddInfo> gfnAddInfos = gfnEntrService.selectEntrMappingList(entrItemCode);
         assertThat(gfnAddInfos).size().isGreaterThan(0);
     }
@@ -170,7 +171,7 @@ public class GfnEntrServiceTest extends BaseServiceTest {
 
     @Test
     public void insertMapItemList() {
-        String entrItemCode = "ITEM0001";
+        String entrItemCode = "ITEM0002";
         List<String> addItemCodeList = Arrays.asList("test1");
 
         int insertCnt = gfnEntrService.insertMapItemList("creatId", entrItemCode, addItemCodeList);
@@ -191,7 +192,7 @@ public class GfnEntrServiceTest extends BaseServiceTest {
     public void insertMapItemList_gfnMapInfo_AddItemCode_null() {
         assertException(IllegalArgumentException.class, "addItemCodeList is null");
 
-        String entrItemCode = "ITEM0001";
+        String entrItemCode = this.ENTR_ITEM_CODE;
         List<String> addItemCodeList = null;
 
         int insertCnt = gfnEntrService.insertMapItemList("creatId", entrItemCode, addItemCodeList);
@@ -199,7 +200,7 @@ public class GfnEntrServiceTest extends BaseServiceTest {
 
     @Test
     public void deleteMapItem() {
-        String entrItemCode = "ITEM0001";
+        String entrItemCode = this.ENTR_ITEM_CODE;
         int deleteCnt = gfnEntrService.deleteMapItem(entrItemCode);
 
         assertThat(deleteCnt).isGreaterThan(0);

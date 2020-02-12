@@ -10,4 +10,5 @@ public interface GfnStatMapper {
     List<GfnMasterInfo> selectUserDetailStat(GfnMasterInfoParam gfnMasterInfo);
     List<GfnJoinStatMonthInfo> selectJoinUserStat(GfnJoinStatInfoParam joinStatInfo);
     List<GfnJoinStatDetailInfo> selectJoinStatDetailList(GfnJoinStatDetailInfoParam joinStatDetailInfo);
+    int insertJoiStat(GfnJoinStatInfo joinStatInfo);
 }

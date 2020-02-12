@@ -1,18 +1,14 @@
 package com.nexgrid.cgsg.admin.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter @Setter
 public class GfnJoinStatInfo {
-    private String joinType;
-    private String lastYearData;
-    private String prevMonthData;
-    private String lastMonthData;
-    private String currentMonthData;
+    private String signupDate;
+    private String freeUserCnt;
+    private String paidUserCnt;
+    private String totUserCnt;
 }
