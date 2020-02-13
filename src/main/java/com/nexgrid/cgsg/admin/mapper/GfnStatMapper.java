@@ -11,4 +11,10 @@ public interface GfnStatMapper {
     List<GfnJoinStatMonthInfo> selectJoinUserStat(GfnJoinStatInfoParam joinStatInfo);
     List<GfnJoinStatDetailInfo> selectJoinStatDetailList(GfnJoinStatDetailInfoParam joinStatDetailInfo);
     int insertJoiStat(GfnJoinStatInfo joinStatInfo);
+    List<GfnTosInfo> selectGfnTosList();
+    List<AcceptTosInfo> selectAccepTosList(String gfnId);
+
+    int insertAcceptTos(AcceptTosInfo b01);
+
+    int deleteOptionAcceptTos(String gfnId);
 }

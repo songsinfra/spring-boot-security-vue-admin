@@ -7,13 +7,17 @@
         <result property="ctn" 		        column="CTN"/>
         <result property="subNo" 		    column="SUB_NO"/>
         <result property="prodCd" 		    column="PROD_CD"/>
-        <result property="entrItemCode" 		    column="ENTR_ITEM_CODE"/>
+        <result property="entrItemCode"     column="ENTR_ITEM_CODE"/>
         <result property="entrItemNm" 		column="ENTR_ITEM_NM"/>
         <result property="addItemCode" 		column="ADD_ITEM_CODE"/>
-        <result property="addItemNm" 		    column="ADD_ITEM_NM"/>
+        <result property="addItemNm" 	    column="ADD_ITEM_NM"/>
         <result property="ctnStusCode" 		column="CTN_STUS_CODE"/>
         <result property="createDt" 		column="CREATE_DT"/>
         <result property="lastLoginDt" 		column="LAST_LOGIN_DT"/>
+        <result property="subscribeDt" 		column="SUBSCRIBE_DT"/>
+        <result property="unsubscribeDt" 	column="UNSUBSCRIBE_DT"/>
+        <result property="grantDt" 	    	column="GRANT_DT"/>
+        <result property="optionTosList" 	    	column="OPTION_TOS_LIST"/>
     </resultMap>
 
     <resultMap id="gfnJoinStatMap" type="com.nexgrid.cgsg.admin.vo.GfnJoinStatMonthInfo">
@@ -31,6 +35,25 @@
             <result property="totUserCnt" 		    column="TOT_USER_CNT"/>
     </resultMap>
 
+    <resultMap id="GfnTosInfoMap" type="com.nexgrid.cgsg.admin.vo.GfnTosInfo">
+        <result property="tosNo"          column="TOS_NO"  />
+        <result property="tosNm"          column="TOS_NM"  />
+        <result property="dipOrder"          column="DIP_ORDER"  />
+        <result property="tosManYn"          column="TOS_MAN_YN"  />
+        <result property="tosType"          column="TOS_TYPE"  />
+        <result property="tosWebUrl"          column="TOS_WEB_URL"  />
+        <result property="tosAppUrl"          column="TOS_APP_URL"  />
+        <result property="updateDt"          column="UPDATE_DT"  />
+        <result property="statusCode"          column="UPDATE_DT"  />
+    </resultMap>
+
+    <resultMap id="AcceptTosInfoMap" type="com.nexgrid.cgsg.admin.vo.AcceptTosInfo">
+        <result property="gfnId"      column="GFN_ID"   />
+        <result property="tosNo"      column="TOS_NO"   />
+        <result property="acceptCd"   column="ACCEPT_CD"   />
+        <result property="updateDt"   column="UPDATE_DT"   />
+    </resultMap>
+
     <!-- 가입자상세 리스트 검색 -->
     <select id="selectUserDetailStat" resultMap="gfnMasterMap">
         SELECT
@@ -45,6 +68,13 @@
             , M.CTN_STUS_CODE
             , M.CREATE_DT
             , M.LAST_LOGIN_DT
+            , M.SUBSCRIBE_DT
+            , M.UNSUBSCRIBE_DT
+            , M.GRANT_DT
+        , (SELECT LISTAGG(TOS_NO, ',') WITHIN GROUP(ORDER BY TOS_NO) AS TOS_NO FROM TB_ACCEPT_TOS
+        WHERE GFN_ID = M.GFN_ID
+        AND TOS_NO IN (SELECT TOS_NO FROM TB_GFN_TOS WHERE TOS_MAN_YN = 'N')
+        ) AS OPTION_TOS_LIST
         FROM TB_GFN_MASTER M
         LEFT OUTER JOIN TB_GFN_ADD_ITEM A ON M.ADD_ITEM_CODE = A.ADD_ITEM_CODE
         LEFT OUTER JOIN TB_GFN_ENTR_ITEM E ON M.PLAN_ITEM_CODE = E.ENTR_ITEM_CODE
@@ -156,5 +186,47 @@
          )
     </insert>
 
+    <select id="selectGfnTosList" resultMap="GfnTosInfoMap">
+        select TOS_NO,
+        TOS_NM,
+        DIP_ORDER,
+        TOS_MAN_YN,
+        TOS_TYPE,
+        TOS_WEB_URL,
+        TOS_APP_URL,
+        UPDATE_DT,
+        STATUS_CODE
+        from tb_gfn_tos where status_code = '1' order by tos_type, dip_order
+    </select>
 
+    <select id="selectAccepTosList" resultMap="AcceptTosInfoMap">
+           SELECT
+            GFN_ID,
+            TOS_NO,
+            ACCEPT_CD,
+            UPDATE_DT
+            FROM TB_ACCEPT_TOS
+            WHERE GFN_ID = #{gfnId}
+    </select>
+
+    <insert id="insertAcceptTos">
+        INSERT INTO TB_ACCEPT_TOS (
+            GFN_ID,
+            TOS_NO,
+            ACCEPT_CD,
+            UPDATE_DT
+        )
+        values (
+            #{gfnId},
+            #{tosNo},
+            #{acceptCd},
+            sysdate
+        )
+    </insert>
+
+    <update id="deleteOptionAcceptTos">
+        DELETE FROM TB_ACCEPT_TOS
+        WHERE TOS_NO IN ( SELECT TOS_NO FROM TB_GFN_TOS WHERE TOS_MAN_YN = 'N')
+        AND GFN_ID = #{gfnId}
+    </update>
 </mapper>

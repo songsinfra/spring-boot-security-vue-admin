@@ -106,4 +106,46 @@ public class GfnStatServiceTest extends BaseServiceTest {
 
         gfnStatService.selectJoinStatDetailList(joinStatDetailInfo);
     }
+
+    @Test
+    public void selectGfnTosList() {
+        List<GfnTosInfo> list = gfnStatService.selectGfnTosList();
+        System.out.println("list = " + list);
+
+        assertThat(list).size()
+                        .isGreaterThan(0);
+    }
+
+    @Test
+    public void selectAccepTosList() {
+        String gfnid = "91c3183a898d62943a72e2ea3f802d5a131548241ef10c48a43ed667d8e70a9d";
+
+        List<AcceptTosInfo> list = gfnStatService.selectAccepTosList(gfnid);
+        System.out.println("list = " + list);
+
+        assertThat(list).size()
+                        .isGreaterThan(0);
+
+        assertThat(list.get(0)
+                       .getTosNo()).isNotEmpty();
+    }
+
+    @Test
+    public void selectGfnTosListWithAcceptTos() {
+        String gfnId = "91c3183a898d62943a72e2ea3f802d5a131548241ef10c48a43ed667d8e70a9d";
+
+        List<GfnTosInfo> gfnTosInfos = gfnStatService.selectGfnTosListWithAcceptTos(gfnId);
+        System.out.println("gfnTosInfos = " + gfnTosInfos);
+
+        assertThat(gfnTosInfos.size()).isGreaterThan(0);
+        assertThat(gfnTosInfos.get(1)
+                              .getIsAgree()).isNotEmpty();
+    }
+
+    @Test
+    public void updateAcceptTosList() {
+        String agreeList = "";
+        String gfnId = "";
+        gfnStatService.updateAcceptTosList(gfnId, agreeList);
+    }
 }

@@ -114,4 +114,14 @@ public class GfnStatControllerTest extends BaseControllerTest {
         ;
     }
 
-}
+
+    @Test
+    public void selectGfnTosList() throws Exception {
+        mvc.perform(post("/stat/selectGfnTosList")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+           .andDo(print())
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$.data").isArray())
+        ;
+    }}

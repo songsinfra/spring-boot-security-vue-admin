@@ -21,4 +21,8 @@ public class GfnMasterInfo {
     private String ctnStusCode;
     private String createDt;
     private String lastLoginDt;
+    private String subscribeDt;
+    private String unsubscribeDt;
+    private String grantDt;
+    private String optionTosList;
 }

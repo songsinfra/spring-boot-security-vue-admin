@@ -50,5 +50,24 @@ public class GfnStatController {
                 .build();
     }
 
+    @RequestMapping("selectGfnTosList")
+    public ResultInfo selectGfnTosList(@RequestBody @Validated GfnTosInfo.GfnTosInfoParams params) {
+
+        List<GfnTosInfo> gfnTosInfos = gfnStatService.selectGfnTosListWithAcceptTos(params.getGfnId());
+        return ResultInfo.builder()
+                         .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+                         .data(gfnTosInfos)
+                         .build();
+    }
+
+    @RequestMapping("updateAcceptTosList")
+    public ResultInfo updateAcceptTosList(@RequestBody @Validated GfnTosInfo.updateAcceptTosListParams params) {
+
+        gfnStatService.updateAcceptTosList(params.getGfnId(), params.getAgreeList());
+        return ResultInfo.builder()
+                         .code(SystemStatusCode.LOGIN_SUCCESS.getCode())
+                         .data(String.format("수정되었습니다"))
+                         .build();
+    }
 
 }

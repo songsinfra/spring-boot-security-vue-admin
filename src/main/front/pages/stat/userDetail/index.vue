@@ -117,6 +117,9 @@
                                         :per-page="perPage"
                                         :current-page="currentPage"
                                 >
+                                    <template v-slot:optionTosList="{item}">
+                                        <b-button @click="popupTosDetail(item.gfnId)">{{item.optionTosList || '상세'}}</b-button>
+                                    </template>
                                 </b-table>
                                 <b-pagination
                                         v-model="currentPage"
@@ -131,16 +134,20 @@
                 </div>
             </div>
         </div>
+        <ModalTosDetail :gfn-id="selectedGfnId"></ModalTosDetail>
     </section>
 </template>
 
 <script>
     import JsonExcel from 'vue-json-excel';
+    import ModalTosDetail from "~/components/pages/stat/userDetail/ModalTosDetail";
+
     export default {
         name: "index",
 
         components: {
-            downloadExcel : JsonExcel
+            downloadExcel : JsonExcel,
+            ModalTosDetail
         },
 
         computed: {
@@ -150,6 +157,9 @@
             yesterday(){
                 return this.$moment().subtract(1, 'days').format('YYYY-MM-DD');
             }
+        },
+        async created() {
+            this.$eventBus.$on('refreshUserDetail', this.selectUserDetailStat);
         },
 
         beforeMount() {
@@ -173,8 +183,12 @@
                     {key: 'addItemCode', label: '부가서비스코드'},
                     {key: 'addItemNm', label: '부가서비스명'},
                     {key: 'ctnStusCode', label: '상태'},
-                    {key: 'createDt', label: '가입일시'},
+                    {key: 'createDt', label: 'GFN 생성일시'},
                     {key: 'lastLoginDt', label: '마지막로그인'},
+                    {key: 'subscribeDt', label: '부가서비스 가입일시'},
+                    {key: 'unsubscribeDt', label: '부가서비스 해지일시'},
+                    {key: 'grantDt', label: 'NVIDIA 등록일시'},
+                    {key: 'optionTosList', label: '선택약관동의'},
                 ],
                 items:[],
                 params: {
@@ -185,6 +199,7 @@
                     subNo: '',
                     ctn: '',
                 },
+                selectedGfnId: '',
                 searchType: 'CTN',
                 entrItems: [],
                 addInfoItems : [],
@@ -222,6 +237,22 @@
                     },
                     'LAST_LOGIN_DT': {
                         field: 'lastLoginDt',
+                        callback: this.convertToStringForExcel
+                    },
+                    'SUBSCRIBE_DT' : {
+                        field : 'subscribeDt',
+                        callback: this.convertToStringForExcel
+                    },
+                    'UNSUBSCRIBE_DT' : {
+                        field : 'unsubscribeDt',
+                        callback: this.convertToStringForExcel
+                    },
+                    'GRANT_DT' : {
+                        field : 'grantDt',
+                        callback: this.convertToStringForExcel
+                    },
+                    'OPTION_TOS_LIST' : {
+                        field : 'optionTosList',
                         callback: this.convertToStringForExcel
                     },
                 },
@@ -273,6 +304,13 @@
 
             convertToStringForExcel(value) {
                 return '=\"' + value + '\"';
+            },
+
+            popupTosDetail(gfnId) {
+                this.$nextTick(async () => {
+                    this.selectedGfnId = gfnId;
+                    this.$bvModal.show('modal_Tos_detail');
+                });
             },
 
             checkAndConvertDate(params){
