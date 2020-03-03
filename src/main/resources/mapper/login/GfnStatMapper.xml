@@ -172,6 +172,7 @@
         ORDER BY SIGNUP_DATE
     </select>
 
+    <!-- testcase용 통계입력 -->
     <insert id="insertJoiStat" >
         insert into TB_SIGNUP_STAT (
          SIGNUP_DATE,
@@ -186,6 +187,7 @@
          )
     </insert>
 
+    <!-- GFN 약관정보 검색 -->
     <select id="selectGfnTosList" resultMap="GfnTosInfoMap">
         select TOS_NO,
         TOS_NM,
@@ -199,6 +201,7 @@
         from tb_gfn_tos where status_code = '1' order by tos_type, dip_order
     </select>
 
+    <!-- 약관동의 검색 -->
     <select id="selectAccepTosList" resultMap="AcceptTosInfoMap">
            SELECT
             GFN_ID,
@@ -209,6 +212,7 @@
             WHERE GFN_ID = #{gfnId}
     </select>
 
+    <!-- 약관동의 등록 -->
     <insert id="insertAcceptTos">
         INSERT INTO TB_ACCEPT_TOS (
             GFN_ID,
@@ -224,6 +228,7 @@
         )
     </insert>
 
+    <!-- 선택약관 삭제 -->
     <update id="deleteOptionAcceptTos">
         DELETE FROM TB_ACCEPT_TOS
         WHERE TOS_NO IN ( SELECT TOS_NO FROM TB_GFN_TOS WHERE TOS_MAN_YN = 'N')
