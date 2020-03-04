@@ -4,6 +4,7 @@ import com.nexgrid.cgsg.admin.base.BaseControllerTest;
 import com.nexgrid.cgsg.admin.constants.SystemStatusCode;
 import com.nexgrid.cgsg.admin.vo.GfnJoinStatDetailInfoParam;
 import com.nexgrid.cgsg.admin.vo.GfnMasterInfoParam;
+import com.nexgrid.cgsg.admin.vo.GfnTosInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -117,8 +118,12 @@ public class GfnStatControllerTest extends BaseControllerTest {
 
     @Test
     public void selectGfnTosList() throws Exception {
+        GfnTosInfo.GfnTosInfoParams params = new GfnTosInfo.GfnTosInfoParams();
+        params.setGfnId("22958b6ee63f851712dfbbb594abebc69f1386a2b990d0f35e319c5f696d9999");
+
         mvc.perform(post("/stat/selectGfnTosList")
                 .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(params))
         )
            .andDo(print())
            .andExpect(status().isOk())

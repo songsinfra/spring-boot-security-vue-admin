@@ -38,12 +38,12 @@ public class GfnStatServiceTest extends BaseServiceTest {
     @Test
     public void selectUserStat() {
         GfnMasterInfoParam gfnMasterInfo = GfnMasterInfoParam.builder()
-                .entrItemCode("")
-                .addItemCode("GFN0000007")
-                .createStartDt("20191101")
-                .createEndDt("20191101")
-                .subNo("500137677005")
-                .ctn("010043307609")
+                .entrItemCode("LPZ0000999")
+//                .addItemCode("GFN0000007")
+//                .createStartDt("20191101")
+//                .createEndDt("20191101")
+//                .subNo("500137677005")
+//                .ctn("010043307609")
                 .build();
 
         List<GfnMasterInfo> gfnMasterInfos = gfnStatService.selectUserDetailStat(gfnMasterInfo);

@@ -56,7 +56,7 @@ public class MbrControllerTest extends BaseControllerTest {
         mvc.perform(post("/mbr/getMemberList"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.[0].mbrId").value("admin"));
+                .andExpect(jsonPath("$.data.[0].mbrId").value("TestID"));
     }
 
     @Test
