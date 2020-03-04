@@ -61,9 +61,9 @@
             , M.CTN
             , M.SUB_NO
             , M.PROD_CD
-            , E.ENTR_ITEM_CODE
+            , M.PLAN_ITEM_CODE
             , E.ENTR_ITEM_NM
-            , A.ADD_ITEM_CODE
+            , M.ADD_ITEM_CODE
             , A.ADD_ITEM_NM
             , M.CTN_STUS_CODE
             , M.CREATE_DT
@@ -80,7 +80,7 @@
         LEFT OUTER JOIN TB_GFN_ENTR_ITEM E ON M.PLAN_ITEM_CODE = E.ENTR_ITEM_CODE
         <where>
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(entrItemCode)">
-                AND E.ENTR_ITEM_CODE = #{entrItemCode}
+                AND M.PLAN_ITEM_CODE = #{entrItemCode}
             </if>
             <if test="!@com.nexgrid.cgsg.admin.utils.StringUtil@empty(addItemCode)">
                 AND M.ADD_ITEM_CODE = #{addItemCode}
